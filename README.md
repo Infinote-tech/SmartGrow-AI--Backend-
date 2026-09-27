@@ -26,9 +26,11 @@ app/
   services/      # business logic (auth, trays, sensors, irrigation, ML, analytics)
   api/v1/        # route handlers, one file per resource
   ml/            # model wrapper + offline training script
-tests/           # pytest suite (auth, trays, sensors, predictions)
+tests/           # pytest suite (auth, trays, sensors, predictions, postman sync check)
 postman/         # importable collection + environment
+scripts/         # sync_postman_collection.py -- keeps postman/ up to date with app/api/v1
 .github/workflows/ci.yml
+.github/workflows/postman-sync.yml
 ```
 
 ## Quickstart (Docker)
@@ -101,6 +103,45 @@ Point Power BI's **Get Data → Web** connector at:
 Each returns a flat JSON array Power BI can parse straight into a table. For
 a live, higher-volume connection, prefer MongoDB's official ODBC/ADO.NET
 connector directly against the database instead of polling these endpoints.
+
+## Postman
+
+Import both files from [`postman/`](postman/) into Postman:
+
+- [`SmartGrowAI.postman_collection.json`](postman/SmartGrowAI.postman_collection.json) — every endpoint, grouped by
+  resource, with realistic example request bodies and `test` scripts that
+  capture `access_token` / `admin_access_token` / `tray_id` / `user_id` into
+  environment variables as you work through the flow (e.g. Login populates
+  `{{access_token}}` for every subsequent request).
+- [`SmartGrowAI.postman_environment.json`](postman/SmartGrowAI.postman_environment.json) — `base_url`, tokens, ids and
+  the ESP32 `device_key`, wired up as environment variables. Select the
+  **SmartGrow AI - Local** environment after importing.
+
+Typical flow: **Auth → Register** (or **Register (Admin)**), then **Auth →
+Login**, then everything else — the captured `{{access_token}}` is already
+wired into every protected request's `Authorization` header.
+
+### Keeping the collection in sync
+
+New endpoint added? Run:
+
+```bash
+python scripts/sync_postman_collection.py
+```
+
+It diffs the live FastAPI route table (via `app.openapi()`) against
+`postman/SmartGrowAI.postman_collection.json`, and for anything missing it
+appends a skeleton request (method, URL, path/query params, auth header,
+and a placeholder JSON body generated from the endpoint's Pydantic model)
+into the right folder — existing hand-written requests, example bodies and
+test scripts are never touched. It also adds an empty environment variable
+for any new path parameter. `pytest` runs the same check
+(`tests/test_postman_sync.py`) and fails with a pointer to this command if
+the collection has drifted, and
+[`.github/workflows/postman-sync.yml`](.github/workflows/postman-sync.yml)
+runs it on every push that touches `app/api/v1/**` and commits the update
+back automatically, so the collection can't go stale even if someone
+forgets to run it locally.
 
 ## Flutter frontend
 
