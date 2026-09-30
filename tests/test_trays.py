@@ -2,53 +2,56 @@ import pytest
 
 
 @pytest.mark.asyncio
-async def test_create_and_get_tray(client, auth_headers):
-    create_resp = await client.post(
+async def test_create_tray_entry_stores_user_id(client, auth_headers, test_db):
+    me = (await client.get("/api/v1/auth/me", headers=auth_headers)).json()
+    resp = await client.post(
         "/api/v1/trays",
-        json={"tray_code": "SG-2026-001", "crop_type": "radish microgreen", "substrate": "cocopeat"},
+        json={
+            "seed_type": "radish",
+            "substrate_type": "cocopeat",
+            "tray_number": 3,
+            "date": "2026-09-29",
+            "time": "08:30:00",
+        },
         headers=auth_headers,
     )
-    assert create_resp.status_code == 201
-    tray = create_resp.json()
-    assert tray["tray_code"] == "SG-2026-001"
+    assert resp.status_code == 201
+    body = resp.json()
+    assert body["user_id"] == me["id"]
+    assert (body["seed_type"], body["substrate_type"], body["tray_number"]) == ("radish", "cocopeat", 3)
+    assert (body["date"], body["time"]) == ("2026-09-29", "08:30:00")
 
-    get_resp = await client.get(f"/api/v1/trays/{tray['id']}", headers=auth_headers)
-    assert get_resp.status_code == 200
-    assert get_resp.json()["id"] == tray["id"]
-
-
-@pytest.mark.asyncio
-async def test_duplicate_tray_code_rejected(client, auth_headers):
-    payload = {"tray_code": "SG-2026-002", "crop_type": "pea shoots", "substrate": "cocopeat"}
-    first = await client.post("/api/v1/trays", json=payload, headers=auth_headers)
-    second = await client.post("/api/v1/trays", json=payload, headers=auth_headers)
-    assert first.status_code == 201
-    assert second.status_code == 409
+    stored = await test_db["tray_entries"].find_one({})
+    assert stored["user_id"] == me["id"]
 
 
 @pytest.mark.asyncio
-async def test_update_and_delete_tray(client, auth_headers):
-    create_resp = await client.post(
+async def test_date_and_time_default_to_now(client, auth_headers):
+    resp = await client.post(
         "/api/v1/trays",
-        json={"tray_code": "SG-2026-003", "crop_type": "sunflower", "substrate": "cocopeat"},
+        json={"seed_type": "pea", "substrate_type": "peat", "tray_number": 1},
         headers=auth_headers,
     )
-    tray_id = create_resp.json()["id"]
-
-    update_resp = await client.patch(
-        f"/api/v1/trays/{tray_id}", json={"status": "harvested", "harvest_weight_g": 245.5}, headers=auth_headers
-    )
-    assert update_resp.status_code == 200
-    assert update_resp.json()["status"] == "harvested"
-
-    delete_resp = await client.delete(f"/api/v1/trays/{tray_id}", headers=auth_headers)
-    assert delete_resp.status_code == 204
-
-    get_resp = await client.get(f"/api/v1/trays/{tray_id}", headers=auth_headers)
-    assert get_resp.status_code == 404
+    assert resp.status_code == 201
+    assert resp.json()["date"] and resp.json()["time"]
 
 
 @pytest.mark.asyncio
-async def test_list_trays_requires_auth(client):
-    resp = await client.get("/api/v1/trays")
+async def test_each_entry_is_stored_separately(client, auth_headers, test_db):
+    payload = {"seed_type": "pea", "substrate_type": "peat", "tray_number": 1}
+    await client.post("/api/v1/trays", json=payload, headers=auth_headers)
+    await client.post("/api/v1/trays", json=payload, headers=auth_headers)
+    assert await test_db["tray_entries"].count_documents({}) == 2
+
+
+@pytest.mark.asyncio
+async def test_create_tray_entry_requires_auth(client):
+    resp = await client.post("/api/v1/trays", json={"seed_type": "a", "substrate_type": "b", "tray_number": 1})
     assert resp.status_code == 401
+
+
+@pytest.mark.asyncio
+async def test_removed_endpoints_are_gone(client, auth_headers):
+    for path in ["/api/v1/users", "/api/v1/sensors/ingest", "/api/v1/analytics/tray-summary", "/api/v1/agent/chat"]:
+        assert (await client.get(path, headers=auth_headers)).status_code == 404
+    assert (await client.get("/api/v1/trays", headers=auth_headers)).status_code == 405

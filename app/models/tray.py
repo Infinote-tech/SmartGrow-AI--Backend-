@@ -1,49 +1,37 @@
-"""A cultivation tray: the unit everything else (readings, irrigation, predictions) hangs off."""
-from typing import Literal
+"""A tray input entry: one logged sowing record submitted by a logged-in user."""
+from datetime import date as date_type
+from datetime import time as time_type
 
 from pydantic import BaseModel, Field
 
 from app.models.common import MongoBaseModel, PyObjectId, utcnow
 
-TrayStatus = Literal["active", "harvested", "empty", "failed"]
+
+class TrayEntryCreate(BaseModel):
+    """Body of POST /trays. `user_id` is never accepted here -- it comes from the JWT."""
+
+    seed_type: str = Field(min_length=1, max_length=80, examples=["radish"])
+    substrate_type: str = Field(min_length=1, max_length=80, examples=["cocopeat"])
+    tray_number: int = Field(ge=1, examples=[1])
+    date: date_type | None = Field(default=None, description="YYYY-MM-DD. Defaults to today (UTC).")
+    time: time_type | None = Field(default=None, description="HH:MM[:SS]. Defaults to now (UTC).")
 
 
-class TrayCreate(BaseModel):
-    tray_code: str = Field(min_length=1, max_length=40, description="e.g. SG-2026-001")
-    crop_type: str = Field(default="microgreen")
-    substrate: str = Field(default="cocopeat")
-    sown_at: str | None = None
-    notes: str | None = None
-
-
-class TrayUpdate(BaseModel):
-    crop_type: str | None = None
-    status: TrayStatus | None = None
-    notes: str | None = None
-    harvested_at: str | None = None
-    harvest_weight_g: float | None = None
-
-
-class TrayInDB(MongoBaseModel):
-    tray_code: str
-    crop_type: str
-    substrate: str
-    status: TrayStatus = "active"
-    sown_at: str | None = None
-    harvested_at: str | None = None
-    harvest_weight_g: float | None = None
-    notes: str | None = None
-    owner_id: PyObjectId
+class TrayEntryInDB(MongoBaseModel):
+    user_id: PyObjectId
+    seed_type: str
+    substrate_type: str
+    tray_number: int
+    date: str
+    time: str
     created_at: str = Field(default_factory=lambda: utcnow().isoformat())
 
 
-class TrayPublic(BaseModel):
+class TrayEntryPublic(BaseModel):
     id: PyObjectId
-    tray_code: str
-    crop_type: str
-    substrate: str
-    status: TrayStatus
-    sown_at: str | None
-    harvested_at: str | None
-    harvest_weight_g: float | None
-    notes: str | None
+    user_id: PyObjectId
+    seed_type: str
+    substrate_type: str
+    tray_number: int
+    date: str
+    time: str

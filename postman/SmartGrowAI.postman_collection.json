@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "SmartGrow AI Backend",
-    "description": "CRUD, auth, sensor ingestion, predictions and analytics for the SmartGrow AI backend.",
+    "description": "Register/login (JWT auth) and per-user tray input entries for the SmartGrow AI backend.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -13,7 +13,15 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": {"raw": "{{base_url}}/health", "host": ["{{base_url}}"], "path": ["health"]}
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
           }
         }
       ]
@@ -23,115 +31,256 @@
       "item": [
         {
           "name": "Register",
-          "event": [{"listen": "test", "script": {"exec": [
-            "const body = pm.response.json();",
-            "if (body.id) { pm.environment.set('user_id', body.id); }"
-          ], "type": "text/javascript"}}],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.id) { pm.environment.set('user_id', body.id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"email\": \"grower@example.com\",\n  \"password\": \"supersecret123\",\n  \"full_name\": \"Test Grower\",\n  \"role\": \"grower\"\n}"},
-            "url": {"raw": "{{base_url}}/api/v1/auth/register", "host": ["{{base_url}}"], "path": ["api","v1","auth","register"]}
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"grower@example.com\",\n  \"password\": \"supersecret123\",\n  \"full_name\": \"Test Grower\",\n  \"role\": \"grower\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
+            }
           }
         },
         {
           "name": "Register (Admin)",
-          "event": [{"listen": "test", "script": {"exec": [
-            "const body = pm.response.json();",
-            "if (body.id) { pm.environment.set('admin_user_id', body.id); }"
-          ], "type": "text/javascript"}}],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.id) { pm.environment.set('admin_user_id', body.id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\",\n  \"full_name\": \"Test Admin\",\n  \"role\": \"admin\"\n}"},
-            "url": {"raw": "{{base_url}}/api/v1/auth/register", "host": ["{{base_url}}"], "path": ["api","v1","auth","register"]},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\",\n  \"full_name\": \"Test Admin\",\n  \"role\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
+            },
             "description": "NOTE: self-registering as admin is a prototype-only gap called out in the README's security notes -- lock this down before any real deployment."
           }
         },
         {
           "name": "Login",
-          "event": [{"listen": "test", "script": {"exec": [
-            "const body = pm.response.json();",
-            "if (body.access_token) { pm.environment.set('access_token', body.access_token); }",
-            "if (body.refresh_token) { pm.environment.set('refresh_token', body.refresh_token); }"
-          ], "type": "text/javascript"}}],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.access_token) { pm.environment.set('access_token', body.access_token); }",
+                  "if (body.refresh_token) { pm.environment.set('refresh_token', body.refresh_token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"email\": \"grower@example.com\",\n  \"password\": \"supersecret123\"\n}"},
-            "url": {"raw": "{{base_url}}/api/v1/auth/login", "host": ["{{base_url}}"], "path": ["api","v1","auth","login"]}
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"grower@example.com\",\n  \"password\": \"supersecret123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
           }
         },
         {
           "name": "Login (Admin)",
-          "event": [{"listen": "test", "script": {"exec": [
-            "const body = pm.response.json();",
-            "if (body.access_token) { pm.environment.set('admin_access_token', body.access_token); }"
-          ], "type": "text/javascript"}}],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.access_token) { pm.environment.set('admin_access_token', body.access_token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"},
-            "url": {"raw": "{{base_url}}/api/v1/auth/login", "host": ["{{base_url}}"], "path": ["api","v1","auth","login"]}
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
           }
         },
         {
           "name": "Refresh",
-          "event": [{"listen": "test", "script": {"exec": [
-            "const body = pm.response.json();",
-            "if (body.access_token) { pm.environment.set('access_token', body.access_token); }"
-          ], "type": "text/javascript"}}],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.access_token) { pm.environment.set('access_token', body.access_token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}"},
-            "url": {"raw": "{{base_url}}/api/v1/auth/refresh", "host": ["{{base_url}}"], "path": ["api","v1","auth","refresh"]}
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/refresh",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "refresh"
+              ]
+            }
           }
         },
         {
           "name": "Logout",
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}"},
-            "url": {"raw": "{{base_url}}/api/v1/auth/logout", "host": ["{{base_url}}"], "path": ["api","v1","auth","logout"]}
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "logout"
+              ]
+            }
           }
         },
         {
           "name": "Me",
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-            "url": {"raw": "{{base_url}}/api/v1/auth/me", "host": ["{{base_url}}"], "path": ["api","v1","auth","me"]}
-          }
-        }
-      ]
-    },
-    {
-      "name": "Users (Admin)",
-      "item": [
-        {
-          "name": "List Users",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{admin_access_token}}"}],
-            "url": {"raw": "{{base_url}}/api/v1/users?skip=0&limit=50", "host": ["{{base_url}}"], "path": ["api","v1","users"], "query": [{"key": "skip", "value": "0"}, {"key": "limit", "value": "50"}]}
-          }
-        },
-        {
-          "name": "Get User",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{admin_access_token}}"}],
-            "url": {"raw": "{{base_url}}/api/v1/users/{{user_id}}", "host": ["{{base_url}}"], "path": ["api","v1","users","{{user_id}}"]}
-          }
-        },
-        {
-          "name": "Delete User",
-          "request": {
-            "method": "DELETE",
-            "header": [{"key": "Authorization", "value": "Bearer {{admin_access_token}}"}],
-            "url": {"raw": "{{base_url}}/api/v1/users/{{user_id}}", "host": ["{{base_url}}"], "path": ["api","v1","users","{{user_id}}"]}
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "me"
+              ]
+            }
           }
         }
       ]
@@ -140,184 +289,47 @@
       "name": "Trays",
       "item": [
         {
-          "name": "Create Tray",
-          "event": [{"listen": "test", "script": {"exec": [
-            "const body = pm.response.json();",
-            "if (body.id) { pm.environment.set('tray_id', body.id); }"
-          ], "type": "text/javascript"}}],
+          "name": "Create Tray Entry",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.id) { pm.environment.set('tray_entry_id', body.id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Content-Type", "value": "application/json"},
-              {"key": "Authorization", "value": "Bearer {{access_token}}"}
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
-            "body": {"mode": "raw", "raw": "{\n  \"tray_code\": \"SG-2026-001\",\n  \"crop_type\": \"radish microgreen\",\n  \"substrate\": \"cocopeat\"\n}"},
-            "url": {"raw": "{{base_url}}/api/v1/trays", "host": ["{{base_url}}"], "path": ["api","v1","trays"]}
-          }
-        },
-        {
-          "name": "List Trays",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-            "url": {"raw": "{{base_url}}/api/v1/trays", "host": ["{{base_url}}"], "path": ["api","v1","trays"]}
-          }
-        },
-        {
-          "name": "Get Tray",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-            "url": {"raw": "{{base_url}}/api/v1/trays/{{tray_id}}", "host": ["{{base_url}}"], "path": ["api","v1","trays","{{tray_id}}"]}
-          }
-        },
-        {
-          "name": "Update Tray",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {"key": "Content-Type", "value": "application/json"},
-              {"key": "Authorization", "value": "Bearer {{access_token}}"}
-            ],
-            "body": {"mode": "raw", "raw": "{\n  \"status\": \"harvested\",\n  \"harvest_weight_g\": 245.5\n}"},
-            "url": {"raw": "{{base_url}}/api/v1/trays/{{tray_id}}", "host": ["{{base_url}}"], "path": ["api","v1","trays","{{tray_id}}"]}
-          }
-        },
-        {
-          "name": "Delete Tray",
-          "request": {
-            "method": "DELETE",
-            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-            "url": {"raw": "{{base_url}}/api/v1/trays/{{tray_id}}", "host": ["{{base_url}}"], "path": ["api","v1","trays","{{tray_id}}"]}
-          }
-        }
-      ]
-    },
-    {
-      "name": "Sensors (ESP32)",
-      "item": [
-        {
-          "name": "Ingest Reading (device key)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {"key": "Content-Type", "value": "application/json"},
-              {"key": "X-Device-Key", "value": "{{device_key}}"}
-            ],
-            "body": {"mode": "raw", "raw": "{\n  \"tray_id\": \"{{tray_id}}\",\n  \"temperature_c\": 27.5,\n  \"relative_humidity_pct\": 78,\n  \"substrate_moisture_pct\": 55,\n  \"light_lux\": 4200,\n  \"hours_since_last_irrigation\": 3\n}"},
-            "url": {"raw": "{{base_url}}/api/v1/sensors/ingest", "host": ["{{base_url}}"], "path": ["api","v1","sensors","ingest"]}
-          }
-        },
-        {
-          "name": "List Readings For Tray",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-            "url": {"raw": "{{base_url}}/api/v1/sensors/trays/{{tray_id}}", "host": ["{{base_url}}"], "path": ["api","v1","sensors","trays","{{tray_id}}"]}
-          }
-        },
-        {
-          "name": "Latest Reading For Tray",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-            "url": {"raw": "{{base_url}}/api/v1/sensors/trays/{{tray_id}}/latest", "host": ["{{base_url}}"], "path": ["api","v1","sensors","trays","{{tray_id}}","latest"]}
-          }
-        }
-      ]
-    },
-    {
-      "name": "Irrigation",
-      "item": [
-        {
-          "name": "Record Irrigation Event",
-          "request": {
-            "method": "POST",
-            "header": [
-              {"key": "Content-Type", "value": "application/json"},
-              {"key": "Authorization", "value": "Bearer {{access_token}}"}
-            ],
-            "body": {"mode": "raw", "raw": "{\n  \"tray_id\": \"{{tray_id}}\",\n  \"volume_ml\": 150,\n  \"triggered_by\": \"ai\"\n}"},
-            "url": {"raw": "{{base_url}}/api/v1/irrigation", "host": ["{{base_url}}"], "path": ["api","v1","irrigation"]}
-          }
-        },
-        {
-          "name": "List Irrigation Events For Tray",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-            "url": {"raw": "{{base_url}}/api/v1/irrigation/trays/{{tray_id}}", "host": ["{{base_url}}"], "path": ["api","v1","irrigation","trays","{{tray_id}}"]}
-          }
-        }
-      ]
-    },
-    {
-      "name": "Predictions",
-      "item": [
-        {
-          "name": "Create Prediction",
-          "request": {
-            "method": "POST",
-            "header": [
-              {"key": "Content-Type", "value": "application/json"},
-              {"key": "Authorization", "value": "Bearer {{access_token}}"}
-            ],
-            "body": {"mode": "raw", "raw": "{\n  \"tray_id\": \"{{tray_id}}\",\n  \"temperature_c\": 30,\n  \"relative_humidity_pct\": 85,\n  \"substrate_moisture_pct\": 45,\n  \"light_lux\": 5000,\n  \"crop_age_days\": 5,\n  \"hours_since_last_irrigation\": 6\n}"},
-            "url": {"raw": "{{base_url}}/api/v1/predictions", "host": ["{{base_url}}"], "path": ["api","v1","predictions"]}
-          }
-        },
-        {
-          "name": "List Predictions For Tray",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-            "url": {"raw": "{{base_url}}/api/v1/predictions/trays/{{tray_id}}", "host": ["{{base_url}}"], "path": ["api","v1","predictions","trays","{{tray_id}}"]}
-          }
-        }
-      ]
-    },
-    {
-      "name": "Analytics (Power BI)",
-      "item": [
-        {
-          "name": "Tray Summary",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-            "url": {"raw": "{{base_url}}/api/v1/analytics/tray-summary", "host": ["{{base_url}}"], "path": ["api","v1","analytics","tray-summary"]}
-          }
-        },
-        {
-          "name": "Water Usage",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-            "url": {"raw": "{{base_url}}/api/v1/analytics/water-usage", "host": ["{{base_url}}"], "path": ["api","v1","analytics","water-usage"]}
-          }
-        },
-        {
-          "name": "Prediction Accuracy",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-            "url": {"raw": "{{base_url}}/api/v1/analytics/prediction-accuracy", "host": ["{{base_url}}"], "path": ["api","v1","analytics","prediction-accuracy"]}
-          }
-        }
-      ]
-    },
-    {
-      "name": "AI Agent",
-      "item": [
-        {
-          "name": "Chat (stub)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {"key": "Content-Type", "value": "application/json"},
-              {"key": "Authorization", "value": "Bearer {{access_token}}"}
-            ],
-            "body": {"mode": "raw", "raw": "{\n  \"message\": \"Should I water tray 7?\",\n  \"tray_id\": \"{{tray_id}}\"\n}"},
-            "url": {"raw": "{{base_url}}/api/v1/agent/chat", "host": ["{{base_url}}"], "path": ["api","v1","agent","chat"]}
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"seed_type\": \"radish\",\n  \"substrate_type\": \"cocopeat\",\n  \"tray_number\": 1,\n  \"date\": \"2026-09-29\",\n  \"time\": \"08:30:00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/trays",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "trays"
+              ]
+            },
+            "description": "Stores one tray input entry for the logged-in user. user_id is taken from the access token (do not send it). date and time are optional and default to the current UTC date/time."
           }
         }
       ]
