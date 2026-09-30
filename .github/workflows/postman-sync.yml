@@ -1,0 +1,41 @@
+name: Sync Postman collection
+
+# Keeps postman/SmartGrowAI.postman_collection.json (and its environment
+# file) from drifting behind the real API: whenever a route file changes,
+# this runs scripts/sync_postman_collection.py and, if it added anything,
+# commits the update straight back onto the same branch.
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "app/api/v1/**"
+      - "app/main.py"
+      - "app/models/**"
+      - "scripts/sync_postman_collection.py"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Sync postman collection with the route table
+        run: python scripts/sync_postman_collection.py
+
+      - name: Commit updated collection/environment if anything changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: sync postman collection with API routes"
+          file_pattern: "postman/*.json"
