@@ -1,9 +1,8 @@
 # SmartGrow AI â€” Backend
 
 FastAPI + MongoDB backend for the SmartGrow AI microgreen cultivation platform.
-Ingests ESP32 sensor readings, logs irrigation events, serves ML-driven
-irrigation predictions, and exposes JWT-authenticated CRUD for a Flutter
-front-end, plus flat analytics endpoints for Power BI.
+Provides JWT-authenticated register/login and stores per-user tray input
+entries (seed type, substrate type, tray number, date, time) for a Flutter front-end.
 
 ## Stack
 
@@ -11,8 +10,6 @@ front-end, plus flat analytics endpoints for Power BI.
 - **Pydantic v2** for all request/response validation
 - **python-jose** + **passlib[bcrypt]** for JWT auth + password hashing
 - **slowapi** for rate limiting
-- **scikit-learn / joblib** for the irrigation prediction model (with a
-  transparent heuristic fallback until you've trained a real model)
 - **pytest** + **httpx** + **mongomock-motor** for tests (no real Mongo needed to run the suite)
 - **Docker / docker-compose**, **GitHub Actions CI**
 
@@ -23,10 +20,10 @@ app/
   core/          # config, db connection, security, rate limiting, exceptions
   models/        # Pydantic request/response + Mongo document models
   repositories/  # thin async CRUD wrappers per Mongo collection
-  services/      # business logic (auth, trays, sensors, irrigation, ML, analytics)
+  services/      # business logic (auth, tray entries)
   api/v1/        # route handlers, one file per resource
-  ml/            # model wrapper + offline training script
-tests/           # pytest suite (auth, trays, sensors, predictions)
+  ml/            # (empty package, kept for layout)
+tests/           # pytest suite (auth, trays)
 postman/         # importable collection + environment
 .github/workflows/ci.yml
 ```
@@ -68,60 +65,44 @@ in `.github/workflows/ci.yml`).
 4. `POST /api/v1/auth/refresh` â€” exchange a refresh token for a new access token
 5. `POST /api/v1/auth/logout` â€” revokes the refresh token server-side (denylist), not just client-side
 
-## ESP32 device ingestion
+## API endpoints
 
-Devices don't log in as users â€” they POST to `/api/v1/sensors/ingest` with a
-static header:
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| GET | `/health` | – | Health check |
+| POST | `/api/v1/auth/register` | – | Create an account |
+| POST | `/api/v1/auth/login` | – | Get access + refresh tokens |
+| POST | `/api/v1/auth/refresh` | – | New access token from a refresh token |
+| POST | `/api/v1/auth/logout` | – | Revoke a refresh token |
+| GET | `/api/v1/auth/me` | Bearer | Current user |
+| POST | `/api/v1/trays` | Bearer | Store a tray input entry |
 
+All other CRUD endpoints (users, sensors, irrigation, predictions, analytics, agent, tray list/get/update/delete) have been removed.
+
+## Tray input entries
+
+`POST /api/v1/trays` (requires `Authorization: Bearer <access_token>`) stores one
+document in the `tray_entries` collection per call:
+
+```json
+{
+  "seed_type": "radish",
+  "substrate_type": "cocopeat",
+  "tray_number": 1,
+  "date": "2026-09-29",
+  "time": "08:30:00"
+}
 ```
-X-Device-Key: <DEVICE_API_KEY from .env>
-```
 
-Swap this for per-device provisioned keys before any real-world (non-prototype) pilot.
-
-## Training the irrigation model
-
-Once you have a crop cycle or two of logged sensor + irrigation data:
-
-```bash
-python -m app.ml.train_model --csv data/tray_history.csv --out app/ml/artifacts/irrigation_model.joblib
-```
-
-The API automatically picks up a trained model on next restart; until one
-exists, `/api/v1/predictions` uses an explainable heuristic (see
-`app/ml/irrigation_model.py`) so the endpoint always works.
-
-## Power BI
-
-Point Power BI's **Get Data â†’ Web** connector at:
-- `{base_url}/api/v1/analytics/tray-summary`
-- `{base_url}/api/v1/analytics/water-usage`
-- `{base_url}/api/v1/analytics/prediction-accuracy`
-
-Each returns a flat JSON array Power BI can parse straight into a table. For
-a live, higher-volume connection, prefer MongoDB's official ODBC/ADO.NET
-connector directly against the database instead of polling these endpoints.
-
-## Flutter frontend
-
-Set `CORS_ORIGINS` in `.env` to include your Flutter web origin (mobile
-builds aren't subject to CORS). All endpoints are plain JSON REST, so any
-HTTP client package (`dio`, `http`) works â€” the Postman collection doubles
-as a spec for request/response shapes.
-
-## AI agent
-
-`app/api/v1/agent.py` is a deliberate stub â€” it gives you a stable
-`/api/v1/agent/chat` endpoint and request/response shape to build the
-Flutter UI against immediately, with a `TODO` marking exactly where to wire
-in a real LLM call with tool access to the tray/sensor/prediction services.
+`user_id` is set server-side from the logged-in user's token and is never read
+from the request body. `date` and `time` are optional and default to the current
+UTC date/time. The Swagger UI at `/docs` and the Postman collection document this endpoint.
 
 ## Security notes for going beyond a prototype
 
-- Rotate `JWT_SECRET_KEY` and `DEVICE_API_KEY` out of `.env` and into a real
+- Rotate `JWT_SECRET_KEY` out of `.env` and into a real
   secrets manager before any non-local deployment.
 - The refresh-token denylist is a single Mongo collection â€” fine at this
   scale; consider a TTL index on `revoked_tokens` keyed to token expiry so
   it doesn't grow unbounded.
-- `require_role("admin")` gates user management; review role assignment
-  logic before letting real users self-register as anything other than `grower`.
+- Review role assignment logic before letting real users self-register as anything other than `grower`.

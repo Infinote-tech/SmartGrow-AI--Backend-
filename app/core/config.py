@@ -26,14 +26,10 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 30
     refresh_token_expire_days: int = 7
 
-    device_api_key: str = "insecure-dev-device-key"
-
     rate_limit_default: str = "100/minute"
     rate_limit_login: str = "5/minute"
 
     cors_origins: str = "http://localhost:3000"
-
-    model_path: str = "app/ml/artifacts/irrigation_model.joblib"
 
     @property
     def cors_origin_list(self) -> list[str]:
