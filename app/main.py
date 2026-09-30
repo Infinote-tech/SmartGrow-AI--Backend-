@@ -37,8 +37,7 @@ app = FastAPI(
     title=settings.app_name,
     description=(
         "REST API for the SmartGrow AI microgreen cultivation platform: "
-        "tray management, ESP32 sensor ingestion, irrigation event logging, "
-        "ML-driven irrigation predictions, and analytics for Power BI."
+        "user registration/login and per-user tray input entries."
     ),
     version="1.0.0",
     lifespan=lifespan,
