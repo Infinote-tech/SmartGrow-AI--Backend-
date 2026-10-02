@@ -1,0 +1,44 @@
+-- SmartGrow AI -- DAX measures for the dashboard. Create them in the TrayEntries table
+-- (Modeling > New measure), one per block.
+
+Total Entries = COUNTROWS(TrayEntries)
+
+Distinct Trays = DISTINCTCOUNT(TrayEntries[tray_number])
+
+Seed Types Used = DISTINCTCOUNT(TrayEntries[seed_type])
+
+Active Growers = DISTINCTCOUNT(TrayEntries[user_id])
+
+-- Suitability of the single seed + substrate selected by the slicers (for a card next to them)
+Seed Substrate Suitability =
+VAR s = SELECTEDVALUE(TrayEntries[seed_type])
+VAR m = SELECTEDVALUE(TrayEntries[substrate_type])
+RETURN
+    IF(
+        ISBLANK(s) || ISBLANK(m),
+        "Select one seed and one substrate",
+        LOOKUPVALUE(SeedCompatibility[Suitability], SeedCompatibility[Seed], s, SeedCompatibility[Substrate], m, "Unknown")
+    )
+
+-- Share of entries whose seed + substrate combination is rated Avoid or Poor
+Risky Combination % =
+DIVIDE(
+    COUNTROWS(
+        FILTER(
+            TrayEntries,
+            LOOKUPVALUE(
+                SeedCompatibility[Suitability],
+                SeedCompatibility[Seed], TrayEntries[seed_type],
+                SeedCompatibility[Substrate], TrayEntries[substrate_type],
+                "Unknown"
+            ) IN { "Avoid", "Poor" }
+        )
+    ),
+    [Total Entries]
+)
+
+-- Model setup
+--   * TrayEntries[Day of Week]      -> Column tools > Sort by column > Day Number
+--   * SubstrateProfile[Setting]     -> Sort by column > Sort
+--   * Relationship: TrayEntries[substrate_type] -> SubstrateProfile[Substrate] (many-to-many, filter from TrayEntries)
+--     so selecting a substrate (or the substrate slicer) shows only that substrate's optimal conditions.

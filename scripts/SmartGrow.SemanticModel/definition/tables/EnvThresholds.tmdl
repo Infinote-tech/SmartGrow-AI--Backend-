@@ -1,0 +1,44 @@
+table EnvThresholds
+	lineageTag: 88e29723-9c02-4787-80a5-c7a1eda75eab
+
+	column Parameter
+		dataType: string
+		lineageTag: c1944a14-250a-45d6-bb32-4136c30b084d
+		summarizeBy: none
+		sourceColumn: Parameter
+
+	column Good
+		dataType: string
+		lineageTag: eb89e500-8b62-4b30-8a8c-9aaae892d9ca
+		summarizeBy: none
+		sourceColumn: Good
+
+	column Warning
+		dataType: string
+		lineageTag: efc18732-a696-481f-85ea-9ec3fb4d40f3
+		summarizeBy: none
+		sourceColumn: Warning
+
+	column Critical
+		dataType: string
+		lineageTag: 31c574ff-7642-4c09-bd4d-51410386a389
+		summarizeBy: none
+		sourceColumn: Critical
+
+	partition EnvThresholds = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [Parameter = text, Good = text, Warning = text, Critical = text],
+				        {
+				{"Temperature (lowland)", "22-28 °C", "28-31 °C", ">32 °C"},
+									{"Temperature (hill country)", "18-25 °C", "25-28 °C", ">30 °C"},
+									{"Humidity, growth phase", "50-70%", "70-80%", ">80% for 4+ h"},
+									{"Light", "8,000-15,000 lux, 12-14 h/day", "<4,000 lux", "Schedule missed"}
+				        })
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

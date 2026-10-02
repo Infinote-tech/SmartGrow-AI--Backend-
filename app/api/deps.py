@@ -13,11 +13,17 @@ from app.core.config import settings
 from app.core.database import get_database
 from app.core.security import decode_token
 from app.models.user import UserInDB
+from app.repositories.crop_batch_repository import CropBatchRepository
+from app.repositories.fault_event_repository import FaultEventRepository
+from app.repositories.hardware_status_repository import HardwareStatusRepository
+from app.repositories.irrigation_log_repository import IrrigationLogRepository
+from app.repositories.model_output_repository import ModelOutputRepository
+from app.repositories.sensor_data_repository import SensorDataRepository
+from app.repositories.threshold_repository import ThresholdRepository
 from app.repositories.token_repository import TokenDenylistRepository
-from app.repositories.tray_repository import TrayRepository
+from app.repositories.tray_status_repository import TrayStatusRepository
 from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
-from app.services.tray_service import TrayService
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.api_v1_prefix}/auth/login", auto_error=False)
 
@@ -30,8 +36,36 @@ def get_user_repository(db: DbDep) -> UserRepository:
     return UserRepository(db)
 
 
-def get_tray_repository(db: DbDep) -> TrayRepository:
-    return TrayRepository(db)
+def get_sensor_data_repository(db: DbDep) -> SensorDataRepository:
+    return SensorDataRepository(db)
+
+
+def get_model_output_repository(db: DbDep) -> ModelOutputRepository:
+    return ModelOutputRepository(db)
+
+
+def get_hardware_status_repository(db: DbDep) -> HardwareStatusRepository:
+    return HardwareStatusRepository(db)
+
+
+def get_tray_status_repository(db: DbDep) -> TrayStatusRepository:
+    return TrayStatusRepository(db)
+
+
+def get_threshold_repository(db: DbDep) -> ThresholdRepository:
+    return ThresholdRepository(db)
+
+
+def get_fault_event_repository(db: DbDep) -> FaultEventRepository:
+    return FaultEventRepository(db)
+
+
+def get_irrigation_log_repository(db: DbDep) -> IrrigationLogRepository:
+    return IrrigationLogRepository(db)
+
+
+def get_crop_batch_repository(db: DbDep) -> CropBatchRepository:
+    return CropBatchRepository(db)
 
 
 def get_token_denylist(db: DbDep) -> TokenDenylistRepository:
@@ -45,10 +79,6 @@ def get_auth_service(
     token_denylist: Annotated[TokenDenylistRepository, Depends(get_token_denylist)],
 ) -> AuthService:
     return AuthService(user_repo, token_denylist)
-
-
-def get_tray_service(tray_repo: Annotated[TrayRepository, Depends(get_tray_repository)]) -> TrayService:
-    return TrayService(tray_repo)
 
 
 # --- Auth guards -----------------------------------------------------------

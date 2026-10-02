@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "SmartGrow"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "2862942c-136b-463b-96d3-f466f08fcbfe"
+  }
+}

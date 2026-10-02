@@ -1,0 +1,13 @@
+relationship 1208135c-407d-4c86-90a3-5971a87544e1
+	fromColumn: TrayEntries.substrate_type
+	toColumn: Substrates.Substrate
+
+relationship 4c6a4020-950f-45ce-86f4-fca8e7101e51
+	fromColumn: SubstrateProfile.Substrate
+	toColumn: Substrates.Substrate
+
+relationship 51775d71-1a27-46d6-9708-0a3ead5eb945
+	joinOnDateBehavior: datePartOnly
+	fromColumn: TrayEntries.'Entry Date'
+	toColumn: LocalDateTable_356c207e-6d31-49b6-83bf-05cbf6e83da6.Date
+
