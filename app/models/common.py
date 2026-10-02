@@ -4,7 +4,7 @@ Shared Mongo/Pydantic plumbing.
 PyObjectId lets Pydantic v2 models accept and (de)serialise MongoDB's
 ObjectId as a plain string, so API responses never leak a raw bson type.
 """
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Annotated, Any
 
 from bson import ObjectId
@@ -23,7 +23,7 @@ PyObjectId = Annotated[str, BeforeValidator(_validate_object_id)]
 
 
 def utcnow() -> datetime:
-    return datetime.now(UTC)
+    return datetime.now(timezone.utc)
 
 
 class MongoBaseModel(BaseModel):

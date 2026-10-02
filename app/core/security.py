@@ -4,7 +4,7 @@ Access tokens are short-lived; refresh tokens are longer-lived and checked
 against a denylist collection on logout so logout actually invalidates them
 server-side rather than only on the client.
 """
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Literal
 
 from jose import JWTError, jwt
@@ -26,7 +26,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 def _create_token(subject: str, token_type: TokenType, expires_delta: timedelta, extra_claims: dict[str, Any] | None = None) -> str:
-    now = datetime.now(UTC)
+    now = datetime.now(timezone.utc)
     to_encode = {
         "sub": subject,
         "type": token_type,
