@@ -25,7 +25,9 @@ app/
   ml/            # (empty package, kept for layout)
 tests/           # pytest suite (auth, data collections)
 postman/         # importable collection + environment
+scripts/         # sync_postman_collection.py -- keeps postman/ up to date with app/api/v1
 .github/workflows/ci.yml
+.github/workflows/postman-sync.yml
 ```
 
 ## Quickstart (Docker)
@@ -69,11 +71,11 @@ in `.github/workflows/ci.yml`).
 
 | Method | Path | Auth | Description |
 |---|---|---|---|
-| GET | `/health` | – | Health check |
-| POST | `/api/v1/auth/register` | – | Create an account |
-| POST | `/api/v1/auth/login` | – | Get access + refresh tokens |
-| POST | `/api/v1/auth/refresh` | – | New access token from a refresh token |
-| POST | `/api/v1/auth/logout` | – | Revoke a refresh token |
+| GET | `/health` | � | Health check |
+| POST | `/api/v1/auth/register` | � | Create an account |
+| POST | `/api/v1/auth/login` | � | Get access + refresh tokens |
+| POST | `/api/v1/auth/refresh` | � | New access token from a refresh token |
+| POST | `/api/v1/auth/logout` | � | Revoke a refresh token |
 | GET | `/api/v1/auth/me` | Bearer | Current user |
 | POST | `/api/v1/sensor-data` | Bearer | Add a row to `sensor_data` |
 | POST | `/api/v1/model-outputs` | Bearer | Add a row to `model_outputs` |
