@@ -32,3 +32,9 @@ class MongoBaseModel(BaseModel):
     model_config = ConfigDict(populate_by_name=True, arbitrary_types_allowed=True)
 
     id: PyObjectId = Field(alias="_id")
+
+
+class GenericDocument(MongoBaseModel):
+    """A stored document whose fields are defined by its request model (insert-only collections)."""
+
+    model_config = ConfigDict(populate_by_name=True, arbitrary_types_allowed=True, extra="allow")

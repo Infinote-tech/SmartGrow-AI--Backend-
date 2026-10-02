@@ -1,0 +1,83 @@
+table SeedCompatibility
+	lineageTag: 8923fa6a-a106-4111-8eb4-121edd9c1c08
+
+	measure 'Suitability Rating' = SELECTEDVALUE(SeedCompatibility[Suitability])
+		lineageTag: 2f2abc2c-f8b5-467a-9dfb-3efec12f6f5b
+
+	measure 'Suitability Color' =
+			SWITCH(
+			    SELECTEDVALUE(SeedCompatibility[Suitability]),
+			    "Good", "#A5D6A7",
+			    "Fair", "#FFF59D",
+			    "Poor", "#FFCC80",
+			    "Avoid", "#EF9A9A",
+			    "#FFFFFF"
+			)
+		lineageTag: 1090bd32-dae5-47d0-bc1e-e99970cbbbf4
+
+	measure 'Seed Substrate Suitability' =
+			VAR s = SELECTEDVALUE(TrayEntries[seed_type])
+			VAR m = SELECTEDVALUE(TrayEntries[substrate_type])
+			RETURN
+			    IF(
+			        ISBLANK(s) || ISBLANK(m),
+			        "Select one seed and one substrate",
+			        LOOKUPVALUE(SeedCompatibility[Suitability], SeedCompatibility[Seed], s, SeedCompatibility[Substrate], m, "Unknown")
+			    )
+		lineageTag: a147c242-3269-429e-8361-1bf24f6bde5e
+
+	column Seed
+		dataType: string
+		lineageTag: b4645a7d-5c7d-4d68-90e2-8a9074889363
+		summarizeBy: none
+		sourceColumn: Seed
+
+	column Substrate
+		dataType: string
+		lineageTag: 6e5006d6-96ca-4022-82ce-be2f70c18aa8
+		summarizeBy: none
+		sourceColumn: Substrate
+
+	column Suitability
+		dataType: string
+		lineageTag: a228b478-649d-432a-b799-e728e973b0c6
+		summarizeBy: none
+		sourceColumn: Suitability
+
+	partition SeedCompatibility = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [Seed = text, Substrate = text, Suitability = text],
+				        {
+				{"mustard", "cocopeat", "Good"},
+									{"mustard", "tissue paper", "Good"},
+									{"mustard", "compost", "Good"},
+									{"radish", "cocopeat", "Good"},
+									{"radish", "tissue paper", "Good"},
+									{"radish", "compost", "Good"},
+									{"fenugreek", "cocopeat", "Good"},
+									{"fenugreek", "tissue paper", "Good"},
+									{"fenugreek", "compost", "Good"},
+									{"coriander", "cocopeat", "Good"},
+									{"coriander", "tissue paper", "Poor"},
+									{"coriander", "compost", "Good"},
+									{"amaranth", "cocopeat", "Good"},
+									{"amaranth", "tissue paper", "Poor"},
+									{"amaranth", "compost", "Good"},
+									{"green gram", "cocopeat", "Good"},
+									{"green gram", "tissue paper", "Fair"},
+									{"green gram", "compost", "Good"},
+									{"sunflower", "cocopeat", "Good"},
+									{"sunflower", "tissue paper", "Avoid"},
+									{"sunflower", "compost", "Good"},
+									{"pea", "cocopeat", "Good"},
+									{"pea", "tissue paper", "Avoid"},
+									{"pea", "compost", "Good"}
+				        })
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

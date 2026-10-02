@@ -1,0 +1,30 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "customTheme": {
+      "name": "SmartGrowTheme.json",
+      "reportVersionAtImport": {
+        "visual": "1.8.91",
+        "report": "2.0.91",
+        "page": "1.3.91"
+      },
+      "type": "RegisteredResources"
+    }
+  },
+  "resourcePackages": [
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "SmartGrowTheme.json",
+          "path": "SmartGrowTheme.json",
+          "type": "CustomTheme"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useEnhancedTooltips": false
+  }
+}

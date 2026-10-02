@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "SmartGrow AI Backend",
-    "description": "Register/login (JWT auth) and per-user tray input entries for the SmartGrow AI backend.",
+    "description": "Register/login (JWT auth) and insert-only endpoints for SmartGrow AI sensor data, model outputs, hardware status, tray status, thresholds, irrigation logs and crop batches.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -286,19 +286,20 @@
       ]
     },
     {
-      "name": "Trays",
+      "name": "Data Collections",
       "item": [
         {
-          "name": "Create Tray Entry",
+          "name": "Add Sensor Data",
           "event": [
             {
               "listen": "test",
               "script": {
+                "type": "text/javascript",
                 "exec": [
                   "const body = pm.response.json();",
-                  "if (body.id) { pm.environment.set('tray_entry_id', body.id); }"
-                ],
-                "type": "text/javascript"
+                  "if (body.sensor_data_id) { pm.environment.set('sensor_data_id', body.sensor_data_id); }",
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));"
+                ]
               }
             }
           ],
@@ -316,20 +317,335 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"seed_type\": \"radish\",\n  \"substrate_type\": \"cocopeat\",\n  \"tray_number\": 1,\n  \"date\": \"2026-09-29\",\n  \"time\": \"08:30:00\"\n}"
+              "raw": "{\n  \"esp32_id\": \"esp32-01\",\n  \"tray_id\": \"tray-1\",\n  \"seed_type\": \"radish\",\n  \"media_type\": \"cocopeat\",\n  \"temperature\": 25.4,\n  \"humidity\": 62.0,\n  \"soil_moisture\": 66.5,\n  \"light_intensity\": 11000,\n  \"water_level\": 80,\n  \"water_flow_rate\": 1.2\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/trays",
+              "raw": "{{base_url}}/api/v1/sensor-data",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
                 "v1",
-                "trays"
+                "sensor-data"
               ]
             },
-            "description": "Stores one tray input entry for the logged-in user. user_id is taken from the access token (do not send it). date and time are optional and default to the current UTC date/time."
+            "description": "One ESP32 reading for a tray. timestamp is optional (defaults to now, UTC). Insert-only; stored in the `sensor_data` collection with a generated `sensor_data_id`."
+          }
+        },
+        {
+          "name": "Add Model Output",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.output_id) { pm.environment.set('output_id', body.output_id); }",
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tray_id\": \"tray-1\",\n  \"model_name\": \"growth-lstm\",\n  \"model_version\": \"0.1\",\n  \"growth_prediction\": \"on_track\",\n  \"stress_probability\": 0.12,\n  \"anomaly_score\": 0.03,\n  \"sensor_health_score\": 0.97,\n  \"predicted_soil_moisture\": 64.0,\n  \"predicted_harvest_date\": \"2026-10-10\",\n  \"predicted_yield\": 245.5,\n  \"irrigation_recommendation\": \"water_small_dose\",\n  \"recommended_action\": \"irrigate\",\n  \"recommendation_confidence\": 0.88,\n  \"recommendation_reason\": \"moisture below dry line\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/model-outputs",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "model-outputs"
+              ]
+            },
+            "description": "One AI/ML model result for a tray. Insert-only; stored in the `model_outputs` collection with a generated `output_id`."
+          }
+        },
+        {
+          "name": "Add Hardware Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.hardware_status_id) { pm.environment.set('hardware_status_id', body.hardware_status_id); }",
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"esp32_id\": \"esp32-01\",\n  \"overall_system_status\": \"ok\",\n  \"solenoid_1_status\": \"closed\",\n  \"solenoid_2_status\": \"closed\",\n  \"solenoid_3_status\": \"open\",\n  \"fan_status\": \"on\",\n  \"motor_status\": \"off\",\n  \"water_pump_status\": \"off\",\n  \"power_status\": \"ok\",\n  \"connectivity_status\": \"online\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/hardware-status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "hardware-status"
+              ]
+            },
+            "description": "Hardware health snapshot from an ESP32. Insert-only; stored in the `hardware_status` collection with a generated `hardware_status_id`."
+          }
+        },
+        {
+          "name": "Add Tray Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.tray_status_id) { pm.environment.set('tray_status_id', body.tray_status_id); }",
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tray_1_status\": \"active\",\n  \"tray_2_status\": \"active\",\n  \"tray_3_status\": \"empty\",\n  \"tray_1_seed_type\": \"radish\",\n  \"tray_2_seed_type\": \"mustard\",\n  \"tray_1_media_type\": \"cocopeat\",\n  \"tray_2_media_type\": \"compost\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/tray-status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tray-status"
+              ]
+            },
+            "description": "Status, seed type and media type of trays 1-3. Insert-only; stored in the `tray_status` collection with a generated `tray_status_id`."
+          }
+        },
+        {
+          "name": "Add Threshold",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.threshold_id) { pm.environment.set('threshold_id', body.threshold_id); }",
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"seed_type\": \"radish\",\n  \"media_type\": \"cocopeat\",\n  \"growth_stage\": \"germination\",\n  \"parameter\": \"soil_moisture\",\n  \"optimal_min\": 55,\n  \"optimal_max\": 75,\n  \"warning_min\": 45,\n  \"warning_max\": 85,\n  \"critical_min\": 35,\n  \"critical_max\": 90,\n  \"threshold_version\": \"v1\",\n  \"effective_from\": \"2026-10-01T00:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/thresholds",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "thresholds"
+              ]
+            },
+            "description": "Optimal/warning/critical range for one parameter of a seed + media + growth stage. updated_at is set by the server. Insert-only; stored in the `thresholds` collection with a generated `threshold_id`."
+          }
+        },
+        {
+          "name": "Add Irrigation Log",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.irrigation_id) { pm.environment.set('irrigation_id', body.irrigation_id); }",
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tray_id\": \"tray-1\",\n  \"solenoid_id\": \"1\",\n  \"pump_status\": \"on\",\n  \"irrigation_duration\": 8,\n  \"water_consumed\": 40.5,\n  \"trigger_type\": \"auto\",\n  \"trigger_reason\": \"moisture below dry line\",\n  \"ai_recommended\": true,\n  \"actual_action\": \"irrigated\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/irrigation-logs",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "irrigation-logs"
+              ]
+            },
+            "description": "One irrigation event. Insert-only; stored in the `irrigation_logs` collection with a generated `irrigation_id`."
+          }
+        },
+        {
+          "name": "Add Fault Event",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.fault_id) { pm.environment.set('fault_id', body.fault_id); }",
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"esp32_id\": \"esp32-01\",\n  \"tray_id\": \"tray-2\",\n  \"fault_type\": \"soil_moisture_sensor_stuck\",\n  \"fault_source\": \"sensor\",\n  \"severity\": \"critical\",\n  \"sensor_value\": 0.0,\n  \"expected_min\": 35,\n  \"expected_max\": 90,\n  \"anomaly_score\": 0.91,\n  \"fault_probability\": 0.87,\n  \"detected_by\": \"tinyml\",\n  \"recommended_action\": \"inspect sensor\",\n  \"automatic_action\": \"irrigation paused\",\n  \"fault_status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/fault-events",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "fault-events"
+              ]
+            },
+            "description": "A detected fault and the action taken. fault_status defaults to active. Insert-only; stored in the `fault_events` collection with a generated `fault_id`."
+          }
+        },
+        {
+          "name": "Add Crop Batch",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.batch_id) { pm.environment.set('batch_id', body.batch_id); }",
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"seed_type\": \"radish\",\n  \"media_type\": \"cocopeat\",\n  \"planting_date\": \"2026-09-30\",\n  \"expected_harvest_date\": \"2026-10-10\",\n  \"seed_quantity\": 25,\n  \"tray_id\": \"tray-1\",\n  \"batch_status\": \"growing\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/crop-batches",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "crop-batches"
+              ]
+            },
+            "description": "One planted batch for traceability. Insert-only; stored in the `crop_batches` collection with a generated `batch_id`."
           }
         }
       ]

@@ -1,0 +1,161 @@
+table TrayEntries
+	lineageTag: 0e019c6b-a9e2-4e27-8ff1-caf55ffbfd65
+
+	measure 'Total Entries' = COUNTROWS(TrayEntries)
+		formatString: 0
+		lineageTag: dbb3241c-1f49-4e49-a1ba-ec5e77d55960
+
+	measure 'Distinct Trays' = DISTINCTCOUNT(TrayEntries[tray_number])
+		formatString: 0
+		lineageTag: 4ca1d3b6-7a48-4bbc-bbd7-0316fa6d0c71
+
+	measure 'Seed Types Used' = DISTINCTCOUNT(TrayEntries[seed_type])
+		formatString: 0
+		lineageTag: 965d096f-39ac-4884-a09e-547d3505d24e
+
+	measure 'Active Growers' = DISTINCTCOUNT(TrayEntries[user_id])
+		formatString: 0
+		lineageTag: 3fb7384f-6a9a-4700-9fd6-3fac2d37a642
+
+	measure 'Risky Combination %' =
+			DIVIDE(
+			    0 + COUNTROWS(
+			        FILTER(
+			            TrayEntries,
+			            LOOKUPVALUE(
+			                SeedCompatibility[Suitability],
+			                SeedCompatibility[Seed], TrayEntries[seed_type],
+			                SeedCompatibility[Substrate], TrayEntries[substrate_type],
+			                "Unknown"
+			            ) IN { "Avoid", "Poor" }
+			        )
+			    ),
+			    [Total Entries]
+			)
+		formatString: 0.0%
+		lineageTag: 6909dbe8-6266-4f3a-b627-80578ed224c5
+
+	column id
+		dataType: string
+		lineageTag: 86413583-ca7e-496f-9295-d46ee0734597
+		summarizeBy: none
+		sourceColumn: id
+
+	column user_id
+		dataType: string
+		lineageTag: 6b244221-375d-4a45-932d-bbafd3824b1b
+		summarizeBy: none
+		sourceColumn: user_id
+
+	column user_name
+		dataType: string
+		lineageTag: cfce379c-94d2-47be-87ad-68848fbaf627
+		summarizeBy: none
+		sourceColumn: user_name
+
+	column seed_type
+		dataType: string
+		lineageTag: e2800093-1932-4b17-97fe-bb3d9e6e1640
+		summarizeBy: none
+		sourceColumn: seed_type
+
+	column substrate_type
+		dataType: string
+		lineageTag: 1edca683-ddb8-4d49-bc8d-2a855072482c
+		summarizeBy: none
+		sourceColumn: substrate_type
+
+	column tray_number
+		dataType: int64
+		formatString: 0
+		lineageTag: ed2ed23a-cf7f-44da-8550-226954aa6fd6
+		summarizeBy: sum
+		sourceColumn: tray_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Entry Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 535d5fce-5bfb-4c8c-93d9-c0b8bee9de40
+		summarizeBy: none
+		sourceColumn: Entry Date
+
+		variation Variation
+			isDefault
+			relationship: 51775d71-1a27-46d6-9708-0a3ead5eb945
+			defaultHierarchy: LocalDateTable_356c207e-6d31-49b6-83bf-05cbf6e83da6.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Hour
+		dataType: int64
+		formatString: 0
+		lineageTag: 637163f0-b953-4f2d-bb62-6a781ff9cb45
+		summarizeBy: sum
+		sourceColumn: Hour
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day of Week'
+		dataType: string
+		lineageTag: 5dcc021e-7d4a-46b2-88ee-83241145a1aa
+		summarizeBy: none
+		sourceColumn: Day of Week
+		sortByColumn: 'Day Number'
+
+	column 'Day Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: f7c96304-8a48-4276-b505-72e50a0d4529
+		summarizeBy: sum
+		sourceColumn: Day Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Time of Day'
+		dataType: string
+		lineageTag: b148bc4c-27d6-4edb-ad7b-b1ae3ec91c7e
+		summarizeBy: none
+		sourceColumn: Time of Day
+
+	column Tray
+		dataType: string
+		lineageTag: 4dd8e147-dd53-425b-8848-c42c0b0021f9
+		summarizeBy: none
+		sourceColumn: Tray
+		sortByColumn: tray_number
+
+	column time
+		dataType: string
+		lineageTag: d4607f1d-cd57-48e5-8d6d-1e707ad5feb5
+		summarizeBy: none
+		sourceColumn: time
+
+		annotation SummarizationSetBy = Automatic
+
+	partition TrayEntries = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [id = text, user_id = text, user_name = text, seed_type = text, substrate_type = text, tray_number = Int64.Type, date = text, time = text],
+				        {
+				{"e1", "u1", "Demo Grower", "radish", "cocopeat", 1, "2026-09-21", "07:30:00"},
+									{"e2", "u1", "Demo Grower", "mustard", "cocopeat", 2, "2026-09-23", "09:15:00"},
+									{"e3", "u1", "Demo Grower", "coriander", "compost", 3, "2026-09-25", "14:45:00"},
+									{"e4", "u1", "Demo Grower", "sunflower", "tissue paper", 4, "2026-09-26", "18:10:00"},
+									{"e5", "u1", "Demo Grower", "pea", "compost", 5, "2026-09-28", "11:00:00"}
+				        }),
+				    WithDate = Table.AddColumn(Source, "Entry Date", each Date.FromText([date]), type date),
+				    WithHour = Table.AddColumn(WithDate, "Hour", each Number.FromText(Text.Start([time], 2)), Int64.Type),
+				    WithDay = Table.AddColumn(WithHour, "Day of Week", each Date.DayOfWeekName([Entry Date], "en-US"), type text),
+				    WithDayN = Table.AddColumn(WithDay, "Day Number", each Date.DayOfWeek([Entry Date], Day.Monday), Int64.Type),
+				    WithPart = Table.AddColumn(WithDayN, "Time of Day", each if [Hour] < 12 then "Morning" else if [Hour] < 17 then "Afternoon" else "Evening", type text),
+				    WithTray = Table.AddColumn(WithPart, "Tray", each "Tray " & Number.ToText([tray_number]), type text),
+				    Result = Table.RemoveColumns(WithTray, {"date"})
+				in
+				    Result
+
+	annotation PBI_ResultType = Table
+

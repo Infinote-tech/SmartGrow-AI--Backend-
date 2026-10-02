@@ -1,8 +1,8 @@
 # SmartGrow AI â€” Backend
 
 FastAPI + MongoDB backend for the SmartGrow AI microgreen cultivation platform.
-Provides JWT-authenticated register/login and stores per-user tray input
-entries (seed type, substrate type, tray number, date, time) for a Flutter front-end.
+Provides JWT-authenticated register/login and stores ESP32 sensor data, AI model outputs,
+hardware/tray status, thresholds, irrigation logs, crop batches and fault events (insert-only endpoints) for a Flutter front-end.
 
 ## Stack
 
@@ -20,10 +20,10 @@ app/
   core/          # config, db connection, security, rate limiting, exceptions
   models/        # Pydantic request/response + Mongo document models
   repositories/  # thin async CRUD wrappers per Mongo collection
-  services/      # business logic (auth, tray entries)
+  services/      # business logic (auth)
   api/v1/        # route handlers, one file per resource
   ml/            # (empty package, kept for layout)
-tests/           # pytest suite (auth, trays)
+tests/           # pytest suite (auth, data collections)
 postman/         # importable collection + environment
 .github/workflows/ci.yml
 ```
@@ -69,34 +69,58 @@ in `.github/workflows/ci.yml`).
 
 | Method | Path | Auth | Description |
 |---|---|---|---|
-| GET | `/health` | – | Health check |
-| POST | `/api/v1/auth/register` | – | Create an account |
-| POST | `/api/v1/auth/login` | – | Get access + refresh tokens |
-| POST | `/api/v1/auth/refresh` | – | New access token from a refresh token |
-| POST | `/api/v1/auth/logout` | – | Revoke a refresh token |
+| GET | `/health` | â€“ | Health check |
+| POST | `/api/v1/auth/register` | â€“ | Create an account |
+| POST | `/api/v1/auth/login` | â€“ | Get access + refresh tokens |
+| POST | `/api/v1/auth/refresh` | â€“ | New access token from a refresh token |
+| POST | `/api/v1/auth/logout` | â€“ | Revoke a refresh token |
 | GET | `/api/v1/auth/me` | Bearer | Current user |
-| POST | `/api/v1/trays` | Bearer | Store a tray input entry |
+| POST | `/api/v1/sensor-data` | Bearer | Add a row to `sensor_data` |
+| POST | `/api/v1/model-outputs` | Bearer | Add a row to `model_outputs` |
+| POST | `/api/v1/hardware-status` | Bearer | Add a row to `hardware_status` |
+| POST | `/api/v1/tray-status` | Bearer | Add a row to `tray_status` |
+| POST | `/api/v1/thresholds` | Bearer | Add a row to `thresholds` |
+| POST | `/api/v1/irrigation-logs` | Bearer | Add a row to `irrigation_logs` |
+| POST | `/api/v1/crop-batches` | Bearer | Add a row to `crop_batches` |
+| POST | `/api/v1/fault-events` | Bearer | Add a row to `fault_events` |
 
-All other CRUD endpoints (users, sensors, irrigation, predictions, analytics, agent, tray list/get/update/delete) have been removed.
+All other CRUD endpoints (users, sensors, irrigation, predictions, analytics, agent, tray entries and any read/update/delete) have been removed.
 
-## Tray input entries
+## Data collections
 
-`POST /api/v1/trays` (requires `Authorization: Bearer <access_token>`) stores one
-document in the `tray_entries` collection per call:
+Each endpoint below only **inserts**. It needs `Authorization: Bearer <access_token>`, validates the body, adds a generated
+`<name>_id` and a server `created_at`, and stores one document in the matching MongoDB collection. Read the data
+straight from MongoDB (Power BI, Compass, your own service).
 
-```json
-{
-  "seed_type": "radish",
-  "substrate_type": "cocopeat",
-  "tray_number": 1,
-  "date": "2026-09-29",
-  "time": "08:30:00"
-}
-```
+| Endpoint | Collection | Id field | Required fields |
+|---|---|---|---|
+| `POST /sensor-data` | `sensor_data` | `sensor_data_id` | `esp32_id`, `tray_id` |
+| `POST /model-outputs` | `model_outputs` | `output_id` | `tray_id`, `model_name` |
+| `POST /hardware-status` | `hardware_status` | `hardware_status_id` | `esp32_id` |
+| `POST /tray-status` | `tray_status` | `tray_status_id` | none |
+| `POST /thresholds` | `thresholds` | `threshold_id` | `seed_type`, `media_type`, `growth_stage`, `parameter` |
+| `POST /irrigation-logs` | `irrigation_logs` | `irrigation_id` | `tray_id` |
+| `POST /crop-batches` | `crop_batches` | `batch_id` | `seed_type`, `media_type`, `planting_date`, `tray_id` |
+| `POST /fault-events` | `fault_events` | `fault_id` | `esp32_id`, `fault_type`, `severity` |
 
-`user_id` is set server-side from the logged-in user's token and is never read
-from the request body. `date` and `time` are optional and default to the current
-UTC date/time. The Swagger UI at `/docs` and the Postman collection document this endpoint.
+All paths are under `/api/v1`. Other fields are optional (see Swagger at `/docs`). `timestamp` is taken from the request
+when sent (e.g. the ESP32's reading time), otherwise set to now (UTC); `thresholds` gets a server `updated_at`.
+
+## Power BI dashboard
+
+`scripts/SmartGrow.pbip` is a ready-made Power BI Project (needs Power BI Desktop, Windows). Double-click it to open.
+It ships with the 5 dummy tray entries embedded, so it works immediately, plus the optimal-conditions tables per
+substrate, seed/substrate compatibility and environment thresholds.
+
+To point it at the live database instead of the dummy rows:
+1. Run the API, register a user, then `python scripts/seed_tray_entries.py` (optional, adds 5 dummy entries).
+2. In Power BI: Transform data, open the `TrayEntries` query, and replace its `Source` step with the
+   `TrayEntries` query from `scripts/powerbi_queries.pq` (reads MongoDB via Python; needs `pip install pandas pymongo`),
+   or load a CSV from `python scripts/seed_tray_entries.py --export-csv tray_entries.csv`.
+3. Close & Apply.
+
+`scripts/powerbi_theme.json` (green theme) and `scripts/powerbi_measures.dax` are already part of the project;
+they are kept separately for reuse.
 
 ## Security notes for going beyond a prototype
 
