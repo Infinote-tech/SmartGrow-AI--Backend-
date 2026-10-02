@@ -1,0 +1,69 @@
+table SubstrateProfile
+	lineageTag: 4c0dc2cd-42c4-4108-be46-c1e5636af6f9
+
+	measure 'Optimal Value' = SELECTEDVALUE(SubstrateProfile[Value])
+		lineageTag: 1ddf8cb4-9530-4f23-940f-f2c543d9bf8d
+
+	column Substrate
+		dataType: string
+		lineageTag: b7bba7f0-b0f9-4ad4-bb14-51a42d58c8a2
+		summarizeBy: none
+		sourceColumn: Substrate
+
+	column Setting
+		dataType: string
+		lineageTag: 5f080e59-5768-4a90-aaa7-2fb15f2156e6
+		summarizeBy: none
+		sourceColumn: Setting
+		sortByColumn: Sort
+
+	column Value
+		dataType: string
+		lineageTag: 23f17ffa-2f26-4a3c-867b-e3391ec0870f
+		summarizeBy: none
+		sourceColumn: Value
+
+	column Sort
+		dataType: int64
+		formatString: 0
+		lineageTag: abf57194-e896-42bf-809e-1e39e39e98c8
+		summarizeBy: none
+		sourceColumn: Sort
+
+	partition SubstrateProfile = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [Substrate = text, Setting = text, Value = text, Sort = Int64.Type],
+				        {
+				{"cocopeat", "Dry (irrigate)", "<45%", 1},
+									{"tissue paper", "Dry (irrigate)", "<50%", 1},
+									{"compost", "Dry (irrigate)", "<40%", 1},
+									{"cocopeat", "Target after watering", "~65%", 2},
+									{"tissue paper", "Target after watering", "~70%", 2},
+									{"compost", "Target after watering", "~60%", 2},
+									{"cocopeat", "Good band", "55-75%", 3},
+									{"tissue paper", "Good band", "60-80%", 3},
+									{"compost", "Good band", "50-70%", 3},
+									{"cocopeat", "Too wet", ">85%", 4},
+									{"tissue paper", "Too wet", ">90%", 4},
+									{"compost", "Too wet", ">80%", 4},
+									{"cocopeat", "Dose size", "Medium", 5},
+									{"tissue paper", "Dose size", "Small", 5},
+									{"compost", "Dose size", "Medium-small", 5},
+									{"cocopeat", "Min interval between doses", "2 h", 6},
+									{"tissue paper", "Min interval between doses", "45 min", 6},
+									{"compost", "Min interval between doses", "3 h", 6},
+									{"cocopeat", "Max pump run per dose", "10 s", 7},
+									{"tissue paper", "Max pump run per dose", "4 s", 7},
+									{"compost", "Max pump run per dose", "8 s", 7},
+									{"cocopeat", "Moisture check interval", "5 min", 8},
+									{"tissue paper", "Moisture check interval", "2 min", 8},
+									{"compost", "Moisture check interval", "5 min", 8}
+				        })
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

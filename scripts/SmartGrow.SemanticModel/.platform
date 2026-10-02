@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "SmartGrow"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "97df35a3-7d18-4602-b542-ca3efebe1c75"
+  }
+}
