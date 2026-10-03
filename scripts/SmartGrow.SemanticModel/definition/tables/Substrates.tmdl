@@ -1,9 +1,9 @@
 table Substrates
-	lineageTag: 58358742-2276-4e20-a27b-403696a9a3b3
+	lineageTag: e79d9da4-8cef-4a22-9a3d-d5bc8d35b7a7
 
 	column Substrate
 		dataType: string
-		lineageTag: 0fb44d6f-3506-4971-9f74-e6b8c2d30d5c
+		lineageTag: 06237caa-9f8f-4e31-97f7-c01aaac6e5f3
 		summarizeBy: none
 		sourceColumn: Substrate
 
@@ -11,9 +11,15 @@ table Substrates
 		mode: import
 		source =
 				let
-				    Source = #table(type table [Substrate = text], {{"cocopeat"}, {"tissue paper"}, {"compost"}})
+				    Source = #table(
+				        type table [Substrate = text],
+				        {
+				            {"cocopeat"},
+				            {"compost"},
+				            {"tissue paper"}
+				        }),
+				    Result = Source
 				in
-				    Source
+				    Result
 
 	annotation PBI_ResultType = Table
-

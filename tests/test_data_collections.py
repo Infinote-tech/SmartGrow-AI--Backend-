@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 
 SAMPLES = {
@@ -149,7 +151,8 @@ async def test_insert_stores_document_with_generated_id(client, auth_headers, te
 
     stored = await test_db[collection].find_one({id_field: body[id_field]})
     assert stored is not None
-    assert stored["created_at"] == body["created_at"]
+    assert isinstance(stored["created_at"], datetime)  # stored as a BSON datetime, not a string
+    assert datetime.fromisoformat(body["created_at"].replace("Z", "+00:00")).replace(tzinfo=None) == stored["created_at"]
 
 
 @pytest.mark.asyncio
@@ -191,3 +194,19 @@ async def test_old_tray_entry_endpoint_removed(client, auth_headers):
         "/api/v1/trays", json={"seed_type": "a", "substrate_type": "b", "tray_number": 1}, headers=auth_headers
     )
     assert resp.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_timestamps_stored_as_utc_datetimes(client, auth_headers, test_db):
+    base = SAMPLES["sensor-data"][2]
+    # an offset timestamp is converted to UTC, a naive one is treated as UTC
+    await client.post("/api/v1/sensor-data", json={**base, "timestamp": "2026-10-01T08:00:00+02:00"}, headers=auth_headers)
+    await client.post("/api/v1/sensor-data", json={**base, "timestamp": "2026-10-01T06:00:00"}, headers=auth_headers)
+    stamps = [d["timestamp"] async for d in test_db["sensor_data"].find({})]
+    assert all(isinstance(t, datetime) for t in stamps)
+    assert stamps[0] == stamps[1] == datetime(2026, 10, 1, 6, 0, 0)
+
+    threshold = SAMPLES["thresholds"][2]
+    await client.post("/api/v1/thresholds", json=threshold, headers=auth_headers)
+    stored = await test_db["thresholds"].find_one({})
+    assert isinstance(stored["effective_from"], datetime) and isinstance(stored["updated_at"], datetime)

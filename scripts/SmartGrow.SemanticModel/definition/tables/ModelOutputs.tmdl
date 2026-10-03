@@ -1,0 +1,386 @@
+table ModelOutputs
+	lineageTag: 27a8dee1-d490-409e-9a46-03dffb69b1d5
+
+	measure 'Policy Decisions' = CALCULATE(COUNTROWS(ModelOutputs), ModelOutputs[model_name] = "adaptive_irrigation_policy")
+		formatString: #,0
+		lineageTag: cef19236-326b-45a4-b4e6-6c63b4e3048e
+
+	measure 'Avg Policy Confidence' = CALCULATE(AVERAGE(ModelOutputs[recommendation_confidence]), ModelOutputs[model_name] = "adaptive_irrigation_policy")
+		formatString: 0%
+		lineageTag: 12d166b7-f781-4e0e-9cf4-8aeb2634b094
+
+	measure 'Avg Water Response Score' = AVERAGE(ModelOutputs[water_response_score])
+		formatString: 0.00
+		lineageTag: 3d5ac90b-2221-44dc-9457-fbfe64f31aa6
+
+	measure 'Avg Model 1 Confidence' = AVERAGE(ModelOutputs[response_confidence])
+		formatString: 0%
+		lineageTag: a648ea5a-05a9-4802-889c-8d441eab4c46
+
+	measure 'Avg Expected After' = AVERAGE(ModelOutputs[expected_moisture_after_irrigation])
+		formatString: 0.0"%"
+		lineageTag: 02f0dc23-6fcb-4df6-887b-397590d9bd73
+
+	measure 'Avg Actual After' = AVERAGE(ModelOutputs[actual_moisture_after_irrigation])
+		formatString: 0.0"%"
+		lineageTag: 4d756e1a-950a-47b5-a28c-f3f135016de4
+
+	measure 'Avg Response Error' = AVERAGE(ModelOutputs[response_error])
+		formatString: 0.0" pts"
+		lineageTag: f9de62e6-6bad-4d39-8730-6f8736ca4497
+
+	column output_id
+		dataType: string
+		lineageTag: 52a1154c-b3b8-4419-9b5a-dbbd2aca9435
+		summarizeBy: none
+		sourceColumn: output_id
+
+	column timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 4041e60e-43fe-402d-9e0c-60ca9921707c
+		summarizeBy: none
+		sourceColumn: timestamp
+
+	column tray_id
+		dataType: string
+		lineageTag: 47d0353e-53c5-41d4-b9d8-8d915d5bb2a8
+		summarizeBy: none
+		sourceColumn: tray_id
+
+	column model_name
+		dataType: string
+		lineageTag: e2102fe7-ec6a-499b-84b1-67815627b19d
+		summarizeBy: none
+		sourceColumn: model_name
+
+	column model_version
+		dataType: string
+		lineageTag: 467bce0f-28e7-477d-8c01-de4a3d25d514
+		summarizeBy: none
+		sourceColumn: model_version
+
+	column irrigation_recommendation
+		dataType: string
+		lineageTag: 1e5b1613-90bb-4ad0-9d80-45a0574fcb8d
+		summarizeBy: none
+		sourceColumn: irrigation_recommendation
+
+	column decision_volume_ml
+		dataType: double
+		formatString: General Number
+		lineageTag: 31058734-d1a7-4026-a0b9-e25a013abe2f
+		summarizeBy: none
+		sourceColumn: decision_volume_ml
+
+	column recommendation_confidence
+		dataType: double
+		formatString: General Number
+		lineageTag: a2ffe539-32fc-4e7a-8f3a-273948ae077d
+		summarizeBy: none
+		sourceColumn: recommendation_confidence
+
+	column recommended_action
+		dataType: string
+		lineageTag: 0c0fd8bd-8e68-4cbd-861c-d2b85e0011b7
+		summarizeBy: none
+		sourceColumn: recommended_action
+
+	column recommendation_reason
+		dataType: string
+		lineageTag: 90505472-e1c9-4575-b0c9-f91563685f62
+		summarizeBy: none
+		sourceColumn: recommendation_reason
+
+	column expected_moisture_change
+		dataType: double
+		formatString: General Number
+		lineageTag: 71bd1e7d-89f8-4e4b-acea-ec6abfa8bfee
+		summarizeBy: none
+		sourceColumn: expected_moisture_change
+
+	column expected_moisture_after_irrigation
+		dataType: double
+		formatString: General Number
+		lineageTag: ea08dc19-f7dd-4d4c-8fdd-a67b023feef6
+		summarizeBy: none
+		sourceColumn: expected_moisture_after_irrigation
+
+	column expected_moisture_lower
+		dataType: double
+		formatString: General Number
+		lineageTag: 7df47ae4-c257-4a7c-8ea9-b0af36c1618d
+		summarizeBy: none
+		sourceColumn: expected_moisture_lower
+
+	column expected_moisture_upper
+		dataType: double
+		formatString: General Number
+		lineageTag: e2b2e931-27a2-4131-878b-ffa45fe98001
+		summarizeBy: none
+		sourceColumn: expected_moisture_upper
+
+	column actual_moisture_after_irrigation
+		dataType: double
+		formatString: General Number
+		lineageTag: e6630aef-dafd-48f9-80c3-5af47f66f859
+		summarizeBy: none
+		sourceColumn: actual_moisture_after_irrigation
+
+	column response_error
+		dataType: double
+		formatString: General Number
+		lineageTag: 5fd9c5e4-c092-4e72-a42d-2e67b18c5e1f
+		summarizeBy: none
+		sourceColumn: response_error
+
+	column response_confidence
+		dataType: double
+		formatString: General Number
+		lineageTag: 3fb57e8e-0efd-4497-8a03-74089bec4567
+		summarizeBy: none
+		sourceColumn: response_confidence
+
+	column water_response_score
+		dataType: double
+		formatString: General Number
+		lineageTag: 26161993-36f2-489f-80f4-57499388b73d
+		summarizeBy: none
+		sourceColumn: water_response_score
+
+	column anomaly_score
+		dataType: double
+		formatString: General Number
+		lineageTag: aca5b19b-1fb6-476a-8efd-b0f152b2625b
+		summarizeBy: none
+		sourceColumn: anomaly_score
+
+	column irrigation_id
+		dataType: string
+		lineageTag: 203fd567-b002-4d7a-9057-9808c184d850
+		summarizeBy: none
+		sourceColumn: irrigation_id
+
+	column batch_id
+		dataType: string
+		lineageTag: e4cbc47b-7124-4058-9d26-0853e15c7597
+		summarizeBy: none
+		sourceColumn: batch_id
+
+	column growth_stage
+		dataType: string
+		lineageTag: 611572f0-4085-4948-9c82-d3453a47ed51
+		summarizeBy: none
+		sourceColumn: growth_stage
+
+	column Date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 1fdfddff-7a81-44f5-80b0-07041fd36fa2
+		summarizeBy: none
+		sourceColumn: Date
+
+	column Decision
+		dataType: string
+		lineageTag: 4dd715ef-a826-4ae2-a916-5d695167cb9a
+		summarizeBy: none
+		sourceColumn: Decision
+
+	partition ModelOutputs = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [output_id = text, timestamp = datetime, tray_id = text, model_name = text, model_version = text, irrigation_recommendation = text, decision_volume_ml = number, recommendation_confidence = number, recommended_action = text, recommendation_reason = text, expected_moisture_change = number, expected_moisture_after_irrigation = number, expected_moisture_lower = number, expected_moisture_upper = number, actual_moisture_after_irrigation = number, response_error = number, response_confidence = number, water_response_score = number, anomaly_score = number, irrigation_id = text, batch_id = text, growth_stage = text],
+				        {
+				            {"867347214cdd2055930d6eaf14f4733f", #datetime(2026, 9, 26, 0, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-1 now", "forecast_within_band(63.0>=57.0)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "germination"},
+				            {"eeeacbe226e875555790f82ec1d3fcff", #datetime(2026, 9, 26, 0, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "forecast_within_band(58.0>=52.0)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "blackout"},
+				            {"7f26144b98289fcd59a54a7bb1fee08f", #datetime(2026, 9, 26, 0, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "forecast_within_band(68.0>=62.0)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"1200339d068739fa9d1de2a05d158a2f", #datetime(2026, 9, 26, 6, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-1 now", "forecast_within_band(61.2>=57.0)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "germination"},
+				            {"fe3bfada7cf20724d953ee261d87cec3", #datetime(2026, 9, 26, 6, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "forecast_within_band(56.6>=52.0)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "blackout"},
+				            {"05e999f3842e7fc229540a6eb12aa1f6", #datetime(2026, 9, 26, 6, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "forecast_within_band(65.4>=62.0)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"23a5ef88ef02090bbfdefc1586ce03f9", #datetime(2026, 9, 26, 12, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-1 now", "forecast_within_band(59.1>=57.0)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "germination"},
+				            {"6b4468068b5ab3ee4265bb3153740902", #datetime(2026, 9, 26, 12, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "forecast_within_band(55.0>=52.0)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "blackout"},
+				            {"806c10b5e0cfab4ceaefc4d2d3bf6d01", #datetime(2026, 9, 26, 12, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "forecast_within_band(62.6>=62.0)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"f10637ce81fc069e7a609683ceaf4915", #datetime(2026, 9, 26, 14, 15, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 50.0, 0.3, "Irrigate tray tray-3 with 50 mL", "moisture_below_target", 0.484, 62.02, 59.02, 65.02, 62.33, 0.31, 0.3, 0.896, null, "f179f2d2e48b96628f3c4be3ec3b9605", "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"231b3e14729135bdd70a39d133dcd77f", #datetime(2026, 9, 26, 14, 33, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "Check emitter placement, sensor contact with media, media dryness/hydrophobicity", "hypothesis=distribution_sensor_media; flow=normal; response=no_change; z=0.10; anomaly=False", null, null, null, null, null, null, null, null, 0.104, "f179f2d2e48b96628f3c4be3ec3b9605", "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"9bb183e11570266b42b38755cd37880e", #datetime(2026, 9, 26, 18, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "forecast_within_band(53.3>=52.0)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "blackout"},
+				            {"2114e0689f27f52c449274d2ea59679a", #datetime(2026, 9, 26, 18, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "min_interval_not_elapsed(4<360min)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"d1a89b37ad0c9bb6e9526a69d97e967b", #datetime(2026, 9, 26, 18, 11, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "irrigate", 50.0, 0.3, "Irrigate tray tray-1 with 50 mL", "moisture_below_target", 0.759, 57.48, 54.48, 60.48, 57.81, 0.33, 0.3, 0.889, null, "16e6fec353b97377b34e8ece7e9ee51d", "6513270e269e0d37f2a74de452e6b438", "germination"},
+				            {"b02e3d8dccb1c51d0eba0ea84770a087", #datetime(2026, 9, 26, 18, 29, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.11; anomaly=False", null, null, null, null, null, null, null, null, 0.111, "16e6fec353b97377b34e8ece7e9ee51d", "6513270e269e0d37f2a74de452e6b438", "germination"},
+				            {"121ae3e603a63966213bca7fd644de2f", #datetime(2026, 9, 26, 20, 59, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 200.0, 0.3, "Irrigate tray tray-3 with 200 mL", "moisture_below_target", 2.454, 61.72, 58.72, 64.72, 62.71, 0.99, 0.3, 0.671, null, "dedb9109618177ffd75d6769aa4c5c60", "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"482cc78ef88ede10aba8b9b38185797c", #datetime(2026, 9, 26, 21, 17, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.33; anomaly=False", null, null, null, null, null, null, null, null, 0.329, "dedb9109618177ffd75d6769aa4c5c60", "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"a7f0c99e80b5244a4767e1fa79823eb2", #datetime(2026, 9, 26, 22, 0, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "irrigate", 50.0, 0.3, "Irrigate tray tray-2 with 50 mL", "moisture_below_target", 1.033, 52.95, 49.95, 55.95, 53.18, 0.23, 0.3, 0.923, null, "963892a766465d2824d4589c16fa1421", "d23f0824128b2f330c5c7fd0a6a3a450", "blackout"},
+				            {"4cb59aa705c22d3f64dbc8d30aaaaf81", #datetime(2026, 9, 26, 22, 18, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.08; anomaly=False", null, null, null, null, null, null, null, null, 0.077, "963892a766465d2824d4589c16fa1421", "d23f0824128b2f330c5c7fd0a6a3a450", "blackout"},
+				            {"9187df42811e7616c0bbe6ed8614f504", #datetime(2026, 9, 27, 0, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-1 now", "min_interval_not_elapsed(6<480min)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"221265400ab7798807fa22f715c891ff", #datetime(2026, 9, 27, 0, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "forecast_within_band(52.9>=52.0)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "blackout"},
+				            {"4387ee7b7d42646f3e9b768fae4001e3", #datetime(2026, 9, 27, 0, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "min_interval_not_elapsed(3<360min)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"491961a1843baee9b578909c4a7591f2", #datetime(2026, 9, 27, 3, 13, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "irrigate", 150.0, 0.3, "Irrigate tray tray-1 with 150 mL", "moisture_below_target", 2.56, 57.63, 54.63, 60.63, 58.4, 0.77, 0.3, 0.742, null, "8c90473ee4c717fdfe48ef631e563408", "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"15fa8b65fa6672cd4fc9e91833020ccd", #datetime(2026, 9, 27, 3, 31, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.26; anomaly=False", null, null, null, null, null, null, null, null, 0.258, "8c90473ee4c717fdfe48ef631e563408", "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"24056360ba28a6794d4ca9c767c98fb9", #datetime(2026, 9, 27, 4, 12, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 200.0, 0.3, "Irrigate tray tray-3 with 200 mL", "moisture_below_target", 2.303, 62.23, 59.23, 65.23, 63.84, 1.61, 0.3, 0.462, null, "00721f8454d1ac6bd71961891ef3ea44", "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"d6cff718569908f6c0301b2153158ce4", #datetime(2026, 9, 27, 4, 30, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.54; anomaly=False", null, null, null, null, null, null, null, null, 0.538, "00721f8454d1ac6bd71961891ef3ea44", "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"491e99f5a97766fbd5ad53600d36ce2c", #datetime(2026, 9, 27, 6, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-1 now", "forecast_within_band(57.8>=57.0)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"076d490ae25f4b1c6d80de7cf4c73f2b", #datetime(2026, 9, 27, 6, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "min_interval_not_elapsed(8<480min)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "blackout"},
+				            {"736b96a0692fd360bb7b738eeef795cd", #datetime(2026, 9, 27, 6, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "forecast_within_band(63.4>=62.0)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"bd1e6912bd313bee41785bc64c3ac6fc", #datetime(2026, 9, 27, 7, 7, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "irrigate", 50.0, 0.3, "Irrigate tray tray-2 with 50 mL", "moisture_below_target", 1.088, 52.04, 49.04, 55.04, 52.34, 0.3, 0.3, 0.901, null, "1ea7722864f54969ab3b74fe8eaca288", "d23f0824128b2f330c5c7fd0a6a3a450", "blackout"},
+				            {"133e6153296259c8a4a915d02ad64ce9", #datetime(2026, 9, 27, 7, 25, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.10; anomaly=False", null, null, null, null, null, null, null, null, 0.099, "1ea7722864f54969ab3b74fe8eaca288", "d23f0824128b2f330c5c7fd0a6a3a450", "blackout"},
+				            {"91c3098c3b8a27ba202ab6fac844b8fd", #datetime(2026, 9, 27, 10, 58, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 150.0, 0.3, "Irrigate tray tray-3 with 150 mL", "moisture_below_target", 1.569, 62.42, 59.42, 65.42, 63.36, 0.94, 0.3, 0.687, null, "a060846c20c26f71f662222e4dc4ac8c", "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"6ffb726aa2e3f93a873b99034075916e", #datetime(2026, 9, 27, 11, 16, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.31; anomaly=False", null, null, null, null, null, null, null, null, 0.313, "a060846c20c26f71f662222e4dc4ac8c", "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"3a0ea6e15ec69be3ecd7570b6ca06496", #datetime(2026, 9, 27, 12, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "min_interval_not_elapsed(5<480min)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "blackout"},
+				            {"34893498114340ff813fb5cdd85bbb6b", #datetime(2026, 9, 27, 12, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "forecast_within_band(63.4>=62.0)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"d6e3a71ea502e8a850fcc626f57d1709", #datetime(2026, 9, 27, 12, 6, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "irrigate", 100.0, 0.3, "Irrigate tray tray-1 with 100 mL", "moisture_below_target", 1.663, 57.11, 54.11, 60.11, 57.64, 0.52, 0.3, 0.826, null, "077ef32a3f3f37ea8c0856a43c19c315", "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"a64f7613b4642ea4696c63d6f5ead065", #datetime(2026, 9, 27, 12, 24, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.17; anomaly=False", null, null, null, null, null, null, null, null, 0.174, "077ef32a3f3f37ea8c0856a43c19c315", "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"07c0909c797b1538e5a15b79bcc0fd98", #datetime(2026, 9, 27, 16, 9, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "irrigate", 100.0, 0.3, "Irrigate tray tray-2 with 100 mL", "moisture_below_target", 2.287, 52.27, 49.27, 55.27, 53.12, 0.85, 0.3, 0.717, null, "0a68013d679f2d9ec4445aaea01ac23a", "d23f0824128b2f330c5c7fd0a6a3a450", "blackout"},
+				            {"10053d2c76cc057308ec379a602533dc", #datetime(2026, 9, 27, 16, 27, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.28; anomaly=False", null, null, null, null, null, null, null, null, 0.283, "0a68013d679f2d9ec4445aaea01ac23a", "d23f0824128b2f330c5c7fd0a6a3a450", "blackout"},
+				            {"62f2a21bc6bf4fa2f4337bd1773afe02", #datetime(2026, 9, 27, 18, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-1 now", "min_interval_not_elapsed(6<480min)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"b12e1de2d2a0169d4da60990bd0d8cfe", #datetime(2026, 9, 27, 18, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "forecast_within_band(52.7>=52.0)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "blackout"},
+				            {"6862bf793f4f8b9d28f1a81bc0bd1d84", #datetime(2026, 9, 27, 18, 10, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 150.0, 0.3, "Irrigate tray tray-3 with 150 mL", "moisture_below_target", 1.626, 62.14, 59.14, 65.14, 63.25, 1.11, 0.3, 0.631, null, "1aefca62e22b64a66d32a901faf20ac0", "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"9fe5e39943cfeadf1279688cfce205cd", #datetime(2026, 9, 27, 18, 28, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.37; anomaly=False", null, null, null, null, null, null, null, null, 0.369, "1aefca62e22b64a66d32a901faf20ac0", "9531985d5d9dc9f81818e811892f902b", "germination"},
+				            {"99b9ede73087de350ce66f731e84fb36", #datetime(2026, 9, 27, 21, 1, 0), "tray-1", "crop_water_response", "baseline-v0", null, null, null, null, null, 2.572, 57.57, 54.57, 60.57, 58.78, 1.21, 0.3, 0.598, null, "31b4932c954c2fc1d3f2e52df9143ef5", "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"833e469f5f4aebeb133ad73dee1fdde0", #datetime(2026, 9, 27, 21, 16, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.40; anomaly=False", null, null, null, null, null, null, null, null, 0.402, "31b4932c954c2fc1d3f2e52df9143ef5", "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"e239d3d79107756fbece71454ff6f2c5", #datetime(2026, 9, 28, 0, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-1 now", "forecast_within_band(58.2>=57.0)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"6c7b31e22814c437e6d143186f25630d", #datetime(2026, 9, 28, 0, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "min_interval_not_elapsed(8<480min)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"ce74b3c4a402bb72247aabb58d323d9e", #datetime(2026, 9, 28, 0, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "min_interval_not_elapsed(6<360min)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"1bd9d912112d4095eced8ded2bfa1f10", #datetime(2026, 9, 28, 1, 14, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "irrigate", 50.0, 0.3, "Irrigate tray tray-2 with 50 mL", "moisture_below_target", 1.082, 52.15, 49.15, 55.15, 52.34, 0.19, 0.3, 0.935, null, "3284fc6fce017551f78530bfcaca003c", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"c92bdd5aa3ec4d322907db86e4219307", #datetime(2026, 9, 28, 1, 16, 0), "tray-3", "crop_water_response", "baseline-v0", null, null, null, null, null, 1.621, 62.16, 59.16, 65.16, 63.13, 0.96, 0.3, 0.678, null, "678c4cb99efd55d238d9e9abdb495244", "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"d445a53e3234752bd8aa7be39d5ee2f9", #datetime(2026, 9, 28, 1, 31, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.32; anomaly=False", null, null, null, null, null, null, null, null, 0.322, "678c4cb99efd55d238d9e9abdb495244", "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"f16d68f3d658c99a206c28564d36a8ed", #datetime(2026, 9, 28, 1, 32, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.06; anomaly=False", null, null, null, null, null, null, null, null, 0.065, "3284fc6fce017551f78530bfcaca003c", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"6078a406e539cb1653ec4b93adff8165", #datetime(2026, 9, 28, 6, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "min_interval_not_elapsed(5<480min)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"e1edcf3eb050864e947dbe2d857de96d", #datetime(2026, 9, 28, 6, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "min_interval_not_elapsed(5<360min)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"4665ea199d106a37e58376fb52e71cf8", #datetime(2026, 9, 28, 6, 3, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "irrigate", 50.0, 0.3, "Irrigate tray tray-1 with 50 mL", "moisture_below_target", 0.761, 57.44, 54.44, 60.44, 57.77, 0.33, 0.3, 0.89, null, "434b4b949785f4f83554ada87ae85484", "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"51af10743cc631418189ac459da968f2", #datetime(2026, 9, 28, 6, 21, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.11; anomaly=False", null, null, null, null, null, null, null, null, 0.11, "434b4b949785f4f83554ada87ae85484", "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"96ceb5254d187e3e956636e669c9fef0", #datetime(2026, 9, 28, 8, 1, 0), "tray-3", "crop_water_response", "baseline-v0", null, null, null, null, null, 1.643, 62.06, 59.06, 65.06, 63.5, 1.44, 0.3, 0.52, null, "9fb9d8f65dc18bce34456d5b223be9e7", "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"227ee409289b8ba979932a50d416b8a9", #datetime(2026, 9, 28, 8, 16, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.48; anomaly=False", null, null, null, null, null, null, null, null, 0.48, "9fb9d8f65dc18bce34456d5b223be9e7", "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"c7642bdee967ebdb0ef1f01228c26bb2", #datetime(2026, 9, 28, 10, 5, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "irrigate", 100.0, 0.3, "Irrigate tray tray-2 with 100 mL", "moisture_below_target", 2.256, 52.51, 49.51, 55.51, 53.21, 0.7, 0.3, 0.767, null, "9bab534084ac8fe63313a10169c60d1b", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"a43dede7a5c8e5c581c75baba48792c5", #datetime(2026, 9, 28, 10, 23, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.23; anomaly=False", null, null, null, null, null, null, null, null, 0.233, "9bab534084ac8fe63313a10169c60d1b", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"b630f00543678856d867c466f15ea89d", #datetime(2026, 9, 28, 12, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-1 now", "min_interval_not_elapsed(6<480min)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"378d04eae4e8d8d2f71377dcedb6ce85", #datetime(2026, 9, 28, 12, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "forecast_within_band(53.0>=52.0)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"3122c81553add817ea3ab6d2bf03c644", #datetime(2026, 9, 28, 12, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "forecast_within_band(62.1>=62.0)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"a1dbbd89a1ac6036c05d7b62d337264b", #datetime(2026, 9, 28, 15, 0, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 150.0, 0.3, "Irrigate tray tray-3 with 150 mL", "moisture_below_target", 1.64, 62.08, 59.08, 65.08, 63.24, 1.16, 0.3, 0.613, null, "a5753d8bc1e299a3cabe5e52190d78d3", "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"e134f9f810e1fec9aa069dd3e42af0ad", #datetime(2026, 9, 28, 15, 15, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "irrigate", 200.0, 0.3, "Irrigate tray tray-1 with 200 mL", "moisture_below_target", 3.612, 57.81, 54.81, 60.81, 59.21, 1.4, 0.3, 0.534, null, "3f1fb2411b6bf27362438362f1bf55ed", "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"5625e67151b315ec4b61b0fd347a7325", #datetime(2026, 9, 28, 15, 18, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.39; anomaly=False", null, null, null, null, null, null, null, null, 0.387, "a5753d8bc1e299a3cabe5e52190d78d3", "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"08ab17151caa0c48340252a634aa4a20", #datetime(2026, 9, 28, 15, 33, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.47; anomaly=False", null, null, null, null, null, null, null, null, 0.466, "3f1fb2411b6bf27362438362f1bf55ed", "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"2a7147ea7f919c893b4563c7b31110c8", #datetime(2026, 9, 28, 18, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-1 now", "forecast_within_band(58.4>=57.0)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "blackout"},
+				            {"edb27a0f66b9aaf9185ba6635b09b845", #datetime(2026, 9, 28, 18, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "min_interval_not_elapsed(8<480min)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"804dffe88b80fd3ae6b6122f6d956563", #datetime(2026, 9, 28, 18, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "forecast_within_band(62.2>=62.0)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"85903d9753a000dc94e27f7759365783", #datetime(2026, 9, 28, 18, 59, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "irrigate", 100.0, 0.3, "Irrigate tray tray-2 with 100 mL", "moisture_below_target", 2.19, 53.02, 50.02, 56.02, 53.7, 0.68, 0.3, 0.775, null, "b06653507055114e769177522b67a9fd", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"3b246b479444785741d8b452c5ffd933", #datetime(2026, 9, 28, 19, 17, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.23; anomaly=False", null, null, null, null, null, null, null, null, 0.225, "b06653507055114e769177522b67a9fd", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"2e771bd6adfa09b03a85eed0da39c4ea", #datetime(2026, 9, 28, 22, 16, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 150.0, 0.3, "Irrigate tray tray-3 with 150 mL", "moisture_below_target", 1.647, 62.04, 59.04, 65.04, 62.91, 0.87, 0.3, 0.711, null, "3e0dac1c6b699f07e50df523190dcc94", "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"b66f47acb6910780666f0c32c849ed81", #datetime(2026, 9, 28, 22, 34, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.29; anomaly=False", null, null, null, null, null, null, null, null, 0.289, "3e0dac1c6b699f07e50df523190dcc94", "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"37c714cf8b19a2b64050284509c3e7c0", #datetime(2026, 9, 29, 0, 1, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "irrigate", 50.0, 0.3, "Irrigate tray tray-1 with 50 mL", "moisture_below_target", 0.782, 57.1, 54.1, 60.1, 57.36, 0.26, 0.3, 0.914, null, "5924204384eb99bd3326d90ff0ca5b41", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"35c86b7874f806f2f2ae556fbdfaea88", #datetime(2026, 9, 29, 0, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "forecast_within_band(52.8>=52.0)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"61c00cbe463c465040a111b90e7e8994", #datetime(2026, 9, 29, 0, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "forecast_within_band(62.5>=62.0)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"74efd76493166586d8df71f419e0d64a", #datetime(2026, 9, 29, 0, 19, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.09; anomaly=False", null, null, null, null, null, null, null, null, 0.086, "5924204384eb99bd3326d90ff0ca5b41", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"e7e2e6079088ec8ad3f13f1915d4e7c2", #datetime(2026, 9, 29, 3, 59, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "irrigate", 50.0, 0.3, "Irrigate tray tray-2 with 50 mL", "moisture_below_target", 1.037, 52.89, 49.89, 55.89, 53.29, 0.4, 0.3, 0.866, null, "a216ed03585bc3add4d1e96987d88917", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"02f04abfa845063a03d61cbf951bcb26", #datetime(2026, 9, 29, 4, 17, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.13; anomaly=False", null, null, null, null, null, null, null, null, 0.134, "a216ed03585bc3add4d1e96987d88917", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"9bbdf2eab0227a15e42172519c09119a", #datetime(2026, 9, 29, 5, 3, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 200.0, 0.3, "Irrigate tray tray-3 with 200 mL", "moisture_below_target", 2.235, 62.46, 59.46, 65.46, 64.05, 1.59, 0.3, 0.47, null, "3286dfae4c0b0f70d6bbcb67a2f7e7f9", "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"87e23671368dc5bfb15adcf27e9508cb", #datetime(2026, 9, 29, 5, 21, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.53; anomaly=False", null, null, null, null, null, null, null, null, 0.53, "3286dfae4c0b0f70d6bbcb67a2f7e7f9", "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"7bffb6a40ef6df4f8ea4dc667e3a46a3", #datetime(2026, 9, 29, 6, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-1 now", "min_interval_not_elapsed(6<480min)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"77cc40da521858f4d73c8a36290d2ec3", #datetime(2026, 9, 29, 6, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "forecast_within_band(53.2>=52.0)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"5c418d05a3151d0c2e367dcb134d2c81", #datetime(2026, 9, 29, 6, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "forecast_within_band(64.0>=62.0)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"661ce41c0a40c9e8ff1a5c0cc8c259a2", #datetime(2026, 9, 29, 9, 0, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "irrigate", 150.0, 0.3, "Irrigate tray tray-1 with 150 mL", "moisture_below_target", 2.604, 57.41, 54.41, 60.41, 58.11, 0.69, 0.3, 0.769, null, "0be0a71d019705ee1bc6b08b4ce76f14", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"799d149eebe2eb3bd26c0cf8309ff5b2", #datetime(2026, 9, 29, 9, 18, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.23; anomaly=False", null, null, null, null, null, null, null, null, 0.231, "0be0a71d019705ee1bc6b08b4ce76f14", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"f00e60f8fe3d856b978b66419807633c", #datetime(2026, 9, 29, 12, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-1 now", "forecast_within_band(57.5>=57.0)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"01397a296d4fdbf803f9c73ea07c30a8", #datetime(2026, 9, 29, 12, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "min_interval_not_elapsed(8<480min)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"ec3cd40d2ffa1f86be845f95bbca6b41", #datetime(2026, 9, 29, 12, 12, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 150.0, 0.3, "Irrigate tray tray-3 with 150 mL", "moisture_below_target", 1.553, 62.49, 59.49, 65.49, 63.52, 1.03, 0.3, 0.656, null, "2511957edb01b9f2b1e13663b6ab58ca", "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"4b0b708d1594011ec264ab93bacf0bd8", #datetime(2026, 9, 29, 12, 30, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.34; anomaly=False", null, null, null, null, null, null, null, null, 0.344, "2511957edb01b9f2b1e13663b6ab58ca", "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"2a7ec80699a16b9ebabcb4aa4fffa8e1", #datetime(2026, 9, 29, 13, 1, 0), "tray-2", "crop_water_response", "baseline-v0", null, null, null, null, null, 1.077, 52.23, 49.23, 55.23, 52.38, 0.15, 0.3, 0.95, null, "7c8005c5d5bd0132dc685e91f52bc655", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"5e18c71250f7b1680f4dad889be4078c", #datetime(2026, 9, 29, 13, 16, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.05; anomaly=False", null, null, null, null, null, null, null, null, 0.05, "7c8005c5d5bd0132dc685e91f52bc655", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"cd4b9ff5b4093893a6a476a3f954dd9e", #datetime(2026, 9, 29, 14, 17, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "irrigate", 200.0, 0.3, "Irrigate tray tray-2 with 200 mL", "moisture_below_target", 4.026, 56.41, 53.41, 59.41, 52.58, -3.83, 0.3, 0.0, null, "d526e8f999e4226426afd434d4cf50a7", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"f9f4886c6db63aed95acd14a4f0042f5", #datetime(2026, 9, 29, 14, 35, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "Check reservoir level, pump power and inlet line", "hypothesis=pump_tank_blockage; flow=no_flow; response=no_change; z=-1.28; anomaly=True", null, null, null, null, null, null, null, null, 1.275, "d526e8f999e4226426afd434d4cf50a7", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"deead1d3fd8b289c346388d10898a37e", #datetime(2026, 9, 29, 18, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "min_interval_not_elapsed(4<480min)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"9bd541ebd19ee43f97d6b91bc46a6d88", #datetime(2026, 9, 29, 18, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "min_interval_not_elapsed(6<360min)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"84685b61c79664706709ab4c5be04057", #datetime(2026, 9, 29, 18, 16, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "irrigate", 100.0, 0.3, "Irrigate tray tray-1 with 100 mL", "moisture_below_target", 1.651, 57.2, 54.2, 60.2, 57.82, 0.62, 0.3, 0.794, null, "a1fb68f15f25a7fe1b2a9134ddca8b0c", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"27f9c55d14ece04cc98f9bf576a399f8", #datetime(2026, 9, 29, 18, 34, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.21; anomaly=False", null, null, null, null, null, null, null, null, 0.206, "a1fb68f15f25a7fe1b2a9134ddca8b0c", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"65bbc9f7a3ccb0a4991aff0adceb9e13", #datetime(2026, 9, 29, 19, 0, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 150.0, 0.3, "Irrigate tray tray-3 with 150 mL", "moisture_below_target", 1.616, 62.19, 59.19, 65.19, 63.04, 0.85, 0.3, 0.718, null, "908182d05197044a41d7725317076e31", "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"f4d7f15316fc08e0a40085d33bb3830a", #datetime(2026, 9, 29, 19, 18, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.28; anomaly=False", null, null, null, null, null, null, null, null, 0.282, "908182d05197044a41d7725317076e31", "9531985d5d9dc9f81818e811892f902b", "blackout"},
+				            {"5db44741a0d09c621d98a4747a3ff311", #datetime(2026, 9, 29, 23, 5, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "irrigate", 100.0, 0.3, "Irrigate tray tray-2 with 100 mL", "moisture_below_target", 2.257, 52.51, 49.51, 55.51, 53.04, 0.53, 0.3, 0.824, null, "706067ab250bc6e7e3aa471c8da9ec93", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"6b13490744329463263e8db3dee7b644", #datetime(2026, 9, 29, 23, 23, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.18; anomaly=False", null, null, null, null, null, null, null, null, 0.176, "706067ab250bc6e7e3aa471c8da9ec93", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"fa86f4df2743314b1d3a20057b80f213", #datetime(2026, 9, 30, 0, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-1 now", "min_interval_not_elapsed(6<480min)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"fdb38c626e9b73435d417373f87fcf8e", #datetime(2026, 9, 30, 0, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "forecast_within_band(53.0>=52.0)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"24f432ad4b246aa0fa811b6db9fa20fb", #datetime(2026, 9, 30, 0, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "min_interval_not_elapsed(5<360min)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"55d0f05158ff0624cf86926984b9bda5", #datetime(2026, 9, 30, 1, 59, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 100.0, 0.813, "Irrigate tray tray-3 with 100 mL", "moisture_below_target", 1.893, 62.09, 59.59, 64.59, 61.98, -0.11, 0.813, 0.964, null, "7a0365dbc352b37ee903e9cd68d61743", "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"442995faaa5d0b4bdf3c49ba221ec3e3", #datetime(2026, 9, 30, 2, 17, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=-0.04; anomaly=False", null, null, null, null, null, null, null, null, 0.036, "7a0365dbc352b37ee903e9cd68d61743", "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"721dcfa1ee9f585d85131e935b2d18e2", #datetime(2026, 9, 30, 2, 58, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "irrigate", 100.0, 0.836, "Irrigate tray tray-1 with 100 mL", "moisture_below_target", 2.265, 57.61, 55.11, 60.11, 57.82, 0.22, 0.836, 0.928, null, "d10878d03ea65dd8b6ef5dfc5b51e2c0", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"522baa45e99c7e50dd8f90d5d47dd7c2", #datetime(2026, 9, 30, 3, 16, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.07; anomaly=False", null, null, null, null, null, null, null, null, 0.072, "d10878d03ea65dd8b6ef5dfc5b51e2c0", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"92a5bc52ab34e0fd25b03ea73a1ed8f1", #datetime(2026, 9, 30, 6, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-1 now", "forecast_within_band(57.1>=57.0)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"65483c3c0944e14c868ebb8e9a5075c3", #datetime(2026, 9, 30, 6, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "min_interval_not_elapsed(7<480min)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"e9ab5979fc5f26b9cdebbef6907e2098", #datetime(2026, 9, 30, 6, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "min_interval_not_elapsed(4<360min)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"8532b56c1f27b474402615f619baa4a4", #datetime(2026, 9, 30, 8, 17, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "irrigate", 50.0, 0.823, "Irrigate tray tray-2 with 50 mL", "moisture_below_target", 1.301, 52.59, 50.09, 55.09, 52.74, 0.15, 0.823, 0.95, null, "4e2f76c21cf070c7499b18e50a175b0e", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"1ed14e6a2abf1627a5c3e09d58f945ca", #datetime(2026, 9, 30, 8, 35, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.05; anomaly=False", null, null, null, null, null, null, null, null, 0.05, "4e2f76c21cf070c7499b18e50a175b0e", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"d6f9ac8b4983cdd88bdb460abd8b16d7", #datetime(2026, 9, 30, 9, 0, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 200.0, 0.802, "Irrigate tray tray-3 with 200 mL", "moisture_below_target", 4.325, 63.13, 60.63, 65.63, 76.97, 13.84, 0.802, 0.0, null, "75fc74c45de7818bb5da24688c6f5a9c", "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"9ce070a24dbf5d848c4bad76e44d9ef0", #datetime(2026, 9, 30, 9, 18, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.8, "Check for pooling, leaks near sensor, sensor drift", "hypothesis=leakage_or_sensor; flow=normal; response=excessive; z=4.61; anomaly=True", null, null, null, null, null, null, null, null, 4.614, "75fc74c45de7818bb5da24688c6f5a9c", "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"011b5d7d1a7592a5deee738269bc9550", #datetime(2026, 9, 30, 12, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "irrigate", 100.0, 0.843, "Irrigate tray tray-1 with 100 mL", "moisture_below_target", 2.264, 57.61, 55.11, 60.11, 57.18, -0.43, 0.843, 0.857, null, "f67649bc65c220e77f7545c01e110eb0", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"5a5b2c164afcbac65a453866b91a8326", #datetime(2026, 9, 30, 12, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "min_interval_not_elapsed(4<480min)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"2f287d984cce4a5071ac02786173db2a", #datetime(2026, 9, 30, 12, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "hold_and_inspect", 0.0, 0.9, "Hold irrigation for tray tray-3 and inspect", "active_fault(leakage_or_sensor)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"6afc289a264e5ace926be728fe304b6f", #datetime(2026, 9, 30, 12, 20, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=-0.14; anomaly=False", null, null, null, null, null, null, null, null, 0.143, "f67649bc65c220e77f7545c01e110eb0", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"b5ec5c294e868ac300b62052c9a27dd4", #datetime(2026, 9, 30, 16, 58, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "irrigate", 100.0, 0.838, "Irrigate tray tray-2 with 100 mL", "moisture_below_target", 2.749, 52.98, 50.48, 55.48, 52.85, -0.13, 0.838, 0.957, null, "19371cb1d797a9ee65c6e4454df0de9b", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"078f6a4cab09057903f3f20d96113b67", #datetime(2026, 9, 30, 17, 16, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=-0.04; anomaly=False", null, null, null, null, null, null, null, null, 0.043, "19371cb1d797a9ee65c6e4454df0de9b", "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"c26e527084b76cbd282222102535ea0c", #datetime(2026, 9, 30, 18, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-1 now", "min_interval_not_elapsed(6<480min)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"a66cf88b0fe6c899cce053f6ce7d5793", #datetime(2026, 9, 30, 18, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "forecast_within_band(52.9>=52.0)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "early_growth"},
+				            {"e7630c32dbfce1c01975ee17a0f25e4b", #datetime(2026, 9, 30, 18, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "hold_and_inspect", 0.0, 0.9, "Hold irrigation for tray tray-3 and inspect", "active_fault(leakage_or_sensor)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"30f2300d632a42b93eb420db8dc88649", #datetime(2026, 9, 30, 21, 18, 0), "tray-1", "crop_water_response", "gbr-q-2026-09-30", null, null, null, null, null, 3.704, 57.72, 55.22, 60.22, 57.08, -0.64, 0.825, 0.786, null, "3cb77b2e582fc77148992613778e384b", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"aa0de3994775400108f03e7b6f81f00a", #datetime(2026, 9, 30, 21, 33, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=-0.21; anomaly=False", null, null, null, null, null, null, null, null, 0.214, "3cb77b2e582fc77148992613778e384b", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"25234bb091538a62b7ddc1a8a85353b1", #datetime(2026, 10, 1, 0, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-1 now", "min_interval_not_elapsed(3<480min)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"8fde9ebe116dbe5b1be4e39ee42d981a", #datetime(2026, 10, 1, 0, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "min_interval_not_elapsed(7<480min)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"484902df66231401b779220fd11bd314", #datetime(2026, 10, 1, 0, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "hold_and_inspect", 0.0, 0.9, "Hold irrigation for tray tray-3 and inspect", "active_fault(leakage_or_sensor)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"c1c81c2d32b5dff16e428d632979b0ac", #datetime(2026, 10, 1, 2, 17, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "irrigate", 100.0, 0.834, "Irrigate tray tray-2 with 100 mL", "moisture_below_target", 2.696, 53.31, 50.81, 55.81, 53.14, -0.16, 0.834, 0.946, null, "908656cc2dfef53bf109e573a3689b02", "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"7f75d5c291f659b63a479870d6e733f8", #datetime(2026, 10, 1, 2, 35, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=-0.05; anomaly=False", null, null, null, null, null, null, null, null, 0.054, "908656cc2dfef53bf109e573a3689b02", "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"8c5ac7621e335d03d0bd9362a12077c6", #datetime(2026, 10, 1, 6, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "forecast_within_band(52.6>=52.0)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"4a12321db0ac658d1d4e724a34d1bd92", #datetime(2026, 10, 1, 6, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "hold_and_inspect", 0.0, 0.9, "Hold irrigation for tray tray-3 and inspect", "active_fault(leakage_or_sensor)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"3de0cf87b4a395943ce538927b9757ad", #datetime(2026, 10, 1, 6, 12, 0), "tray-1", "crop_water_response", "gbr-q-2026-09-30", null, null, null, null, null, 3.607, 58.04, 55.54, 60.54, 57.81, -0.23, 0.8, 0.923, null, "71ed8d83b107c9ef83f00b7601815723", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"59f959aba412a64cef9370a72212fb12", #datetime(2026, 10, 1, 6, 27, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=-0.08; anomaly=False", null, null, null, null, null, null, null, null, 0.077, "71ed8d83b107c9ef83f00b7601815723", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"91b626d377fa10a371f0456f531082d0", #datetime(2026, 10, 1, 7, 3, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "irrigate", 200.0, 0.857, "Irrigate tray tray-1 with 200 mL", "moisture_below_target", 3.766, 61.58, 59.08, 64.08, 58.31, -3.27, 0.857, 0.0, null, "77f0613902c4b76f0bab24821262afca", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"7c4b5b86c01d342bfad5cbf0fdfc191e", #datetime(2026, 10, 1, 7, 21, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "Check solenoid operation, tubing kinks, air in line", "hypothesis=valve_tubing_system; flow=intermittent; response=no_change; z=-1.09; anomaly=True", null, null, null, null, null, null, null, null, 1.089, "77f0613902c4b76f0bab24821262afca", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"126e3664488383be24a646156ce9eb66", #datetime(2026, 10, 1, 11, 14, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "irrigate", 50.0, 0.783, "Irrigate tray tray-2 with 50 mL", "moisture_below_target", 1.307, 52.51, 50.01, 55.01, 52.39, -0.12, 0.783, 0.961, null, "f4bcf11baa85cd6102409484704e3636", "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"b9895415e76c808b2d20cff7d3797379", #datetime(2026, 10, 1, 11, 32, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=-0.04; anomaly=False", null, null, null, null, null, null, null, null, 0.039, "f4bcf11baa85cd6102409484704e3636", "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"dd8c0f96a02f6772e8a0fe7188e1cae0", #datetime(2026, 10, 1, 12, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "hold_and_inspect", 0.0, 0.9, "Hold irrigation for tray tray-1 and inspect", "active_fault(valve_tubing_system)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"90a55d664c0aba50a88f44fa9bf12a80", #datetime(2026, 10, 1, 12, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "forecast_within_band(52.4>=52.0)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"30581eb8d91dbfb30720a1d1a23d3955", #datetime(2026, 10, 1, 12, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "forecast_within_band(64.0>=62.0)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"e37d169ae895c1516d0cb9b122b65b22", #datetime(2026, 10, 1, 16, 1, 0), "tray-1", "crop_water_response", "gbr-q-2026-09-30", null, null, null, null, null, 2.26, 57.63, 55.13, 60.13, 57.85, 0.22, 0.81, 0.926, null, "df439667fd162a9d9f05049e1673db88", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"08bdd2711ceb8f729a619e47cd92c90d", #datetime(2026, 10, 1, 16, 8, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 50.0, 0.808, "Irrigate tray tray-3 with 50 mL", "moisture_below_target", 0.792, 62.59, 60.09, 65.09, 62.64, 0.05, 0.808, 0.984, null, "b1a54098317225495ab6f4cd412d9f54", "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"eae199b61d5db2bf901e1930339c02a1", #datetime(2026, 10, 1, 16, 16, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.07; anomaly=False", null, null, null, null, null, null, null, null, 0.074, "df439667fd162a9d9f05049e1673db88", "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"fd1d8480d691cfe90572d077725f632c", #datetime(2026, 10, 1, 16, 26, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "Check emitter placement, sensor contact with media, media dryness/hydrophobicity", "hypothesis=distribution_sensor_media; flow=normal; response=no_change; z=0.02; anomaly=False", null, null, null, null, null, null, null, null, 0.016, "b1a54098317225495ab6f4cd412d9f54", "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"0388715571afd1d8f2e25c0844ca72f8", #datetime(2026, 10, 1, 18, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "hold_and_inspect", 0.0, 0.9, "Hold irrigation for tray tray-1 and inspect", "active_fault(valve_tubing_system)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "early_growth"},
+				            {"a50a2caad17bfa8f9ed3e9762eaa3de5", #datetime(2026, 10, 1, 18, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "min_interval_not_elapsed(7<480min)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"5c6611ff136d1af58459f0729c606004", #datetime(2026, 10, 1, 18, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "forecast_within_band(62.2>=62.0)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"c55a8a05e71363538f855845ea410a35", #datetime(2026, 10, 1, 19, 59, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "irrigate", 100.0, 0.857, "Irrigate tray tray-2 with 100 mL", "moisture_below_target", 2.812, 52.59, 50.09, 55.09, 52.51, -0.08, 0.857, 0.973, null, "a276ac02925f8467a212f5e66d1ed982", "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"4815dc26caba1bc45ce7b2c7195793c8", #datetime(2026, 10, 1, 20, 17, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=-0.03; anomaly=False", null, null, null, null, null, null, null, null, 0.027, "a276ac02925f8467a212f5e66d1ed982", "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"e62bca9751bad83a7c093a7dd6ada4f9", #datetime(2026, 10, 1, 23, 0, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 150.0, 0.858, "Irrigate tray tray-3 with 150 mL", "moisture_below_target", 3.051, 62.52, 60.02, 65.02, 62.25, -0.27, 0.858, 0.911, null, "2a20f08dc22c831705e80be48be66eec", "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"b4533d4e3ca593db449efe34a05efda2", #datetime(2026, 10, 1, 23, 18, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=-0.09; anomaly=False", null, null, null, null, null, null, null, null, 0.089, "2a20f08dc22c831705e80be48be66eec", "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"0c711ed499dc8ea7210714baf6905a86", #datetime(2026, 10, 2, 0, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "hold_and_inspect", 0.0, 0.9, "Hold irrigation for tray tray-1 and inspect", "active_fault(valve_tubing_system)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "active_growth"},
+				            {"52a95476a3cffa6a03d77f2ae01cf99b", #datetime(2026, 10, 2, 0, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-2 now", "min_interval_not_elapsed(4<480min)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"0eb4ea732cac590156786908cce5ca93", #datetime(2026, 10, 2, 0, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "forecast_within_band(62.3>=62.0)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"54443b02d5bd6feeb960e68cb5cbfde6", #datetime(2026, 10, 2, 1, 15, 0), "tray-1", "crop_water_response", "gbr-q-2026-09-30", null, null, null, null, null, 2.224, 57.83, 55.33, 60.33, 57.64, -0.19, 0.812, 0.936, null, "27fc2a8b04c30ec917ec412c281c17f8", "6513270e269e0d37f2a74de452e6b438", "active_growth"},
+				            {"c4667357878c243524853cc235e226c7", #datetime(2026, 10, 2, 1, 30, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=-0.06; anomaly=False", null, null, null, null, null, null, null, null, 0.064, "27fc2a8b04c30ec917ec412c281c17f8", "6513270e269e0d37f2a74de452e6b438", "active_growth"},
+				            {"604101ec906f7b903a65dbfc0f5b3637", #datetime(2026, 10, 2, 5, 1, 0), "tray-2", "crop_water_response", "gbr-q-2026-09-30", null, null, null, null, null, 1.343, 52.02, 49.52, 54.52, 51.85, -0.18, 0.852, 0.941, null, "602524a9eb4c14e3e832810468f1004c", "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"dc3ed57ca08b1dffa8344af1f1e84978", #datetime(2026, 10, 2, 5, 16, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=-0.06; anomaly=False", null, null, null, null, null, null, null, null, 0.059, "602524a9eb4c14e3e832810468f1004c", "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"ca73cd7391cc46dafb3969ad3773b4d8", #datetime(2026, 10, 2, 6, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "hold_and_inspect", 0.0, 0.9, "Hold irrigation for tray tray-1 and inspect", "active_fault(valve_tubing_system)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "active_growth"},
+				            {"18f8ee6b5a077da7bc6b8b4680ac55da", #datetime(2026, 10, 2, 6, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 150.0, 0.781, "Irrigate tray tray-3 with 150 mL", "moisture_below_target", 3.007, 62.63, 60.13, 65.13, 62.54, -0.08, 0.781, 0.972, null, "b76325e2aa54729ceb2302dea464b625", "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"295e77b63fee7e7ee4169510df41fd73", #datetime(2026, 10, 2, 6, 13, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "irrigate", 200.0, 0.807, "Irrigate tray tray-2 with 200 mL", "moisture_below_target", 5.048, 56.9, 54.4, 59.4, 52.25, -4.65, 0.807, 0.0, null, "35b6a52ac83c86b7e202fbed0d5840cd", "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"faca57ab55ee454ce1c78fc4658c8035", #datetime(2026, 10, 2, 6, 20, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=-0.03; anomaly=False", null, null, null, null, null, null, null, null, 0.028, "b76325e2aa54729ceb2302dea464b625", "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"5c40d6dabc4a3530e231920ad9f1dd1b", #datetime(2026, 10, 2, 6, 31, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "Check emitter placement, sensor contact with media, media dryness/hydrophobicity", "hypothesis=distribution_sensor_media; flow=normal; response=no_change; z=-1.55; anomaly=True", null, null, null, null, null, null, null, null, 1.549, "35b6a52ac83c86b7e202fbed0d5840cd", "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"e5e9b368249f079dcdc2d18968f3f465", #datetime(2026, 10, 2, 10, 9, 0), "tray-1", "crop_water_response", "gbr-q-2026-09-30", null, null, null, null, null, 2.272, 57.57, 55.07, 60.07, 56.98, -0.58, 0.85, 0.805, null, "3d35196c015820a5a28e0b7dff9430f4", "6513270e269e0d37f2a74de452e6b438", "active_growth"},
+				            {"fd17acd1ed20ea498044e81e9b9abe04", #datetime(2026, 10, 2, 10, 24, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=-0.19; anomaly=False", null, null, null, null, null, null, null, null, 0.195, "3d35196c015820a5a28e0b7dff9430f4", "6513270e269e0d37f2a74de452e6b438", "active_growth"},
+				            {"52778cedd381bdd5ad5d2966a8db9bd0", #datetime(2026, 10, 2, 12, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "hold_and_inspect", 0.0, 0.9, "Hold irrigation for tray tray-1 and inspect", "active_fault(valve_tubing_system)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "active_growth"},
+				            {"85a4a1345907f490b8b83e89db929b4e", #datetime(2026, 10, 2, 12, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "hold_and_inspect", 0.0, 0.9, "Hold irrigation for tray tray-2 and inspect", "active_fault(distribution_sensor_media)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"3d17a7db5da48846d037e73e2b4c4a87", #datetime(2026, 10, 2, 12, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "min_interval_not_elapsed(6<360min)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"6009a07a40611c92b3df0515276258c7", #datetime(2026, 10, 2, 13, 11, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 150.0, 0.849, "Irrigate tray tray-3 with 150 mL", "moisture_below_target", 2.979, 62.69, 60.19, 65.19, 62.82, 0.13, 0.849, 0.957, null, "46674b2816872f85a9886cb473eb085e", "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"723a4135ff38e6394a5e36776542a692", #datetime(2026, 10, 2, 13, 29, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.04; anomaly=False", null, null, null, null, null, null, null, null, 0.043, "46674b2816872f85a9886cb473eb085e", "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"a5ef82fc6e53dbac686db9fef843bab8", #datetime(2026, 10, 2, 15, 20, 0), "tray-2", "crop_water_response", "gbr-q-2026-09-30", null, null, null, null, null, 2.793, 52.71, 50.21, 55.21, 52.57, -0.13, 0.843, 0.955, null, "5a33c64241bd180ccf9251e19b81289e", "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"9425be21d985c91d62a6c5953d16964f", #datetime(2026, 10, 2, 15, 35, 20), "tray-2", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=-0.04; anomaly=False", null, null, null, null, null, null, null, null, 0.045, "5a33c64241bd180ccf9251e19b81289e", "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"169791627f37a9b31a096f2103f6082d", #datetime(2026, 10, 2, 18, 2, 0), "tray-1", "adaptive_irrigation_policy", "policy-v0", "hold_and_inspect", 0.0, 0.9, "Hold irrigation for tray tray-1 and inspect", "active_fault(valve_tubing_system)", null, null, null, null, null, null, null, null, null, null, "6513270e269e0d37f2a74de452e6b438", "active_growth"},
+				            {"bf7840c0b0e659a58ce586710e05f3ca", #datetime(2026, 10, 2, 18, 2, 0), "tray-2", "adaptive_irrigation_policy", "policy-v0", "hold_and_inspect", 0.0, 0.9, "Hold irrigation for tray tray-2 and inspect", "active_fault(distribution_sensor_media)", null, null, null, null, null, null, null, null, null, null, "d23f0824128b2f330c5c7fd0a6a3a450", "active_growth"},
+				            {"fd1a2d072fa7448c018af00ffb736a2a", #datetime(2026, 10, 2, 18, 2, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "wait", 0.0, 0.9, "Wait: do not irrigate tray tray-3 now", "min_interval_not_elapsed(5<360min)", null, null, null, null, null, null, null, null, null, null, "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"a6fa0c12896eeef5351f20ff0d56e625", #datetime(2026, 10, 2, 19, 13, 0), "tray-1", "crop_water_response", "gbr-q-2026-09-30", null, null, null, null, null, 3.703, 57.72, 55.22, 60.22, 57.36, -0.37, 0.8, 0.877, null, "a804b52576d76b97eeb518985fb1d2e2", "6513270e269e0d37f2a74de452e6b438", "active_growth"},
+				            {"242b225a9572558bb5ba54db7d2e414d", #datetime(2026, 10, 2, 19, 28, 20), "tray-1", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=-0.12; anomaly=False", null, null, null, null, null, null, null, null, 0.123, "a804b52576d76b97eeb518985fb1d2e2", "6513270e269e0d37f2a74de452e6b438", "active_growth"},
+				            {"bcb91fa18fa1961fb8a5a600ec224e37", #datetime(2026, 10, 2, 19, 58, 0), "tray-3", "adaptive_irrigation_policy", "policy-v0", "irrigate", 150.0, 0.845, "Irrigate tray tray-3 with 150 mL", "moisture_below_target", 2.983, 62.69, 60.19, 65.19, 63.12, 0.43, 0.845, 0.856, null, "bfa8cb61acca1434b86e41f0ac818d66", "9531985d5d9dc9f81818e811892f902b", "early_growth"},
+				            {"88d197b23605d52dcd4b338d4b7e1509", #datetime(2026, 10, 2, 20, 16, 20), "tray-3", "response_deviation", "rules-v0", null, null, 0.7, "No action needed", "hypothesis=normal; flow=normal; response=expected; z=0.14; anomaly=False", null, null, null, null, null, null, null, null, 0.144, "bfa8cb61acca1434b86e41f0ac818d66", "9531985d5d9dc9f81818e811892f902b", "early_growth"}
+				        }),
+				    Step0 = Table.AddColumn(Source, "Date", each DateTime.Date([timestamp]), type date),
+				    Step1 = Table.AddColumn(Step0, "Decision", each if [irrigation_recommendation] = null then null else Text.Proper(Text.Replace([irrigation_recommendation], "_", " ")), type text),
+				    Result = Step1
+				in
+				    Result
+
+	annotation PBI_ResultType = Table

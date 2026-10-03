@@ -1,0 +1,116 @@
+table Thresholds
+	lineageTag: ebb94639-9b6c-44ae-b18b-94fe4e8b6373
+
+	column threshold_id
+		dataType: string
+		lineageTag: 40a704a4-ba13-4ea9-8424-5833db5ccfe9
+		summarizeBy: none
+		sourceColumn: threshold_id
+
+	column seed_type
+		dataType: string
+		lineageTag: 203f82f1-3393-48ea-b71f-842b453469d5
+		summarizeBy: none
+		sourceColumn: seed_type
+
+	column media_type
+		dataType: string
+		lineageTag: 51b2cf88-0b68-46eb-9b06-72324babef86
+		summarizeBy: none
+		sourceColumn: media_type
+
+	column growth_stage
+		dataType: string
+		lineageTag: 420e365f-54e6-45f4-a90c-65c933164542
+		summarizeBy: none
+		sourceColumn: growth_stage
+
+	column parameter
+		dataType: string
+		lineageTag: 864f75c0-c04a-48bc-88ab-783af7778bc5
+		summarizeBy: none
+		sourceColumn: parameter
+
+	column optimal_min
+		dataType: double
+		formatString: General Number
+		lineageTag: d51413d9-724c-4587-b7fd-82d1bf54b67a
+		summarizeBy: none
+		sourceColumn: optimal_min
+
+	column optimal_max
+		dataType: double
+		formatString: General Number
+		lineageTag: 45601e0e-46b5-493d-9af2-80c46a9280c4
+		summarizeBy: none
+		sourceColumn: optimal_max
+
+	column warning_min
+		dataType: double
+		formatString: General Number
+		lineageTag: 2652c217-aa7b-4c12-acbc-4f6e69c4fd88
+		summarizeBy: none
+		sourceColumn: warning_min
+
+	column warning_max
+		dataType: double
+		formatString: General Number
+		lineageTag: b00dd1fe-dde2-4730-8fce-08193c55c3d8
+		summarizeBy: none
+		sourceColumn: warning_max
+
+	column critical_min
+		dataType: double
+		formatString: General Number
+		lineageTag: 175c6eff-8a1b-4ae6-8408-79a5ff1c80bc
+		summarizeBy: none
+		sourceColumn: critical_min
+
+	column critical_max
+		dataType: double
+		formatString: General Number
+		lineageTag: 21e9bf22-d234-4d83-a8ca-be20359342ac
+		summarizeBy: none
+		sourceColumn: critical_max
+
+	column threshold_version
+		dataType: string
+		lineageTag: cafbd122-796b-4d08-ad18-63e56be4a392
+		summarizeBy: none
+		sourceColumn: threshold_version
+
+	column effective_from
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: f2e98be3-0116-4133-96d5-7bf90ce1832a
+		summarizeBy: none
+		sourceColumn: effective_from
+
+	partition Thresholds = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [threshold_id = text, seed_type = text, media_type = text, growth_stage = text, parameter = text, optimal_min = number, optimal_max = number, warning_min = number, warning_max = number, critical_min = number, critical_max = number, threshold_version = text, effective_from = datetime],
+				        {
+				            {"36f675cc81e74ef5e8e25d940ed90475", "radish", "cocopeat", "germination", "soil_moisture", 55.0, 75.0, 45.0, 85.0, 35.0, 90.0, "v1", #datetime(2026, 9, 24, 0, 0, 0)},
+				            {"6b0d549b6f03675a1600a35a099950d8", "radish", "cocopeat", "blackout", "soil_moisture", 55.0, 75.0, 45.0, 85.0, 35.0, 90.0, "v1", #datetime(2026, 9, 24, 0, 0, 0)},
+				            {"8d116ece1738f7d93d9c172411e20b8f", "radish", "cocopeat", "early_growth", "soil_moisture", 55.0, 75.0, 45.0, 85.0, 35.0, 90.0, "v1", #datetime(2026, 9, 24, 0, 0, 0)},
+				            {"90c192cfd3ac94af0f21ddb66cad4a26", "radish", "cocopeat", "active_growth", "soil_moisture", 55.0, 75.0, 45.0, 85.0, 35.0, 90.0, "v1", #datetime(2026, 9, 24, 0, 0, 0)},
+				            {"a170b33839263059f28c105d1fb17c23", "radish", "cocopeat", "pre_harvest", "soil_moisture", 55.0, 75.0, 45.0, 85.0, 35.0, 90.0, "v1", #datetime(2026, 9, 24, 0, 0, 0)},
+				            {"0fd630f1f29d0da9953f48f1a09f76b5", "mustard", "compost", "germination", "soil_moisture", 50.0, 70.0, 40.0, 80.0, 30.0, 85.0, "v1", #datetime(2026, 9, 24, 0, 0, 0)},
+				            {"0cb1e29c658cda1495e60af593bd04cf", "mustard", "compost", "blackout", "soil_moisture", 50.0, 70.0, 40.0, 80.0, 30.0, 85.0, "v1", #datetime(2026, 9, 24, 0, 0, 0)},
+				            {"8e81973e0becd7b03898d190f9ebdacc", "mustard", "compost", "early_growth", "soil_moisture", 50.0, 70.0, 40.0, 80.0, 30.0, 85.0, "v1", #datetime(2026, 9, 24, 0, 0, 0)},
+				            {"6b4cb2424a23d5962217beaddbc496cb", "mustard", "compost", "active_growth", "soil_moisture", 50.0, 70.0, 40.0, 80.0, 30.0, 85.0, "v1", #datetime(2026, 9, 24, 0, 0, 0)},
+				            {"922766581e27a1c08a6a63ec24ede6a4", "mustard", "compost", "pre_harvest", "soil_moisture", 50.0, 70.0, 40.0, 80.0, 30.0, 85.0, "v1", #datetime(2026, 9, 24, 0, 0, 0)},
+				            {"ae97ba94d0eda82f8f6d05584ef8aa38", "green gram", "tissue paper", "germination", "soil_moisture", 60.0, 80.0, 50.0, 90.0, 40.0, 95.0, "v1", #datetime(2026, 9, 24, 0, 0, 0)},
+				            {"923a736994e3bf911a61dbe22e44158b", "green gram", "tissue paper", "blackout", "soil_moisture", 60.0, 80.0, 50.0, 90.0, 40.0, 95.0, "v1", #datetime(2026, 9, 24, 0, 0, 0)},
+				            {"18f135d25f557203301850c5a38fd547", "green gram", "tissue paper", "early_growth", "soil_moisture", 60.0, 80.0, 50.0, 90.0, 40.0, 95.0, "v1", #datetime(2026, 9, 24, 0, 0, 0)},
+				            {"907a70c31012f037b64ce4228c38fb29", "green gram", "tissue paper", "active_growth", "soil_moisture", 60.0, 80.0, 50.0, 90.0, 40.0, 95.0, "v1", #datetime(2026, 9, 24, 0, 0, 0)},
+				            {"7f15052434b9b5df9e7769b10f4205b4", "green gram", "tissue paper", "pre_harvest", "soil_moisture", 60.0, 80.0, 50.0, 90.0, 40.0, 95.0, "v1", #datetime(2026, 9, 24, 0, 0, 0)}
+				        }),
+				    Result = Source
+				in
+				    Result
+
+	annotation PBI_ResultType = Table

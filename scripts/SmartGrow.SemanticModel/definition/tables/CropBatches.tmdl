@@ -1,0 +1,85 @@
+table CropBatches
+	lineageTag: 789b8967-21cb-4723-91d5-dd9f049cd991
+
+	measure 'Active Batches' = CALCULATE(COUNTROWS(CropBatches), CropBatches[batch_status] <> "harvested") + 0
+		formatString: #,0
+		lineageTag: bb1d4f70-3836-4a27-9b66-714ba6891401
+
+	measure 'Days After Sowing' = DATEDIFF(MIN(CropBatches[planting_date]), CALCULATE(MAX(Dates[Date]), ALL(Dates)), DAY)
+		formatString: 0
+		lineageTag: bb17d613-3d7d-4587-a1b8-5876875cac1f
+
+	column batch_id
+		dataType: string
+		lineageTag: 0c14fcd3-54bf-4881-94fa-586970d621cb
+		summarizeBy: none
+		sourceColumn: batch_id
+
+	column tray_id
+		dataType: string
+		lineageTag: 3770c94a-f3eb-4b78-be1d-8090a4e42612
+		summarizeBy: none
+		sourceColumn: tray_id
+
+	column seed_type
+		dataType: string
+		lineageTag: 1194ad28-b7a2-4d48-a0fe-8df10b7f3c86
+		summarizeBy: none
+		sourceColumn: seed_type
+
+	column media_type
+		dataType: string
+		lineageTag: 536a62ca-dcbc-4df7-8b6e-9b9ee7bb9a02
+		summarizeBy: none
+		sourceColumn: media_type
+
+	column planting_date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 95c2dbc0-b300-4ef2-8772-b9c9b782bf48
+		summarizeBy: none
+		sourceColumn: planting_date
+
+	column expected_harvest_date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: c8c1a94d-983f-45a0-a6d7-e1c760fe24c6
+		summarizeBy: none
+		sourceColumn: expected_harvest_date
+
+	column harvest_date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 8238a7ef-e3dd-44af-b1bf-c63f200d237b
+		summarizeBy: none
+		sourceColumn: harvest_date
+
+	column seed_quantity
+		dataType: double
+		formatString: General Number
+		lineageTag: 76a094ae-1c3b-4a05-9812-127031d6d4d6
+		summarizeBy: none
+		sourceColumn: seed_quantity
+
+	column batch_status
+		dataType: string
+		lineageTag: 76876037-3c3f-4c20-ab15-8bc9c31d8a59
+		summarizeBy: none
+		sourceColumn: batch_status
+
+	partition CropBatches = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [batch_id = text, tray_id = text, seed_type = text, media_type = text, planting_date = date, expected_harvest_date = date, harvest_date = date, seed_quantity = number, batch_status = text],
+				        {
+				            {"6513270e269e0d37f2a74de452e6b438", "tray-1", "radish", "cocopeat", #date(2026, 9, 24), #date(2026, 10, 5), null, 25.0, "growing"},
+				            {"d23f0824128b2f330c5c7fd0a6a3a450", "tray-2", "mustard", "compost", #date(2026, 9, 23), #date(2026, 10, 4), null, 20.0, "growing"},
+				            {"9531985d5d9dc9f81818e811892f902b", "tray-3", "green gram", "tissue paper", #date(2026, 9, 25), #date(2026, 10, 6), null, 30.0, "growing"}
+				        }),
+				    Result = Source
+				in
+				    Result
+
+	annotation PBI_ResultType = Table

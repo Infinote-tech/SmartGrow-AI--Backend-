@@ -1,0 +1,48 @@
+table Dates
+	dataCategory: Time
+	lineageTag: 3d8e6d92-0d03-42e2-b36f-139adc871ce3
+
+	column Date
+		dataType: dateTime
+		formatString: Short Date
+		isKey
+		lineageTag: 05882415-cd48-48e9-b2d6-f9c806e7a525
+		summarizeBy: none
+		sourceColumn: Date
+
+	column 'Day Name'
+		dataType: string
+		lineageTag: 7adc064c-eb8f-4c1b-b733-bc518168dff7
+		summarizeBy: none
+		sourceColumn: Day Name
+		sortByColumn: 'Day Number'
+
+	column 'Day Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 86e56da5-bfc1-4c0e-ae29-e1dba24865da
+		summarizeBy: none
+		sourceColumn: Day Number
+
+	column 'Day Label'
+		dataType: string
+		lineageTag: cb0d6b3f-675f-41b1-baaa-114f827905e3
+		summarizeBy: none
+		sourceColumn: Day Label
+		sortByColumn: Date
+
+	partition Dates = m
+		mode: import
+		source =
+				let
+				    Source = List.Dates(#date(2026, 9, 24), 9, #duration(1, 0, 0, 0)),
+				    AsTable = Table.FromList(Source, Splitter.SplitByNothing(), {"Date"}, null, ExtraValues.Error),
+				    Typed = Table.TransformColumnTypes(AsTable, {{"Date", type date}}),
+				    Step0 = Table.AddColumn(Typed, "Day Name", each Date.ToText([Date], "ddd", "en-US"), type text),
+				    Step1 = Table.AddColumn(Step0, "Day Number", each Date.DayOfWeek([Date], Day.Monday), Int64.Type),
+				    Step2 = Table.AddColumn(Step1, "Day Label", each Date.ToText([Date], "ddd dd MMM", "en-US"), type text),
+				    Result = Step2
+				in
+				    Result
+
+	annotation PBI_ResultType = Table
