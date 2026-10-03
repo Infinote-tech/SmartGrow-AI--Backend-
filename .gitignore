@@ -65,3 +65,6 @@ logs/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Trained model artifacts (regenerate with scripts/train_*.py)
+app/ml/artifacts/

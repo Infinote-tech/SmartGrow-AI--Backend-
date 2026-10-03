@@ -1,0 +1,280 @@
+table IrrigationLogs
+	lineageTag: 1cd80bf2-39a1-4f8a-b0da-f6bb5108bdf5
+
+	measure 'Irrigation Events' = COUNTROWS(IrrigationLogs)
+		formatString: #,0
+		lineageTag: 0e1e4d33-2b10-43b2-bf5a-c5029fd8fcd7
+
+	measure 'Total Water (mL)' = SUM(IrrigationLogs[water_volume])
+		formatString: #,0" mL"
+		lineageTag: 44aef96c-eba6-44f2-b4c6-65126163a38e
+
+	measure 'Avg Volume (mL)' = AVERAGE(IrrigationLogs[water_volume])
+		formatString: 0" mL"
+		lineageTag: f5888ef7-2b92-4a8e-a34e-6ba5d626b5f5
+
+	measure 'Avg Expected Response' = AVERAGE(IrrigationLogs[expected_response])
+		formatString: 0.0" pts"
+		lineageTag: a093d4cc-a718-437d-aa67-32138bcf3ab2
+
+	measure 'Avg Actual Response' = AVERAGE(IrrigationLogs[actual_response])
+		formatString: 0.0" pts"
+		lineageTag: 975bca2d-989c-4a55-828f-97ea290ba8b8
+
+	measure 'Avg Response Deviation' = AVERAGE(IrrigationLogs[response_deviation])
+		formatString: 0.0" pts"
+		lineageTag: 222f5563-a0ec-4fde-b814-b941e218cf6b
+
+	measure 'Avg Flow Rate' = AVERAGE(IrrigationLogs[avg_flow_rate])
+		formatString: 0.00" L/min"
+		lineageTag: 6293498b-2e55-4467-932a-b3f0d7e34644
+
+	measure 'AI Recommended %' =
+			DIVIDE(
+			    CALCULATE(COUNTROWS(IrrigationLogs), IrrigationLogs[ai_recommended] = TRUE()),
+			    COUNTROWS(IrrigationLogs)
+			)
+		formatString: 0%
+		lineageTag: 4f3cd9af-2d79-42de-93b6-c3b8146e59be
+
+	column irrigation_id
+		dataType: string
+		lineageTag: c5367c14-c48e-4000-8a1f-e169d9831a95
+		summarizeBy: none
+		sourceColumn: irrigation_id
+
+	column timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 198d568a-7bdb-4fe2-9608-9a09d7b76c6a
+		summarizeBy: none
+		sourceColumn: timestamp
+
+	column tray_id
+		dataType: string
+		lineageTag: 3b5d5f6f-b9ef-47c3-bd79-cc10e2ad9cfe
+		summarizeBy: none
+		sourceColumn: tray_id
+
+	column batch_id
+		dataType: string
+		lineageTag: d3fb2d95-d3af-46ab-9f4d-af09cd27e897
+		summarizeBy: none
+		sourceColumn: batch_id
+
+	column solenoid_id
+		dataType: string
+		lineageTag: 0ce05cc5-ad34-4e76-a459-bfbcd911a29e
+		summarizeBy: none
+		sourceColumn: solenoid_id
+
+	column pump_status
+		dataType: string
+		lineageTag: 2ed120f0-f6ce-4934-bf48-5bb1916bda62
+		summarizeBy: none
+		sourceColumn: pump_status
+
+	column irrigation_duration
+		dataType: double
+		formatString: General Number
+		lineageTag: 042be5f2-58b1-4ed9-a9bc-5176c2062a45
+		summarizeBy: none
+		sourceColumn: irrigation_duration
+
+	column water_consumed
+		dataType: double
+		formatString: General Number
+		lineageTag: b81741df-8023-4ac7-8714-54b3639db2bb
+		summarizeBy: none
+		sourceColumn: water_consumed
+
+	column trigger_type
+		dataType: string
+		lineageTag: ae5e62d6-6557-4351-8c1d-c0c16e9de512
+		summarizeBy: none
+		sourceColumn: trigger_type
+
+	column trigger_reason
+		dataType: string
+		lineageTag: 75af9d20-5ad6-41df-95df-a0b6261e6fbd
+		summarizeBy: none
+		sourceColumn: trigger_reason
+
+	column ai_recommended
+		dataType: boolean
+		lineageTag: b1f94fe9-5897-4cc4-b59e-be166ed709c4
+		summarizeBy: none
+		sourceColumn: ai_recommended
+
+	column actual_action
+		dataType: string
+		lineageTag: feda72b2-0bdb-463d-b9bb-7cdaf7bdf109
+		summarizeBy: none
+		sourceColumn: actual_action
+
+	column growth_stage
+		dataType: string
+		lineageTag: 74d49cd8-ac9b-4da1-86e2-db6a4cab60fc
+		summarizeBy: none
+		sourceColumn: growth_stage
+
+	column pre_irrigation_moisture
+		dataType: double
+		formatString: General Number
+		lineageTag: 57451e01-74c6-4bb9-b5e0-7467d4a6d3d2
+		summarizeBy: none
+		sourceColumn: pre_irrigation_moisture
+
+	column post_irrigation_moisture
+		dataType: double
+		formatString: General Number
+		lineageTag: b0ae4ffb-0b0d-4719-a23a-9e2b47c9a291
+		summarizeBy: none
+		sourceColumn: post_irrigation_moisture
+
+	column post_measured_after_s
+		dataType: int64
+		formatString: 0
+		lineageTag: 4cf98fee-d033-4b54-8df7-a4d8a0cfae2a
+		summarizeBy: none
+		sourceColumn: post_measured_after_s
+
+	column water_volume
+		dataType: double
+		formatString: General Number
+		lineageTag: faaf1c3f-5896-4ed3-b001-489bf2e4eebb
+		summarizeBy: none
+		sourceColumn: water_volume
+
+	column avg_flow_rate
+		dataType: double
+		formatString: General Number
+		lineageTag: a6e92c8c-a5a2-4518-85a2-1cdcb55df60e
+		summarizeBy: none
+		sourceColumn: avg_flow_rate
+
+	column flow_cv
+		dataType: double
+		formatString: General Number
+		lineageTag: e8e8f35f-1fa0-46e8-801a-84bfdc006ebb
+		summarizeBy: none
+		sourceColumn: flow_cv
+
+	column expected_response
+		dataType: double
+		formatString: General Number
+		lineageTag: 95f2782e-e95f-4b16-a0e4-2f9e4211584c
+		summarizeBy: none
+		sourceColumn: expected_response
+
+	column actual_response
+		dataType: double
+		formatString: General Number
+		lineageTag: 70abf5ed-567f-4954-9449-fa8f3d83c24b
+		summarizeBy: none
+		sourceColumn: actual_response
+
+	column response_deviation
+		dataType: double
+		formatString: General Number
+		lineageTag: e44beb49-9cf0-401b-bdab-10c97462a484
+		summarizeBy: none
+		sourceColumn: response_deviation
+
+	column model_output_id
+		dataType: string
+		lineageTag: 3da9724a-87a2-4e10-9522-dd1656e9c61f
+		summarizeBy: none
+		sourceColumn: model_output_id
+
+	column Date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: abd28bbc-9e4b-4849-a46c-a62d81bab19f
+		summarizeBy: none
+		sourceColumn: Date
+
+	column Hour
+		dataType: int64
+		formatString: 0
+		lineageTag: 2653a769-b36d-4752-8ecd-641648b44948
+		summarizeBy: none
+		sourceColumn: Hour
+
+	column Trigger
+		dataType: string
+		lineageTag: 8079e4e1-2ca8-4ee3-a3cb-ff25847460ea
+		summarizeBy: none
+		sourceColumn: Trigger
+
+	partition IrrigationLogs = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [irrigation_id = text, timestamp = datetime, tray_id = text, batch_id = text, solenoid_id = text, pump_status = text, irrigation_duration = number, water_consumed = number, trigger_type = text, trigger_reason = text, ai_recommended = logical, actual_action = text, growth_stage = text, pre_irrigation_moisture = number, post_irrigation_moisture = number, post_measured_after_s = Int64.Type, water_volume = number, avg_flow_rate = number, flow_cv = number, expected_response = number, actual_response = number, response_deviation = number, model_output_id = text],
+				        {
+				            {"f179f2d2e48b96628f3c4be3ec3b9605", #datetime(2026, 9, 26, 14, 18, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 2.3, 50.0, "auto", "moisture below target", true, "irrigated", "germination", 61.53, 62.33, 900, 50.0, 1.29, 0.11, 0.484, 0.795, 0.311, "f10637ce81fc069e7a609683ceaf4915"},
+				            {"16e6fec353b97377b34e8ece7e9ee51d", #datetime(2026, 9, 26, 18, 14, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 2.5, 50.0, "auto", "moisture below target", true, "irrigated", "germination", 56.72, 57.81, 900, 50.0, 1.18, 0.04, 0.759, 1.092, 0.333, "d1a89b37ad0c9bb6e9526a69d97e967b"},
+				            {"dedb9109618177ffd75d6769aa4c5c60", #datetime(2026, 9, 26, 21, 2, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 10.9, 200.0, "auto", "moisture below target", true, "irrigated", "germination", 59.27, 62.71, 900, 200.0, 1.1, 0.06, 2.454, 3.441, 0.988, "121ae3e603a63966213bca7fd644de2f"},
+				            {"963892a766465d2824d4589c16fa1421", #datetime(2026, 9, 26, 22, 3, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 2.3, 50.0, "auto", "moisture below target", true, "irrigated", "blackout", 51.92, 53.18, 900, 50.0, 1.28, 0.09, 1.033, 1.264, 0.231, "a7f0c99e80b5244a4767e1fa79823eb2"},
+				            {"8c90473ee4c717fdfe48ef631e563408", #datetime(2026, 9, 27, 3, 16, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 8.0, 150.0, "auto", "moisture below target", true, "irrigated", "blackout", 55.07, 58.4, 900, 150.0, 1.12, 0.08, 2.56, 3.333, 0.773, "491961a1843baee9b578909c4a7591f2"},
+				            {"00721f8454d1ac6bd71961891ef3ea44", #datetime(2026, 9, 27, 4, 15, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 10.5, 200.0, "auto", "moisture below target", true, "irrigated", "germination", 59.92, 63.84, 900, 200.0, 1.14, 0.08, 2.303, 3.917, 1.613, "24056360ba28a6794d4ca9c767c98fb9"},
+				            {"1ea7722864f54969ab3b74fe8eaca288", #datetime(2026, 9, 27, 7, 10, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 2.5, 50.0, "auto", "moisture below target", true, "irrigated", "blackout", 50.96, 52.34, 900, 50.0, 1.19, 0.06, 1.088, 1.384, 0.296, "bd1e6912bd313bee41785bc64c3ac6fc"},
+				            {"a060846c20c26f71f662222e4dc4ac8c", #datetime(2026, 9, 27, 11, 1, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 7.0, 150.0, "auto", "moisture below target", true, "irrigated", "germination", 60.85, 63.36, 900, 150.0, 1.29, 0.05, 1.569, 2.507, 0.938, "91c3098c3b8a27ba202ab6fac844b8fd"},
+				            {"077ef32a3f3f37ea8c0856a43c19c315", #datetime(2026, 9, 27, 12, 9, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 4.8, 100.0, "auto", "moisture below target", true, "irrigated", "blackout", 55.45, 57.64, 900, 100.0, 1.26, 0.05, 1.663, 2.184, 0.522, "d6e3a71ea502e8a850fcc626f57d1709"},
+				            {"0a68013d679f2d9ec4445aaea01ac23a", #datetime(2026, 9, 27, 16, 12, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 5.2, 100.0, "auto", "moisture below target", true, "irrigated", "blackout", 49.99, 53.12, 900, 100.0, 1.16, 0.06, 2.287, 3.137, 0.85, "07c0909c797b1538e5a15b79bcc0fd98"},
+				            {"1aefca62e22b64a66d32a901faf20ac0", #datetime(2026, 9, 27, 18, 13, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 7.4, 150.0, "auto", "moisture below target", true, "irrigated", "germination", 60.51, 63.25, 900, 150.0, 1.21, 0.05, 1.626, 2.733, 1.106, "6862bf793f4f8b9d28f1a81bc0bd1d84"},
+				            {"31b4932c954c2fc1d3f2e52df9143ef5", #datetime(2026, 9, 27, 21, 1, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 8.4, 150.0, "manual", "grower check", false, "irrigated", "blackout", 55.0, 58.78, 900, 150.0, 1.07, 0.09, 2.572, 3.779, 1.207, "99b9ede73087de350ce66f731e84fb36"},
+				            {"678c4cb99efd55d238d9e9abdb495244", #datetime(2026, 9, 28, 1, 16, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 7.6, 150.0, "manual", "grower check", false, "irrigated", "blackout", 60.54, 63.13, 900, 150.0, 1.18, 0.06, 1.621, 2.586, 0.965, "c92bdd5aa3ec4d322907db86e4219307"},
+				            {"3284fc6fce017551f78530bfcaca003c", #datetime(2026, 9, 28, 1, 17, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 2.7, 50.0, "auto", "moisture below target", true, "irrigated", "early_growth", 51.07, 52.34, 900, 50.0, 1.11, 0.1, 1.082, 1.276, 0.194, "1bd9d912112d4095eced8ded2bfa1f10"},
+				            {"434b4b949785f4f83554ada87ae85484", #datetime(2026, 9, 28, 6, 6, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 2.6, 50.0, "auto", "moisture below target", true, "irrigated", "blackout", 56.68, 57.77, 900, 50.0, 1.16, 0.07, 0.761, 1.091, 0.329, "4665ea199d106a37e58376fb52e71cf8"},
+				            {"9fb9d8f65dc18bce34456d5b223be9e7", #datetime(2026, 9, 28, 8, 1, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 8.1, 150.0, "manual", "grower check", false, "irrigated", "blackout", 60.42, 63.5, 900, 150.0, 1.11, 0.07, 1.643, 3.084, 1.441, "96ceb5254d187e3e956636e669c9fef0"},
+				            {"9bab534084ac8fe63313a10169c60d1b", #datetime(2026, 9, 28, 10, 8, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 4.8, 100.0, "auto", "moisture below target", true, "irrigated", "early_growth", 50.26, 53.21, 900, 100.0, 1.26, 0.06, 2.256, 2.955, 0.699, "c7642bdee967ebdb0ef1f01228c26bb2"},
+				            {"a5753d8bc1e299a3cabe5e52190d78d3", #datetime(2026, 9, 28, 15, 3, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 7.6, 150.0, "auto", "moisture below target", true, "irrigated", "blackout", 60.44, 63.24, 900, 150.0, 1.19, 0.08, 1.64, 2.802, 1.162, "a1dbbd89a1ac6036c05d7b62d337264b"},
+				            {"3f1fb2411b6bf27362438362f1bf55ed", #datetime(2026, 9, 28, 15, 18, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 9.2, 200.0, "auto", "moisture below target", true, "irrigated", "blackout", 54.2, 59.21, 900, 200.0, 1.3, 0.03, 3.612, 5.011, 1.399, "e134f9f810e1fec9aa069dd3e42af0ad"},
+				            {"b06653507055114e769177522b67a9fd", #datetime(2026, 9, 28, 19, 2, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 4.6, 100.0, "auto", "moisture below target", true, "irrigated", "early_growth", 50.83, 53.7, 900, 100.0, 1.31, 0.05, 2.19, 2.866, 0.676, "85903d9753a000dc94e27f7759365783"},
+				            {"3e0dac1c6b699f07e50df523190dcc94", #datetime(2026, 9, 28, 22, 19, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 7.9, 150.0, "auto", "moisture below target", true, "irrigated", "blackout", 60.39, 62.91, 900, 150.0, 1.14, 0.06, 1.647, 2.515, 0.868, "2e771bd6adfa09b03a85eed0da39c4ea"},
+				            {"5924204384eb99bd3326d90ff0ca5b41", #datetime(2026, 9, 29, 0, 4, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 2.4, 50.0, "auto", "moisture below target", true, "irrigated", "early_growth", 56.32, 57.36, 900, 50.0, 1.26, 0.11, 0.782, 1.039, 0.257, "37c714cf8b19a2b64050284509c3e7c0"},
+				            {"a216ed03585bc3add4d1e96987d88917", #datetime(2026, 9, 29, 4, 2, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 2.7, 50.0, "auto", "moisture below target", true, "irrigated", "early_growth", 51.86, 53.29, 900, 50.0, 1.12, 0.12, 1.037, 1.439, 0.402, "e7e2e6079088ec8ad3f13f1915d4e7c2"},
+				            {"3286dfae4c0b0f70d6bbcb67a2f7e7f9", #datetime(2026, 9, 29, 5, 6, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 10.0, 200.0, "auto", "moisture below target", true, "irrigated", "blackout", 60.22, 64.05, 900, 200.0, 1.2, 0.1, 2.235, 3.824, 1.59, "9bbdf2eab0227a15e42172519c09119a"},
+				            {"0be0a71d019705ee1bc6b08b4ce76f14", #datetime(2026, 9, 29, 9, 3, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 8.5, 150.0, "auto", "moisture below target", true, "irrigated", "early_growth", 54.81, 58.11, 900, 150.0, 1.06, 0.06, 2.604, 3.296, 0.692, "661ce41c0a40c9e8ff1a5c0cc8c259a2"},
+				            {"2511957edb01b9f2b1e13663b6ab58ca", #datetime(2026, 9, 29, 12, 15, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 6.9, 150.0, "auto", "moisture below target", true, "irrigated", "blackout", 60.94, 63.52, 900, 150.0, 1.31, 0.08, 1.553, 2.584, 1.031, "ec3cd40d2ffa1f86be845f95bbca6b41"},
+				            {"7c8005c5d5bd0132dc685e91f52bc655", #datetime(2026, 9, 29, 13, 1, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 2.6, 50.0, "manual", "grower check", false, "irrigated", "early_growth", 51.16, 52.38, 900, 50.0, 1.15, 0.05, 1.077, 1.227, 0.15, "2a7ec80699a16b9ebabcb4aa4fffa8e1"},
+				            {"d526e8f999e4226426afd434d4cf50a7", #datetime(2026, 9, 29, 14, 20, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 60.0, 200.0, "auto", "moisture below target", true, "irrigated", "early_growth", 52.38, 52.58, 900, 200.0, 0.0, 0.0, 4.026, 0.2, -3.826, "cd4b9ff5b4093893a6a476a3f954dd9e"},
+				            {"a1fb68f15f25a7fe1b2a9134ddca8b0c", #datetime(2026, 9, 29, 18, 19, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 5.2, 100.0, "auto", "moisture below target", true, "irrigated", "early_growth", 55.55, 57.82, 900, 100.0, 1.16, 0.1, 1.651, 2.269, 0.617, "84685b61c79664706709ab4c5be04057"},
+				            {"908182d05197044a41d7725317076e31", #datetime(2026, 9, 29, 19, 3, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 6.9, 150.0, "auto", "moisture below target", true, "irrigated", "blackout", 60.57, 63.04, 900, 150.0, 1.3, 0.05, 1.616, 2.462, 0.846, "65bbc9f7a3ccb0a4991aff0adceb9e13"},
+				            {"706067ab250bc6e7e3aa471c8da9ec93", #datetime(2026, 9, 29, 23, 8, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 4.8, 100.0, "auto", "moisture below target", true, "irrigated", "early_growth", 50.25, 53.04, 900, 100.0, 1.24, 0.11, 2.257, 2.784, 0.527, "5db44741a0d09c621d98a4747a3ff311"},
+				            {"7a0365dbc352b37ee903e9cd68d61743", #datetime(2026, 9, 30, 2, 2, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 4.6, 100.0, "auto", "moisture below target", true, "irrigated", "early_growth", 60.2, 61.98, 900, 100.0, 1.3, 0.08, 1.893, 1.786, -0.107, "55d0f05158ff0624cf86926984b9bda5"},
+				            {"d10878d03ea65dd8b6ef5dfc5b51e2c0", #datetime(2026, 9, 30, 3, 1, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 4.9, 100.0, "auto", "moisture below target", true, "irrigated", "early_growth", 55.34, 57.82, 900, 100.0, 1.23, 0.07, 2.265, 2.482, 0.217, "721dcfa1ee9f585d85131e935b2d18e2"},
+				            {"4e2f76c21cf070c7499b18e50a175b0e", #datetime(2026, 9, 30, 8, 20, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 2.4, 50.0, "auto", "moisture below target", true, "irrigated", "early_growth", 51.29, 52.74, 900, 50.0, 1.25, 0.07, 1.301, 1.452, 0.151, "8532b56c1f27b474402615f619baa4a4"},
+				            {"75fc74c45de7818bb5da24688c6f5a9c", #datetime(2026, 9, 30, 9, 3, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 9.8, 200.0, "auto", "moisture below target", true, "irrigated", "early_growth", 58.8, 76.97, 900, 200.0, 1.23, 0.07, 4.325, 18.167, 13.842, "d6f9ac8b4983cdd88bdb460abd8b16d7"},
+				            {"f67649bc65c220e77f7545c01e110eb0", #datetime(2026, 9, 30, 12, 5, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 5.3, 100.0, "auto", "moisture below target", true, "irrigated", "early_growth", 55.34, 57.18, 900, 100.0, 1.13, 0.09, 2.264, 1.837, -0.428, "011b5d7d1a7592a5deee738269bc9550"},
+				            {"19371cb1d797a9ee65c6e4454df0de9b", #datetime(2026, 9, 30, 17, 1, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 5.0, 100.0, "auto", "moisture below target", true, "irrigated", "early_growth", 50.23, 52.85, 900, 100.0, 1.2, 0.07, 2.749, 2.618, -0.13, "b5ec5c294e868ac300b62052c9a27dd4"},
+				            {"3cb77b2e582fc77148992613778e384b", #datetime(2026, 9, 30, 21, 18, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 8.6, 150.0, "manual", "grower check", false, "irrigated", "early_growth", 54.02, 57.08, 900, 150.0, 1.05, 0.02, 3.704, 3.063, -0.641, "30f2300d632a42b93eb420db8dc88649"},
+				            {"908656cc2dfef53bf109e573a3689b02", #datetime(2026, 10, 1, 2, 20, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 4.8, 100.0, "auto", "moisture below target", true, "irrigated", "active_growth", 50.61, 53.14, 900, 100.0, 1.26, 0.09, 2.696, 2.534, -0.162, "c1c81c2d32b5dff16e428d632979b0ac"},
+				            {"71ed8d83b107c9ef83f00b7601815723", #datetime(2026, 10, 1, 6, 12, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 7.7, 150.0, "manual", "grower check", false, "irrigated", "early_growth", 54.43, 57.81, 900, 150.0, 1.17, 0.06, 3.607, 3.378, -0.23, "3de0cf87b4a395943ce538927b9757ad"},
+				            {"77f0613902c4b76f0bab24821262afca", #datetime(2026, 10, 1, 7, 6, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 17.1, 200.0, "auto", "moisture below target", true, "irrigated", "early_growth", 57.81, 58.31, 900, 200.0, 0.7, 0.9, 3.766, 0.5, -3.266, "91b626d377fa10a371f0456f531082d0"},
+				            {"f4bcf11baa85cd6102409484704e3636", #datetime(2026, 10, 1, 11, 17, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 2.7, 50.0, "auto", "moisture below target", true, "irrigated", "active_growth", 51.2, 52.39, 900, 50.0, 1.13, 0.05, 1.307, 1.188, -0.118, "126e3664488383be24a646156ce9eb66"},
+				            {"df439667fd162a9d9f05049e1673db88", #datetime(2026, 10, 1, 16, 1, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 5.1, 100.0, "manual", "grower check", false, "irrigated", "early_growth", 55.37, 57.85, 900, 100.0, 1.17, 0.07, 2.26, 2.482, 0.222, "e37d169ae895c1516d0cb9b122b65b22"},
+				            {"b1a54098317225495ab6f4cd412d9f54", #datetime(2026, 10, 1, 16, 11, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 2.3, 50.0, "auto", "moisture below target", true, "irrigated", "early_growth", 61.8, 62.64, 900, 50.0, 1.29, 0.05, 0.792, 0.838, 0.047, "08bdd2711ceb8f729a619e47cd92c90d"},
+				            {"a276ac02925f8467a212f5e66d1ed982", #datetime(2026, 10, 1, 20, 2, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 4.8, 100.0, "auto", "moisture below target", true, "irrigated", "active_growth", 49.78, 52.51, 900, 100.0, 1.24, 0.08, 2.812, 2.73, -0.082, "c55a8a05e71363538f855845ea410a35"},
+				            {"2a20f08dc22c831705e80be48be66eec", #datetime(2026, 10, 1, 23, 3, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 7.1, 150.0, "auto", "moisture below target", true, "irrigated", "early_growth", 59.47, 62.25, 900, 150.0, 1.27, 0.12, 3.051, 2.783, -0.268, "e62bca9751bad83a7c093a7dd6ada4f9"},
+				            {"27fc2a8b04c30ec917ec412c281c17f8", #datetime(2026, 10, 2, 1, 15, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 4.7, 100.0, "manual", "grower check", false, "irrigated", "active_growth", 55.6, 57.64, 900, 100.0, 1.29, 0.06, 2.224, 2.031, -0.193, "54443b02d5bd6feeb960e68cb5cbfde6"},
+				            {"602524a9eb4c14e3e832810468f1004c", #datetime(2026, 10, 2, 5, 1, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 2.8, 50.0, "manual", "grower check", false, "irrigated", "active_growth", 50.68, 51.85, 900, 50.0, 1.09, 0.1, 1.343, 1.166, -0.177, "604101ec906f7b903a65dbfc0f5b3637"},
+				            {"b76325e2aa54729ceb2302dea464b625", #datetime(2026, 10, 2, 6, 5, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 8.0, 150.0, "auto", "moisture below target", true, "irrigated", "early_growth", 59.62, 62.54, 900, 150.0, 1.12, 0.05, 3.007, 2.922, -0.085, "18f8ee6b5a077da7bc6b8b4680ac55da"},
+				            {"35b6a52ac83c86b7e202fbed0d5840cd", #datetime(2026, 10, 2, 6, 16, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 9.3, 200.0, "auto", "moisture below target", true, "irrigated", "active_growth", 51.85, 52.25, 900, 200.0, 1.29, 0.09, 5.048, 0.4, -4.648, "295e77b63fee7e7ee4169510df41fd73"},
+				            {"3d35196c015820a5a28e0b7dff9430f4", #datetime(2026, 10, 2, 10, 9, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 4.7, 100.0, "manual", "grower check", false, "irrigated", "active_growth", 55.29, 56.98, 900, 100.0, 1.29, 0.05, 2.272, 1.688, -0.584, "e5e9b368249f079dcdc2d18968f3f465"},
+				            {"46674b2816872f85a9886cb473eb085e", #datetime(2026, 10, 2, 13, 14, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 7.3, 150.0, "auto", "moisture below target", true, "irrigated", "early_growth", 59.72, 62.82, 900, 150.0, 1.24, 0.08, 2.979, 3.11, 0.13, "6009a07a40611c92b3df0515276258c7"},
+				            {"5a33c64241bd180ccf9251e19b81289e", #datetime(2026, 10, 2, 15, 20, 0), "tray-2", "d23f0824128b2f330c5c7fd0a6a3a450", "2", "on", 5.3, 100.0, "manual", "grower check", false, "irrigated", "active_growth", 49.91, 52.57, 900, 100.0, 1.13, 0.11, 2.793, 2.658, -0.135, "a5ef82fc6e53dbac686db9fef843bab8"},
+				            {"a804b52576d76b97eeb518985fb1d2e2", #datetime(2026, 10, 2, 19, 13, 0), "tray-1", "6513270e269e0d37f2a74de452e6b438", "1", "on", 7.5, 150.0, "manual", "grower check", false, "irrigated", "active_growth", 54.02, 57.36, 900, 150.0, 1.2, 0.09, 3.703, 3.336, -0.368, "a6fa0c12896eeef5351f20ff0d56e625"},
+				            {"bfa8cb61acca1434b86e41f0ac818d66", #datetime(2026, 10, 2, 20, 1, 0), "tray-3", "9531985d5d9dc9f81818e811892f902b", "3", "on", 7.3, 150.0, "auto", "moisture below target", true, "irrigated", "early_growth", 59.7, 63.12, 900, 150.0, 1.23, 0.04, 2.983, 3.414, 0.431, "bcb91fa18fa1961fb8a5a600ec224e37"}
+				        }),
+				    Step0 = Table.AddColumn(Source, "Date", each DateTime.Date([timestamp]), type date),
+				    Step1 = Table.AddColumn(Step0, "Hour", each Time.Hour(DateTime.Time([timestamp])), Int64.Type),
+				    Step2 = Table.AddColumn(Step1, "Trigger", each Text.Proper(Text.Replace([trigger_type], "_", " ")), type text),
+				    Result = Step2
+				in
+				    Result
+
+	annotation PBI_ResultType = Table

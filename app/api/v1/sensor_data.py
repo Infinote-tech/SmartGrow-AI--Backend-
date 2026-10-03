@@ -11,12 +11,16 @@ from app.repositories.sensor_data_repository import SensorDataRepository
 router = APIRouter(prefix="/sensor-data", tags=["Sensor Data"])
 
 
-@router.post("", response_model=SensorDataPublic, status_code=201)
+@router.post("", response_model=SensorDataPublic, status_code=201, summary="Store one ESP32 sensor reading")
 async def create_sensor_data(
     payload: SensorDataCreate,
     repo: Annotated[SensorDataRepository, Depends(get_sensor_data_repository)],
     current_user: Annotated[UserInDB, Depends(get_current_user)],
 ):
-    """One reading from an ESP32 for a tray. Insert-only: stored in the `sensor_data` collection with a generated `sensor_data_id`."""
+    """Store one sensor reading for a tray: air temperature (°C), humidity (% RH), media moisture (% VWC, calibrated,
+    never raw ADC), light (lux), reservoir level and flow (L/min). Sent by the ESP32 (or a gateway) every sampling
+    interval. Model 1 and Model 3 read the latest reading per tray as their input. Insert-only: stored in the
+    `sensor_data` collection with a generated `sensor_data_id`.
+    """
     document = await insert_document(repo, payload, id_field="sensor_data_id", timestamp_field="timestamp")
     return SensorDataPublic(**document.model_dump())

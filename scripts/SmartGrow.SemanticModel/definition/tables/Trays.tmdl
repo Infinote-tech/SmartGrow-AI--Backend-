@@ -1,0 +1,65 @@
+table Trays
+	lineageTag: cc5f5c90-9f35-483c-8e18-5fe18c787bf0
+
+	measure 'Optimal Min' = AVERAGE(Trays[optimal_min])
+		formatString: 0.0"%"
+		lineageTag: e5d84255-257f-4b0a-9752-ebd421b78942
+
+	measure 'Optimal Max' = AVERAGE(Trays[optimal_max])
+		formatString: 0.0"%"
+		lineageTag: cfe93af0-6ab0-4ee7-b283-491fd3b7b978
+
+	column tray_id
+		dataType: string
+		lineageTag: 4e140bdf-9e38-4e4c-bc2a-9718e7e3aeb1
+		summarizeBy: none
+		sourceColumn: tray_id
+
+	column tray_name
+		dataType: string
+		lineageTag: 4c002100-7c47-48ed-88ac-1f08ecbf7e46
+		summarizeBy: none
+		sourceColumn: tray_name
+
+	column seed_type
+		dataType: string
+		lineageTag: 9fe0617b-234c-4df3-9a08-37182c52241f
+		summarizeBy: none
+		sourceColumn: seed_type
+
+	column media_type
+		dataType: string
+		lineageTag: 90d9cc14-29fc-4504-bbbb-f57ed37f3ae9
+		summarizeBy: none
+		sourceColumn: media_type
+
+	column optimal_min
+		dataType: double
+		formatString: General Number
+		lineageTag: 2eec4bda-58a4-46fb-97cf-1c97fb727339
+		summarizeBy: none
+		sourceColumn: optimal_min
+
+	column optimal_max
+		dataType: double
+		formatString: General Number
+		lineageTag: 6aecac62-410f-4154-a5ce-f4266a31aae1
+		summarizeBy: none
+		sourceColumn: optimal_max
+
+	partition Trays = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [tray_id = text, tray_name = text, seed_type = text, media_type = text, optimal_min = number, optimal_max = number],
+				        {
+				            {"tray-1", "Tray 1", "radish", "cocopeat", 55.0, 75.0},
+				            {"tray-2", "Tray 2", "mustard", "compost", 50.0, 70.0},
+				            {"tray-3", "Tray 3", "green gram", "tissue paper", 60.0, 80.0}
+				        }),
+				    Result = Source
+				in
+				    Result
+
+	annotation PBI_ResultType = Table

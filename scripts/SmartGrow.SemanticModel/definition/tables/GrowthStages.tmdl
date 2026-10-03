@@ -1,0 +1,41 @@
+table GrowthStages
+	lineageTag: c5970c68-c883-49e5-8c1d-e196e48d40d4
+
+	column stage_key
+		dataType: string
+		lineageTag: 792fac4c-bb8a-4d83-903e-7d57dca1860a
+		summarizeBy: none
+		sourceColumn: stage_key
+
+	column Stage
+		dataType: string
+		lineageTag: f4d600ff-ec47-4144-af35-f14a5e18cc31
+		summarizeBy: none
+		sourceColumn: Stage
+		sortByColumn: Order
+
+	column Order
+		dataType: int64
+		formatString: 0
+		lineageTag: 9fe027ef-2b84-4a9e-8f81-80c3134aefb3
+		summarizeBy: none
+		sourceColumn: Order
+
+	partition GrowthStages = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [stage_key = text, Stage = text, Order = Int64.Type],
+				        {
+				            {"germination", "Germination", 0},
+				            {"blackout", "Blackout", 1},
+				            {"early_growth", "Early Growth", 2},
+				            {"active_growth", "Active Growth", 3},
+				            {"pre_harvest", "Pre Harvest", 4}
+				        }),
+				    Result = Source
+				in
+				    Result
+
+	annotation PBI_ResultType = Table

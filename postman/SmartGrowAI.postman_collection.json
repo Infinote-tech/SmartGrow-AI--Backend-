@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "SmartGrow AI Backend",
-    "description": "Register/login (JWT auth) and insert-only endpoints for SmartGrow AI sensor data, model outputs, hardware status, tray status, thresholds, irrigation logs and crop batches.",
+    "description": "SmartGrow AI backend: JWT auth, insert-only data collections (sensor data, model outputs, hardware/tray status, thresholds, irrigation logs, crop batches, fault events) and the closed irrigation loop - Crop-Water Response (Model 1), Response-Deviation / Fault (Model 2) and Adaptive Irrigation Policy (Model 3). Run order: Auth > Register, Login; then Data Collections (Crop Batch, Sensor Data, Threshold, Irrigation Log); then the model folders.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -22,7 +22,18 @@
                 "health"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -37,7 +48,8 @@
               "script": {
                 "exec": [
                   "const body = pm.response.json();",
-                  "if (body.id) { pm.environment.set('user_id', body.id); }"
+                  "if (body.id) { pm.environment.set('user_id', body.id); }",
+                  "pm.test('Status 201 or 409 (409 = already registered, fine on re-runs)', () => pm.expect(pm.response.code).to.be.oneOf([201, 409]));"
                 ],
                 "type": "text/javascript"
               }
@@ -66,7 +78,8 @@
                 "auth",
                 "register"
               ]
-            }
+            },
+            "description": "Creates the account. Returns 409 if the email is already registered, which is expected when the collection is run again; Login still works with the same credentials."
           }
         },
         {
@@ -77,7 +90,8 @@
               "script": {
                 "exec": [
                   "const body = pm.response.json();",
-                  "if (body.id) { pm.environment.set('admin_user_id', body.id); }"
+                  "if (body.id) { pm.environment.set('admin_user_id', body.id); }",
+                  "pm.test('Status 201 or 409 (409 = already registered, fine on re-runs)', () => pm.expect(pm.response.code).to.be.oneOf([201, 409]));"
                 ],
                 "type": "text/javascript"
               }
@@ -107,7 +121,7 @@
                 "register"
               ]
             },
-            "description": "NOTE: self-registering as admin is a prototype-only gap called out in the README's security notes -- lock this down before any real deployment."
+            "description": "Creates the account. Returns 409 if the email is already registered, which is expected when the collection is run again; Login still works with the same credentials."
           }
         },
         {
@@ -119,7 +133,8 @@
                 "exec": [
                   "const body = pm.response.json();",
                   "if (body.access_token) { pm.environment.set('access_token', body.access_token); }",
-                  "if (body.refresh_token) { pm.environment.set('refresh_token', body.refresh_token); }"
+                  "if (body.refresh_token) { pm.environment.set('refresh_token', body.refresh_token); }",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
                 ],
                 "type": "text/javascript"
               }
@@ -159,7 +174,8 @@
               "script": {
                 "exec": [
                   "const body = pm.response.json();",
-                  "if (body.access_token) { pm.environment.set('admin_access_token', body.access_token); }"
+                  "if (body.access_token) { pm.environment.set('admin_access_token', body.access_token); }",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
                 ],
                 "type": "text/javascript"
               }
@@ -199,7 +215,8 @@
               "script": {
                 "exec": [
                   "const body = pm.response.json();",
-                  "if (body.access_token) { pm.environment.set('access_token', body.access_token); }"
+                  "if (body.access_token) { pm.environment.set('access_token', body.access_token); }",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
                 ],
                 "type": "text/javascript"
               }
@@ -257,7 +274,18 @@
                 "logout"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Me",
@@ -281,7 +309,18 @@
                 "me"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -317,7 +356,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"esp32_id\": \"esp32-01\",\n  \"tray_id\": \"tray-1\",\n  \"seed_type\": \"radish\",\n  \"media_type\": \"cocopeat\",\n  \"temperature\": 25.4,\n  \"humidity\": 62.0,\n  \"soil_moisture\": 66.5,\n  \"light_intensity\": 11000,\n  \"water_level\": 80,\n  \"water_flow_rate\": 1.2\n}"
+              "raw": "{\n  \"esp32_id\": \"esp32-01\",\n  \"tray_id\": \"{{tray_id}}\",\n  \"seed_type\": \"radish\",\n  \"media_type\": \"cocopeat\",\n  \"temperature\": 25.4,\n  \"humidity\": 62.0,\n  \"soil_moisture\": 38.0,\n  \"light_intensity\": 11000,\n  \"water_level\": 80,\n  \"water_flow_rate\": 0\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/sensor-data",
@@ -330,7 +369,7 @@
                 "sensor-data"
               ]
             },
-            "description": "One ESP32 reading for a tray. timestamp is optional (defaults to now, UTC). Insert-only; stored in the `sensor_data` collection with a generated `sensor_data_id`."
+            "description": "One ESP32 reading for a tray. timestamp is optional (defaults to now, UTC). Insert-only; stored in the `sensor_data` collection with a generated `sensor_data_id`. Units: temperature \u00b0C, humidity % RH, soil_moisture % VWC (0-100, calibrated), light lux, water_flow_rate L/min."
           }
         },
         {
@@ -497,7 +536,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"seed_type\": \"radish\",\n  \"media_type\": \"cocopeat\",\n  \"growth_stage\": \"germination\",\n  \"parameter\": \"soil_moisture\",\n  \"optimal_min\": 55,\n  \"optimal_max\": 75,\n  \"warning_min\": 45,\n  \"warning_max\": 85,\n  \"critical_min\": 35,\n  \"critical_max\": 90,\n  \"threshold_version\": \"v1\",\n  \"effective_from\": \"2026-10-01T00:00:00Z\"\n}"
+              "raw": "{\n  \"seed_type\": \"radish\",\n  \"media_type\": \"cocopeat\",\n  \"growth_stage\": \"early_growth\",\n  \"parameter\": \"soil_moisture\",\n  \"optimal_min\": 55,\n  \"optimal_max\": 75,\n  \"warning_min\": 45,\n  \"warning_max\": 85,\n  \"critical_min\": 35,\n  \"critical_max\": 90,\n  \"threshold_version\": \"v1\",\n  \"effective_from\": \"2026-10-01T00:00:00Z\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/thresholds",
@@ -510,7 +549,7 @@
                 "thresholds"
               ]
             },
-            "description": "Optimal/warning/critical range for one parameter of a seed + media + growth stage. updated_at is set by the server. Insert-only; stored in the `thresholds` collection with a generated `threshold_id`."
+            "description": "Optimal/warning/critical range for one parameter of a seed + media + growth stage. updated_at is set by the server. Insert-only; stored in the `thresholds` collection with a generated `threshold_id`. The Adaptive Irrigation Policy reads the soil_moisture row (% VWC) for the tray's seed + media + growth stage."
           }
         },
         {
@@ -542,7 +581,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"tray_id\": \"tray-1\",\n  \"solenoid_id\": \"1\",\n  \"pump_status\": \"on\",\n  \"irrigation_duration\": 8,\n  \"water_consumed\": 40.5,\n  \"trigger_type\": \"auto\",\n  \"trigger_reason\": \"moisture below dry line\",\n  \"ai_recommended\": true,\n  \"actual_action\": \"irrigated\"\n}"
+              "raw": "{\n  \"tray_id\": \"{{tray_id}}\",\n  \"batch_id\": \"{{batch_id}}\",\n  \"solenoid_id\": \"1\",\n  \"pump_status\": \"on\",\n  \"irrigation_duration\": 8,\n  \"trigger_type\": \"auto\",\n  \"trigger_reason\": \"moisture below dry line\",\n  \"ai_recommended\": true,\n  \"actual_action\": \"irrigated\",\n  \"growth_stage\": \"early_growth\",\n  \"pre_irrigation_moisture\": 42.0,\n  \"water_volume\": 100,\n  \"model_output_id\": \"{{output_id}}\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/irrigation-logs",
@@ -555,7 +594,7 @@
                 "irrigation-logs"
               ]
             },
-            "description": "One irrigation event. Insert-only; stored in the `irrigation_logs` collection with a generated `irrigation_id`."
+            "description": "One irrigation event. Insert-only; stored in the `irrigation_logs` collection with a generated `irrigation_id`. Log the event with pre_irrigation_moisture (% VWC) and water_volume (mL). model_output_id is optional (the output_id of the policy decision that led to it). Then send the measured result with 'Link Irrigation Response'."
           }
         },
         {
@@ -632,7 +671,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"seed_type\": \"radish\",\n  \"media_type\": \"cocopeat\",\n  \"planting_date\": \"2026-09-30\",\n  \"expected_harvest_date\": \"2026-10-10\",\n  \"seed_quantity\": 25,\n  \"tray_id\": \"tray-1\",\n  \"batch_status\": \"growing\"\n}"
+              "raw": "{\n  \"seed_type\": \"radish\",\n  \"media_type\": \"cocopeat\",\n  \"planting_date\": \"2026-09-28\",\n  \"expected_harvest_date\": \"2026-10-10\",\n  \"seed_quantity\": 25,\n  \"tray_id\": \"{{tray_id}}\",\n  \"batch_status\": \"growing\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/crop-batches",
@@ -645,8 +684,285 @@
                 "crop-batches"
               ]
             },
-            "description": "One planted batch for traceability. Insert-only; stored in the `crop_batches` collection with a generated `batch_id`."
+            "description": "One planted batch for traceability. Insert-only; stored in the `crop_batches` collection with a generated `batch_id`. Save the returned batch_id: it links irrigation logs and model outputs, and the growth stage is derived from planting_date."
           }
+        }
+      ]
+    },
+    {
+      "name": "Crop-Water Response (Model 1)",
+      "item": [
+        {
+          "name": "Predict Water Response",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/ml/water-response/predict",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "ml",
+                "water-response",
+                "predict"
+              ]
+            },
+            "description": "Model 1: expected moisture after irrigating `water_volume` mL (median + 10th/90th percentile interval + confidence), stored in model_outputs. Optional overrides: batch_id, seed_type, media_type, growth_stage (germination | blackout | early_growth | active_growth | pre_harvest), temperature \u00b0C, humidity % RH, light_intensity lux, timestamp. Anything omitted is resolved from the tray's latest sensor reading and active crop batch. model_version is baseline-v0 until a trained artifact exists (gbr-q-<date>).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tray_id\": \"{{tray_id}}\",\n  \"water_volume\": 100,\n  \"pre_irrigation_moisture\": 42.0\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.output_id) { pm.environment.set('output_id', body.output_id); }",
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Response Deviation & Faults (Model 2)",
+      "item": [
+        {
+          "name": "Link Irrigation Response",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/irrigation-logs/{{irrigation_id}}/response",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "irrigation-logs",
+                "{{irrigation_id}}",
+                "response"
+              ]
+            },
+            "description": "Send the measured result of an irrigation event (needs pre_irrigation_moisture on the log). The server computes actual_response, takes Model 1's expectation, sets expected_response and response_deviation, updates the linked model output and runs Model 2. This example (no flow, no moisture change) should raise a pump_tank_blockage fault. post_irrigation_moisture is % VWC; avg_flow_rate L/min; delays in seconds.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"post_irrigation_moisture\": 43.0,\n  \"post_measured_after_s\": 900,\n  \"avg_flow_rate\": 0.0,\n  \"flow_cv\": 0.0\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.deviation && body.deviation.fault_event) { pm.environment.set('fault_id', body.deviation.fault_event.fault_id); }",
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Evaluate Response Deviation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/ml/response-deviation/evaluate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "ml",
+                "response-deviation",
+                "evaluate"
+              ]
+            },
+            "description": "Re-run Model 2 for an irrigation event whose response is already linked. Returns z, is_anomaly, severity, flow_class, response_class, fault_hypothesis, fault_confidence, actions and the fault event if one was created.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"irrigation_id\": \"{{irrigation_id}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Resolve Fault Event",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/fault-events/{{fault_id}}/resolve",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "fault-events",
+                "{{fault_id}}",
+                "resolve"
+              ]
+            },
+            "description": "Sets fault_status = resolved and resolved_at = now. 404 for an unknown fault_id, 409 if already resolved.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resolution_reason\": \"Cleared blockage in the inlet line\",\n  \"recovery_action\": \"Flushed inlet line and refilled reservoir\",\n  \"recovery_success\": true\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200 or 409 (409 = already resolved)', () => pm.expect(pm.response.code).to.be.oneOf([200, 409]));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Adaptive Irrigation Policy (Model 3)",
+      "item": [
+        {
+          "name": "Decide Irrigation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/policy/trays/{{tray_id}}/decide",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "policy",
+                "trays",
+                "{{tray_id}}",
+                "decide"
+              ]
+            },
+            "description": "Model 3: irrigate / wait / hold_and_inspect for the tray, with the volume (mL), confidence, reason codes and every candidate volume that was simulated. Recommendation only - nothing is actuated and no irrigation log is created. Needs a sensor reading less than 2 h old (soil_moisture, % VWC)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.output_id) { pm.environment.set('output_id', body.output_id); }",
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Latest Decision",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/policy/trays/{{tray_id}}/latest",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "policy",
+                "trays",
+                "{{tray_id}}",
+                "latest"
+              ]
+            },
+            "description": "The most recent adaptive_irrigation_policy output for the tray (404 if none yet)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         }
       ]
     }

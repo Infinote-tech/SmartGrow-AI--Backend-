@@ -13,6 +13,7 @@ from httpx import ASGITransport, AsyncClient
 from mongomock_motor import AsyncMongoMockClient
 
 from app.core import database as database_module
+from app.core.config import settings
 from app.core.rate_limit import limiter
 from app.main import app
 
@@ -24,6 +25,13 @@ def reset_rate_limiter():
     each other via shared state instead of on their own merits."""
     limiter.reset()
     yield
+
+
+@pytest.fixture(autouse=True)
+def isolate_model_artifacts(tmp_path, monkeypatch):
+    """Point both model artifacts at empty temp paths so tests never pick up a model trained on a dev machine."""
+    monkeypatch.setattr(settings, "water_response_model_path", str(tmp_path / "water_response.joblib"))
+    monkeypatch.setattr(settings, "fault_classifier_path", str(tmp_path / "fault_classifier.joblib"))
 
 
 @pytest_asyncio.fixture
