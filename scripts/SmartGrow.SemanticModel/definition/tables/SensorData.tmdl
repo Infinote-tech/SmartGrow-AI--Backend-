@@ -1,0 +1,403 @@
+table SensorData
+	lineageTag: 9e980017-76fc-4380-b973-24cf3da18f44
+
+	measure 'Avg Moisture' = AVERAGE(SensorData[soil_moisture])
+		formatString: 0.0"%"
+		lineageTag: 1d6e0d64-a02f-4638-9213-26f50de13b50
+
+	measure 'Latest Moisture' = LASTNONBLANKVALUE(SensorData[timestamp], AVERAGE(SensorData[soil_moisture]))
+		formatString: 0.0"%"
+		lineageTag: acf3b1f0-dea4-4c2d-980a-e93d0530d3dc
+
+	measure 'Avg Temperature' = AVERAGE(SensorData[temperature])
+		formatString: 0.0"°C"
+		lineageTag: 7c110ba5-5069-4ae9-98a5-c7a76e6db587
+
+	measure 'Avg Humidity' = AVERAGE(SensorData[humidity])
+		formatString: 0.0"%"
+		lineageTag: 2b3fdc36-c149-44b4-9bb0-b2cb3b35b647
+
+	measure 'Avg Light' = AVERAGE(SensorData[light_intensity])
+		formatString: #,0" lux"
+		lineageTag: cc736c8c-eb85-4b4a-a21b-5170f64d0672
+
+	measure 'Avg Water Level' = AVERAGE(SensorData[water_level])
+		formatString: 0.0"%"
+		lineageTag: b59f856b-b1df-4b9f-9139-83ad314f031d
+
+	measure Readings = COUNTROWS(SensorData)
+		formatString: #,0
+		lineageTag: 57bfa832-3ca0-43f8-9ff0-0dedaf439159
+
+	measure 'Time In Band %' =
+			VAR inBand =
+			    SUMX(
+			        VALUES(Trays[tray_id]),
+			        VAR lo = [Optimal Min]
+			        VAR hi = [Optimal Max]
+			        RETURN CALCULATE(COUNTROWS(SensorData), SensorData[soil_moisture] >= lo, SensorData[soil_moisture] <= hi)
+			    )
+			RETURN DIVIDE(inBand, COUNTROWS(SensorData))
+		formatString: 0.0%
+		lineageTag: 14b98300-c4ce-4102-82f3-9831de706194
+
+	column sensor_data_id
+		dataType: string
+		lineageTag: 62a35303-0c1a-4cee-90d3-40c89a06441c
+		summarizeBy: none
+		sourceColumn: sensor_data_id
+
+	column timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0192dac4-8fc0-4bab-a274-cc7072b43801
+		summarizeBy: none
+		sourceColumn: timestamp
+
+	column esp32_id
+		dataType: string
+		lineageTag: 9759510c-63b0-4493-975d-404ea53e6476
+		summarizeBy: none
+		sourceColumn: esp32_id
+
+	column tray_id
+		dataType: string
+		lineageTag: cd68c97d-d70e-41c4-8404-8567808c2d3b
+		summarizeBy: none
+		sourceColumn: tray_id
+
+	column seed_type
+		dataType: string
+		lineageTag: 81a6dca0-bc4d-47c6-8fe3-d547428f381a
+		summarizeBy: none
+		sourceColumn: seed_type
+
+	column media_type
+		dataType: string
+		lineageTag: f69eacd0-79a4-41eb-a8d5-d0bc18f6dd67
+		summarizeBy: none
+		sourceColumn: media_type
+
+	column temperature
+		dataType: double
+		formatString: General Number
+		lineageTag: 65d3c880-a0f6-4e20-81b5-5b1e35349859
+		summarizeBy: none
+		sourceColumn: temperature
+
+	column humidity
+		dataType: double
+		formatString: General Number
+		lineageTag: 0d6f3edd-4492-452c-b2b2-2e1fd9415de8
+		summarizeBy: none
+		sourceColumn: humidity
+
+	column soil_moisture
+		dataType: double
+		formatString: General Number
+		lineageTag: 072abd8d-36e3-4b06-a0e9-24c678ac2659
+		summarizeBy: none
+		sourceColumn: soil_moisture
+
+	column light_intensity
+		dataType: double
+		formatString: General Number
+		lineageTag: 2ae21c34-d7f4-4bc5-a44d-172fb707d4c9
+		summarizeBy: none
+		sourceColumn: light_intensity
+
+	column water_level
+		dataType: double
+		formatString: General Number
+		lineageTag: 46faaec8-93b9-44fa-b3d4-c897f0072e27
+		summarizeBy: none
+		sourceColumn: water_level
+
+	column water_flow_rate
+		dataType: double
+		formatString: General Number
+		lineageTag: ceb22021-942b-40bb-b566-3049627c4ed2
+		summarizeBy: none
+		sourceColumn: water_flow_rate
+
+	column Date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: cda0c5d8-a976-472a-9ade-2c0e25e90263
+		summarizeBy: none
+		sourceColumn: Date
+
+	column Hour
+		dataType: int64
+		formatString: 0
+		lineageTag: 917c1f3e-9cc3-4a22-9888-09dd9c466e79
+		summarizeBy: none
+		sourceColumn: Hour
+
+	partition SensorData = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [sensor_data_id = text, timestamp = datetime, esp32_id = text, tray_id = text, seed_type = text, media_type = text, temperature = number, humidity = number, soil_moisture = number, light_intensity = number, water_level = number, water_flow_rate = number],
+				        {
+				            {"ec66a78795e761d17731af10506bf2ef", #datetime(2026, 9, 26, 0, 3, 0), "esp32-01", "tray-1", "radish", "cocopeat", 21.2, 68.4, 63.2, 0.0, 92.0, 0.0},
+				            {"babced2057ee05cde00902c77ebff206", #datetime(2026, 9, 26, 0, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 21.1, 70.1, 58.2, 0.0, 92.0, 0.0},
+				            {"f646e1f40a097c976bf46c697d2caf82", #datetime(2026, 9, 26, 0, 0, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 21.3, 66.9, 68.2, 0.0, 92.0, 0.0},
+				            {"b774eb5248db40af72158370d269a9a5", #datetime(2026, 9, 26, 2, 3, 0), "esp32-01", "tray-1", "radish", "cocopeat", 20.7, 68.7, 62.2, 0.0, 92.0, 0.0},
+				            {"0f17a3007e62aa0a1df9fd789c653938", #datetime(2026, 9, 26, 2, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 21.1, 68.1, 57.4, 0.0, 92.0, 0.0},
+				            {"2a96fb1a14a0f9e77f1b103cdf1582b0", #datetime(2026, 9, 26, 2, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 21.4, 67.6, 67.3, 0.0, 92.0, 0.0},
+				            {"3b61867626bb7dbd2d1c9af0153e7c2a", #datetime(2026, 9, 26, 4, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 21.6, 69.5, 61.9, 0.0, 92.0, 0.0},
+				            {"5e8766ed88daf4016b4013ef254b0c4e", #datetime(2026, 9, 26, 4, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 20.8, 68.6, 57.0, 0.0, 92.0, 0.0},
+				            {"bd628881ad1b72dba7abe1c29e1a8ef4", #datetime(2026, 9, 26, 4, 0, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 20.9, 69.9, 66.8, 0.0, 92.0, 0.0},
+				            {"000f49c81a358ca00d75985d99c94309", #datetime(2026, 9, 26, 6, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 22.6, 67.3, 61.3, 9495.0, 92.0, 0.0},
+				            {"f4998d7c4093f6dea268aa872607679d", #datetime(2026, 9, 26, 6, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 22.4, 66.3, 56.4, 9495.0, 92.0, 0.0},
+				            {"1a28f7b324e4e25a15fc899e4fd58dbe", #datetime(2026, 9, 26, 6, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 22.6, 67.0, 65.0, 9495.0, 92.0, 0.0},
+				            {"8857f9a43908f227c59db9165b0ee76f", #datetime(2026, 9, 26, 8, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 24.2, 60.3, 60.6, 13087.0, 92.0, 0.0},
+				            {"31f51707da45e18ac2216b02fc241d0b", #datetime(2026, 9, 26, 8, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 24.3, 59.8, 56.1, 13087.0, 92.0, 0.0},
+				            {"fd56a926076b3e36bb2313f55b06258e", #datetime(2026, 9, 26, 8, 0, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 24.3, 60.1, 64.6, 13087.0, 92.0, 0.0},
+				            {"d726c86b9c3a23cde67a9b75fc394724", #datetime(2026, 9, 26, 10, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 25.6, 56.0, 59.9, 11172.0, 92.0, 0.0},
+				            {"63771407e8e727891eb20109a91c2439", #datetime(2026, 9, 26, 10, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 25.5, 56.6, 55.8, 11172.0, 92.0, 0.0},
+				            {"b8c9817af8be8831f237e45acd02c5e1", #datetime(2026, 9, 26, 10, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 25.4, 55.8, 63.7, 11172.0, 92.0, 0.0},
+				            {"8c74fc1e27e9e06f59b44e92effddeea", #datetime(2026, 9, 26, 12, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.3, 54.3, 59.6, 11135.0, 92.0, 0.0},
+				            {"31dec4f4df2a8b79fc8e80b36f0e2289", #datetime(2026, 9, 26, 12, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 26.4, 54.3, 54.5, 11135.0, 92.0, 0.0},
+				            {"e8f6e0bd0f977044218e0b7bd58dcdb4", #datetime(2026, 9, 26, 12, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.5, 53.5, 62.8, 11135.0, 92.0, 0.0},
+				            {"8e31704187ddaeb784b28054aead44b0", #datetime(2026, 9, 26, 14, 3, 0), "esp32-01", "tray-1", "radish", "cocopeat", 27.1, 53.7, 58.1, 9278.0, 92.0, 0.0},
+				            {"1905d591c5b2e75a0acd8be146e40990", #datetime(2026, 9, 26, 14, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 27.1, 53.4, 54.3, 9278.0, 92.0, 0.0},
+				            {"816bee06f92e23399ccea098535b6a43", #datetime(2026, 9, 26, 14, 4, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 27.1, 52.4, 61.5, 9278.0, 92.0, 0.0},
+				            {"b753a1eef08360852789d059c6e50df2", #datetime(2026, 9, 26, 16, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.9, 57.2, 57.7, 9551.0, 91.9, 0.0},
+				            {"e28af60465f4298618189af4f3d74f82", #datetime(2026, 9, 26, 16, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 26.8, 56.9, 53.7, 9551.0, 91.9, 0.0},
+				            {"56d050cd6760136783feb17bfe7b8ae4", #datetime(2026, 9, 26, 16, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.7, 56.6, 61.7, 9551.0, 91.9, 0.0},
+				            {"459c945c43fc052715850a031ad2d5f1", #datetime(2026, 9, 26, 18, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 25.5, 60.2, 56.6, 13373.0, 91.9, 0.0},
+				            {"1289bafae53169606ce193c22eefa279", #datetime(2026, 9, 26, 18, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 25.4, 60.8, 53.1, 13373.0, 91.8, 0.0},
+				            {"02f4b342742a80631f2642aadcded204", #datetime(2026, 9, 26, 18, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 25.4, 60.6, 60.6, 13373.0, 91.8, 0.0},
+				            {"58d50f1b4540f4262d8ad8c0ac127e93", #datetime(2026, 9, 26, 20, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 24.1, 63.0, 57.9, 0.0, 91.8, 0.0},
+				            {"7989e9d083a4e62930803889fa619774", #datetime(2026, 9, 26, 20, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 24.2, 62.9, 52.8, 0.0, 91.8, 0.0},
+				            {"e3838b9ed5a9422a8bc083117eb86c57", #datetime(2026, 9, 26, 20, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 24.3, 62.9, 59.7, 0.0, 91.8, 0.0},
+				            {"285414242f733b05759eb5590b94af3a", #datetime(2026, 9, 26, 22, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 22.4, 64.2, 56.9, 0.0, 91.2, 0.0},
+				            {"08d180113e940bb452d31e1b8c0d0033", #datetime(2026, 9, 26, 22, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 22.4, 64.9, 52.1, 0.0, 91.2, 0.0},
+				            {"15a0a8ae3b996870a1320b9d4de2f8ad", #datetime(2026, 9, 26, 22, 4, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 22.5, 66.3, 62.6, 0.0, 91.1, 0.0},
+				            {"0b35b1de250e7b34a4aa07b49e6397d4", #datetime(2026, 9, 27, 0, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 20.9, 68.0, 56.4, 0.0, 91.1, 0.0},
+				            {"041dcd94cdff5a1cd01a914cd5be785a", #datetime(2026, 9, 27, 0, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 21.3, 67.8, 53.3, 0.0, 91.1, 0.0},
+				            {"1adbce5df5a2d8795c57532ba31a49dd", #datetime(2026, 9, 27, 0, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 21.3, 68.1, 61.5, 0.0, 91.1, 0.0},
+				            {"c1a624dcbab5b3733c1ae91743fb9fbc", #datetime(2026, 9, 27, 2, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 21.3, 70.1, 56.0, 0.0, 91.1, 0.0},
+				            {"af06bcf7e91457db7aa068f113a5397f", #datetime(2026, 9, 27, 2, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 21.3, 70.1, 51.9, 0.0, 91.1, 0.0},
+				            {"a6caf4a341023aed54ef125a25bda659", #datetime(2026, 9, 27, 2, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 21.1, 69.7, 60.8, 0.0, 91.1, 0.0},
+				            {"fe749e67730f37f1fe9eb4adf7d5f124", #datetime(2026, 9, 27, 4, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 20.5, 70.6, 58.5, 0.0, 90.8, 0.0},
+				            {"86292bb5bf5b411b24491df6171e1a8c", #datetime(2026, 9, 27, 4, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 21.0, 69.3, 51.9, 0.0, 90.8, 0.0},
+				            {"5d7cfed1b40de56d1cd86fc1e3096619", #datetime(2026, 9, 27, 4, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 20.5, 69.4, 59.8, 0.0, 90.8, 0.0},
+				            {"6d94dd6dece807995c57722e138efef9", #datetime(2026, 9, 27, 6, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 22.4, 67.3, 57.6, 12915.0, 90.2, 0.0},
+				            {"82ce786f6fad79364406c053f895fc55", #datetime(2026, 9, 27, 6, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 22.2, 67.2, 51.5, 12915.0, 90.2, 0.0},
+				            {"8ddcf83cf0d1ab56e02f9a72e9d625c9", #datetime(2026, 9, 27, 6, 4, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 22.0, 67.0, 63.5, 12915.0, 90.2, 0.0},
+				            {"5534a034e8009d9073f6e53d3853933d", #datetime(2026, 9, 27, 8, 3, 0), "esp32-01", "tray-1", "radish", "cocopeat", 23.9, 64.5, 57.0, 11237.0, 90.1, 0.0},
+				            {"3d37664251bcd77a1751f5798e4dc3a3", #datetime(2026, 9, 27, 8, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 24.2, 65.1, 52.7, 11237.0, 90.1, 0.0},
+				            {"beef67fb69f446126201a9d369ac0f03", #datetime(2026, 9, 27, 8, 4, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 24.2, 64.7, 62.4, 11237.0, 90.1, 0.0},
+				            {"d94355414fe04802f435a5736e8cd94e", #datetime(2026, 9, 27, 10, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 25.3, 59.4, 56.5, 11906.0, 90.1, 0.0},
+				            {"000bb5f97d652135965132d6f7e147fd", #datetime(2026, 9, 27, 10, 0, 0), "esp32-01", "tray-2", "mustard", "compost", 25.0, 57.4, 52.1, 11906.0, 90.1, 0.0},
+				            {"c879b6633f9b6bb272ee6a2ef8e4cb5c", #datetime(2026, 9, 27, 10, 0, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 25.0, 58.9, 61.5, 11906.0, 90.1, 0.0},
+				            {"31135de9953857d7f18bde0e86417b60", #datetime(2026, 9, 27, 12, 3, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.5, 56.0, 55.8, 9317.0, 89.8, 0.0},
+				            {"31b1891a0593dba20e28b64f4eb19fca", #datetime(2026, 9, 27, 12, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 26.8, 53.8, 51.3, 9317.0, 89.5, 0.0},
+				            {"568a8c29b221713908ba9bd97e318ad6", #datetime(2026, 9, 27, 12, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.4, 55.2, 63.6, 9317.0, 89.5, 0.0},
+				            {"f2e2054d0e71597aaa50b96fe90fb651", #datetime(2026, 9, 27, 14, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 27.0, 52.8, 57.5, 11183.0, 89.5, 0.0},
+				            {"b5b94af30d456be06a56aac3245448c8", #datetime(2026, 9, 27, 14, 0, 0), "esp32-01", "tray-2", "mustard", "compost", 27.8, 52.7, 51.0, 11183.0, 89.5, 0.0},
+				            {"ee7d0ae2145103c7ff5e1d1f1cfb0a06", #datetime(2026, 9, 27, 14, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 27.1, 52.1, 62.6, 11183.0, 89.5, 0.0},
+				            {"e29aaceaf49c9eba6b911f9759f9bb79", #datetime(2026, 9, 27, 16, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.3, 54.6, 56.2, 10259.0, 89.5, 0.0},
+				            {"6eb4fff8cdcec408d26f1d764f06e95a", #datetime(2026, 9, 27, 16, 0, 0), "esp32-01", "tray-2", "mustard", "compost", 26.8, 55.4, 49.5, 10259.0, 89.5, 0.0},
+				            {"41cbcc3a0fdf7cc6eb8a25fccda79077", #datetime(2026, 9, 27, 16, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.6, 53.4, 61.4, 10259.0, 89.2, 0.0},
+				            {"d375eff10635afef10b99ac9f178d77f", #datetime(2026, 9, 27, 18, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 25.1, 59.1, 56.2, 11853.0, 89.2, 0.0},
+				            {"ed97ec7621f91a997e544d56d096bfd6", #datetime(2026, 9, 27, 18, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 25.1, 58.7, 53.2, 11853.0, 89.2, 0.0},
+				            {"75f5c1a051cdf2f9dc7a615d53eab031", #datetime(2026, 9, 27, 18, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 25.3, 58.3, 60.1, 11853.0, 89.2, 0.0},
+				            {"c61c96dbd8d4250d89df5e79bf7b6c6c", #datetime(2026, 9, 27, 20, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 23.7, 60.3, 55.2, 0.0, 88.9, 0.0},
+				            {"32fe1f3642a55162bcf1fcb54109d8d6", #datetime(2026, 9, 27, 20, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 23.7, 61.6, 52.5, 0.0, 88.9, 0.0},
+				            {"10970046538ae1c130312932940a3537", #datetime(2026, 9, 27, 20, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 23.7, 61.6, 62.4, 0.0, 88.9, 0.0},
+				            {"a33066bd1b1466f6019f7781f2198825", #datetime(2026, 9, 27, 22, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 22.6, 65.7, 58.5, 0.0, 88.5, 0.0},
+				            {"414205c6fff7ba0d3437ccaa0b4e7f7c", #datetime(2026, 9, 27, 22, 0, 0), "esp32-01", "tray-2", "mustard", "compost", 22.3, 64.9, 51.5, 0.0, 88.5, 0.0},
+				            {"5f2ee40dada65cc468b3e3aa53c69b0a", #datetime(2026, 9, 27, 22, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 22.3, 65.7, 61.8, 0.0, 88.5, 0.0},
+				            {"b2061ecc65d464fd29e78b06a72ed508", #datetime(2026, 9, 28, 0, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 21.5, 70.3, 58.0, 0.0, 88.5, 0.0},
+				            {"04a99e636a9c2a336a01260f5b7042df", #datetime(2026, 9, 28, 0, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 21.5, 69.3, 50.6, 0.0, 88.5, 0.0},
+				            {"67fde1c3172a390ad203acfe1d10e931", #datetime(2026, 9, 28, 0, 4, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 21.8, 69.4, 61.0, 0.0, 88.5, 0.0},
+				            {"84949aabf044c0326655b9f00aadacf0", #datetime(2026, 9, 28, 2, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 20.6, 68.4, 57.8, 0.0, 88.0, 0.0},
+				            {"e244d05f0a857746314df386e5b5206e", #datetime(2026, 9, 28, 2, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 20.9, 69.4, 52.0, 0.0, 88.0, 0.0},
+				            {"8cd0326074aaf340997a20be63cc537b", #datetime(2026, 9, 28, 2, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 20.4, 68.3, 62.9, 0.0, 88.0, 0.0},
+				            {"c7ac6f379e5af2a4c379023e7262b8a9", #datetime(2026, 9, 28, 4, 3, 0), "esp32-01", "tray-1", "radish", "cocopeat", 21.9, 67.6, 57.1, 0.0, 88.0, 0.0},
+				            {"177a83345d866b346e3bbc975bcb9370", #datetime(2026, 9, 28, 4, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 21.4, 68.8, 51.9, 0.0, 88.0, 0.0},
+				            {"c713289150505652bbc55c33ec1072ee", #datetime(2026, 9, 28, 4, 4, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 22.0, 69.5, 62.6, 0.0, 88.0, 0.0},
+				            {"2a44bf93cb8389fbea81ad63cf9d5d05", #datetime(2026, 9, 28, 6, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 22.7, 68.1, 56.8, 10295.0, 88.0, 0.0},
+				            {"2e9dde7332eddf6f096de4215f4ce302", #datetime(2026, 9, 28, 6, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 22.9, 68.4, 51.9, 10295.0, 87.9, 0.0},
+				            {"0c6f2fcc87dd58d9c4ad10061d75cc23", #datetime(2026, 9, 28, 6, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 22.7, 68.3, 61.2, 10295.0, 87.9, 0.0},
+				            {"0c5cd43bf53e2c38be5c39319d892098", #datetime(2026, 9, 28, 8, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 24.0, 61.8, 56.8, 10035.0, 87.9, 0.0},
+				            {"e54e19e5a9e82581edaf80f395fb98f9", #datetime(2026, 9, 28, 8, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 23.9, 61.0, 50.8, 10035.0, 87.9, 0.0},
+				            {"833edd4b6aed88726ea6d05ea0288056", #datetime(2026, 9, 28, 8, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 24.0, 62.1, 60.5, 10035.0, 87.9, 0.0},
+				            {"8ff4ef93d2253c87a51b453f0e5e928c", #datetime(2026, 9, 28, 10, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.2, 56.9, 56.2, 13352.0, 87.5, 0.0},
+				            {"e74c00f42a43f0473f9d80247e2b86d1", #datetime(2026, 9, 28, 10, 0, 0), "esp32-01", "tray-2", "mustard", "compost", 25.7, 58.7, 50.4, 13352.0, 87.5, 0.0},
+				            {"2cb52c329cf99a99d039b9636a4d76e6", #datetime(2026, 9, 28, 10, 4, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 25.7, 57.5, 63.3, 13352.0, 87.2, 0.0},
+				            {"42ecdcf91af3bda5ff21dd5a39d7c140", #datetime(2026, 9, 28, 12, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.1, 55.1, 56.1, 11036.0, 87.2, 0.0},
+				            {"8dc508c6a2c81c324417c5300d72cb97", #datetime(2026, 9, 28, 12, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 25.9, 53.8, 53.2, 11036.0, 87.2, 0.0},
+				            {"03e5f68481e6d6c8e14aa46015de2868", #datetime(2026, 9, 28, 12, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.1, 56.0, 62.1, 11036.0, 87.2, 0.0},
+				            {"3bdc2efdb980ea1ef4a887536fed41d7", #datetime(2026, 9, 28, 14, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.7, 55.9, 54.3, 12859.0, 87.2, 0.0},
+				            {"25042c3d2bea714de929840090b13f30", #datetime(2026, 9, 28, 14, 0, 0), "esp32-01", "tray-2", "mustard", "compost", 27.1, 55.2, 52.2, 12859.0, 87.2, 0.0},
+				            {"07e7166b075b058bb363af43244fbafc", #datetime(2026, 9, 28, 14, 0, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.9, 55.6, 61.3, 12859.0, 87.2, 0.0},
+				            {"c285a8c6b73c30c80c6478014858079e", #datetime(2026, 9, 28, 16, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.8, 54.4, 58.9, 10155.0, 86.4, 0.0},
+				            {"07ee64febee33d4a9e47539449a35964", #datetime(2026, 9, 28, 16, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 26.8, 55.4, 52.1, 10155.0, 86.4, 0.0},
+				            {"3771690c90ebc2c389b28a180c5166f0", #datetime(2026, 9, 28, 16, 0, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.4, 54.9, 62.9, 10155.0, 86.4, 0.0},
+				            {"f1a1750093f84ade42b50c7c83e03b8d", #datetime(2026, 9, 28, 18, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 24.9, 59.2, 58.6, 13307.0, 86.4, 0.0},
+				            {"fdb9ba32c9b4bc967d83c1df14b4b8d8", #datetime(2026, 9, 28, 18, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 25.2, 59.6, 50.9, 13307.0, 86.4, 0.0},
+				            {"a55741cbe371613e6c10b601160f6d6e", #datetime(2026, 9, 28, 18, 0, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 25.2, 58.8, 62.4, 13307.0, 86.4, 0.0},
+				            {"81f8d9df3ce9a9afb25201e9e2979619", #datetime(2026, 9, 28, 20, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 24.2, 64.1, 58.1, 0.0, 86.1, 0.0},
+				            {"3f617877f98a5a3427eeae0ab92c8dec", #datetime(2026, 9, 28, 20, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 24.1, 62.3, 53.8, 0.0, 86.1, 0.0},
+				            {"ba8e3338f478d090f9a3500b42396323", #datetime(2026, 9, 28, 20, 0, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 24.4, 63.8, 61.2, 0.0, 86.1, 0.0},
+				            {"66263f9f033ae33008afbded76c338fa", #datetime(2026, 9, 28, 22, 3, 0), "esp32-01", "tray-1", "radish", "cocopeat", 23.3, 65.3, 56.7, 0.0, 86.1, 0.0},
+				            {"bcfd527b9a8ca89141d8bf61244dd37f", #datetime(2026, 9, 28, 22, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 22.8, 66.2, 53.4, 0.0, 86.1, 0.0},
+				            {"6bd0cd12a5aef8a6bfc5056e96619afb", #datetime(2026, 9, 28, 22, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 22.7, 65.0, 60.0, 0.0, 86.1, 0.0},
+				            {"df7c758bee216a55a93e0f6facdcdb5f", #datetime(2026, 9, 29, 0, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 21.3, 67.8, 56.9, 0.0, 85.8, 0.0},
+				            {"79c9cdb6b7a0b7853479b1f08a814a78", #datetime(2026, 9, 29, 0, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 21.5, 68.4, 52.6, 0.0, 85.6, 0.0},
+				            {"647a6c082f0db088af323c2dfd82db76", #datetime(2026, 9, 29, 0, 4, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 21.2, 67.8, 62.8, 0.0, 85.6, 0.0},
+				            {"fe85dfb1380ab1d7f8b44bc286ee7b4f", #datetime(2026, 9, 29, 2, 3, 0), "esp32-01", "tray-1", "radish", "cocopeat", 20.7, 69.4, 57.1, 0.0, 85.6, 0.0},
+				            {"781ac78f3173b8d9a261621fcc63858a", #datetime(2026, 9, 29, 2, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 21.2, 69.6, 51.7, 0.0, 85.6, 0.0},
+				            {"d0f11e05cb95f372d198e3b8d4a8b1a7", #datetime(2026, 9, 29, 2, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 21.4, 69.2, 61.6, 0.0, 85.6, 0.0},
+				            {"7b481ae22f96781fadc70e946d152eaa", #datetime(2026, 9, 29, 4, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 21.4, 68.1, 56.1, 0.0, 85.6, 0.0},
+				            {"6db1bc287c23aa427ac3caf85200866c", #datetime(2026, 9, 29, 4, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 21.0, 68.6, 51.4, 0.0, 85.6, 0.0},
+				            {"a7ecc7ee126e90a3f3a71b0035b22427", #datetime(2026, 9, 29, 4, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 21.2, 69.8, 60.8, 0.0, 85.5, 0.0},
+				            {"43b5e6701e50f1348e18a9291df2712d", #datetime(2026, 9, 29, 6, 3, 0), "esp32-01", "tray-1", "radish", "cocopeat", 22.5, 67.7, 56.1, 12021.0, 85.0, 0.0},
+				            {"2a244cae7f8870a93f1efd5b7dca9202", #datetime(2026, 9, 29, 6, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 22.3, 66.6, 52.9, 12021.0, 85.0, 0.0},
+				            {"5ffd3d40773c2b1ad72f537c4bfc3a30", #datetime(2026, 9, 29, 6, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 22.1, 65.9, 64.4, 12021.0, 85.0, 0.0},
+				            {"182ee0e556aeeb42207c9f6ca01235b8", #datetime(2026, 9, 29, 8, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 23.9, 63.0, 54.6, 12232.0, 85.0, 0.0},
+				            {"6c21a8d6578a628f6f6894cc48be1fa6", #datetime(2026, 9, 29, 8, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 23.7, 61.3, 52.3, 12232.0, 85.0, 0.0},
+				            {"fbfa379780f5b4a3556ecb72675ad461", #datetime(2026, 9, 29, 8, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 24.2, 61.3, 63.2, 12232.0, 85.0, 0.0},
+				            {"ac77a055a076e64b25a52d399ddffec8", #datetime(2026, 9, 29, 10, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 24.8, 58.8, 58.0, 11753.0, 84.6, 0.0},
+				            {"19f2d5ff2c84fe81c33ea73ea0123246", #datetime(2026, 9, 29, 10, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 25.3, 59.1, 51.8, 11753.0, 84.6, 0.0},
+				            {"d2969d35df3648fb5e6e383a036feab9", #datetime(2026, 9, 29, 10, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 25.5, 58.8, 61.7, 11753.0, 84.6, 0.0},
+				            {"6bcb5706cf71e7f5c61642611e6cc084", #datetime(2026, 9, 29, 12, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.9, 54.7, 57.9, 9177.0, 84.6, 0.0},
+				            {"79b6fcb927c17a26fb14b195a8ce4082", #datetime(2026, 9, 29, 12, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 26.9, 55.4, 50.8, 9177.0, 84.6, 0.0},
+				            {"1f25d23dab5b95f4af0af748026348f7", #datetime(2026, 9, 29, 12, 0, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 27.0, 55.9, 60.7, 9177.0, 84.6, 0.0},
+				            {"a5176da0f4324d925cfef9541de067d0", #datetime(2026, 9, 29, 14, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.9, 52.8, 56.7, 13349.0, 84.1, 0.0},
+				            {"c13897b4c8dd21cd45a087c2f1e66795", #datetime(2026, 9, 29, 14, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 27.1, 53.1, 52.6, 13349.0, 84.1, 0.0},
+				            {"c57d72fe9a0e63e2604ea2ffaf507de3", #datetime(2026, 9, 29, 14, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.5, 53.6, 62.9, 13349.0, 83.6, 0.0},
+				            {"f9b1de86461af27f25a1ba53926893ed", #datetime(2026, 9, 29, 16, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.7, 51.9, 56.1, 12902.0, 83.6, 0.0},
+				            {"61b99161cc21a87a7c1964bb8dbd9a53", #datetime(2026, 9, 29, 16, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 26.9, 52.2, 52.5, 12902.0, 83.6, 0.0},
+				            {"771f672a653f387fad7b41760ebc4be5", #datetime(2026, 9, 29, 16, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 27.1, 53.0, 62.4, 12902.0, 83.6, 0.0},
+				            {"313b7e293673174d306c3a5a33adba6f", #datetime(2026, 9, 29, 18, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 25.3, 59.0, 56.0, 11278.0, 83.6, 0.0},
+				            {"584cc92f07c597f798e2e95450d7941d", #datetime(2026, 9, 29, 18, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 25.4, 58.3, 51.7, 11278.0, 83.4, 0.0},
+				            {"eced430142f803f436ad61dd9132f7ad", #datetime(2026, 9, 29, 18, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 25.3, 56.7, 61.3, 11278.0, 83.4, 0.0},
+				            {"28e3f65ad98592ee72c6a2972ec37ac9", #datetime(2026, 9, 29, 20, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 24.9, 60.9, 57.5, 0.0, 83.0, 0.0},
+				            {"0f2cc3465a1d6349f0f058c541802f2f", #datetime(2026, 9, 29, 20, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 24.6, 60.6, 51.5, 0.0, 83.0, 0.0},
+				            {"c2fb7bc3a58d41a4bd5480a6b5a8e33b", #datetime(2026, 9, 29, 20, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 24.4, 61.6, 63.1, 0.0, 83.0, 0.0},
+				            {"70fe98a02b27df8761307c057b375698", #datetime(2026, 9, 29, 22, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 22.8, 66.6, 56.1, 0.0, 83.0, 0.0},
+				            {"09381efacc81635631f251c2e99f4a92", #datetime(2026, 9, 29, 22, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 22.5, 66.5, 50.3, 0.0, 83.0, 0.0},
+				            {"c73fa90823c77e7abfc43ff7e3825693", #datetime(2026, 9, 29, 22, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 22.5, 67.7, 61.8, 0.0, 83.0, 0.0},
+				            {"4beac505d6ed9fdf922c6c73456746fe", #datetime(2026, 9, 30, 0, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 21.3, 68.6, 56.5, 0.0, 82.8, 0.0},
+				            {"e5212f05a18943f60e8de9c38371f5f2", #datetime(2026, 9, 30, 0, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 20.9, 68.7, 53.4, 0.0, 82.8, 0.0},
+				            {"ecd2073d3d19ce0eff828a3142f32846", #datetime(2026, 9, 30, 0, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 21.4, 69.6, 61.1, 0.0, 82.8, 0.0},
+				            {"46df761b37e035bc68b053ede9779c99", #datetime(2026, 9, 30, 2, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 20.9, 71.1, 56.2, 0.0, 82.8, 0.0},
+				            {"144ad2a499c453ef325baf8e2cf5ec78", #datetime(2026, 9, 30, 2, 0, 0), "esp32-01", "tray-2", "mustard", "compost", 20.7, 71.4, 52.3, 0.0, 82.8, 0.0},
+				            {"b52f9a2aab7e892d9cc86e0c23151b8d", #datetime(2026, 9, 30, 2, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 20.6, 70.0, 60.1, 0.0, 82.8, 0.0},
+				            {"f43cc03a1b917a1ddf700a5f4aa27976", #datetime(2026, 9, 30, 4, 3, 0), "esp32-01", "tray-1", "radish", "cocopeat", 20.8, 68.0, 57.9, 0.0, 82.2, 0.0},
+				            {"3944562916ad95c8f7a93fdb3e587e62", #datetime(2026, 9, 30, 4, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 20.9, 68.3, 52.1, 0.0, 82.2, 0.0},
+				            {"ed22c33018b2594d04fac06e07b2e68a", #datetime(2026, 9, 30, 4, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 20.8, 69.5, 61.2, 0.0, 82.2, 0.0},
+				            {"67d8b64c1f1d72021f3dd7881c2b94eb", #datetime(2026, 9, 30, 6, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 22.8, 64.1, 57.1, 12427.0, 82.2, 0.0},
+				            {"f0054e4204bcfe34d375a49ff2bcde3d", #datetime(2026, 9, 30, 6, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 22.8, 64.3, 51.4, 12427.0, 82.2, 0.0},
+				            {"3d895a436694b89e56ab1e515cfe42a6", #datetime(2026, 9, 30, 6, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 22.7, 64.4, 59.9, 12427.0, 82.2, 0.0},
+				            {"8138e9663366a3116edbbe9453089e3f", #datetime(2026, 9, 30, 8, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 24.2, 62.9, 55.7, 9844.0, 82.2, 0.0},
+				            {"cf2c39e40bf895d7a21a26727427bc76", #datetime(2026, 9, 30, 8, 0, 0), "esp32-01", "tray-2", "mustard", "compost", 24.4, 62.3, 51.2, 9844.0, 82.2, 0.0},
+				            {"f4c1f93ef5866403982355990f726519", #datetime(2026, 9, 30, 8, 4, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 24.2, 61.8, 58.8, 9844.0, 82.1, 0.0},
+				            {"95ef5783f83815f5621789c98bc11ff7", #datetime(2026, 9, 30, 10, 3, 0), "esp32-01", "tray-1", "radish", "cocopeat", 25.8, 59.6, 56.1, 9850.0, 81.6, 0.0},
+				            {"4519feb07dccdf5b535282cb8e80d2fd", #datetime(2026, 9, 30, 10, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 25.7, 59.3, 52.2, 9850.0, 81.6, 0.0},
+				            {"df0bbe3e9b1dda1b1119ba308d16c274", #datetime(2026, 9, 30, 10, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 25.8, 58.6, 77.0, 9850.0, 81.6, 0.0},
+				            {"9c5a8a4f9dc59da033d68d17ace357b4", #datetime(2026, 9, 30, 12, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.9, 54.9, 55.3, 10586.0, 81.6, 0.0},
+				            {"df6d487a4780c42fc89fa771d99619cd", #datetime(2026, 9, 30, 12, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 26.6, 55.3, 51.6, 10586.0, 81.4, 0.0},
+				            {"986d7a4c8e2b86b886afe7df6403e571", #datetime(2026, 9, 30, 12, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.7, 55.7, 75.8, 10586.0, 81.4, 0.0},
+				            {"02bcbaa1f4b6c7c1e91b5531e429370c", #datetime(2026, 9, 30, 14, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 27.1, 55.0, 57.0, 13375.0, 81.4, 0.0},
+				            {"9eb7ce5b89db1c3f4ffaaa98c602e3de", #datetime(2026, 9, 30, 14, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 26.9, 53.1, 51.2, 13375.0, 81.4, 0.0},
+				            {"ad1d2cb9983f9a9a0a6c18dc5b93046e", #datetime(2026, 9, 30, 14, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.7, 53.9, 74.7, 13375.0, 81.4, 0.0},
+				            {"ff0200aee62ee61c9fe60efbc46f9c9a", #datetime(2026, 9, 30, 16, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.6, 56.9, 56.0, 10807.0, 81.4, 0.0},
+				            {"1338eb2bfa7a2cf05ddd479a516d8b3b", #datetime(2026, 9, 30, 16, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 26.6, 56.0, 51.0, 10807.0, 81.4, 0.0},
+				            {"8245fb9cfd80eda2ef75d22fd20fde9d", #datetime(2026, 9, 30, 16, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.6, 55.3, 73.7, 10807.0, 81.4, 0.0},
+				            {"24caabd0ff42958983ab84e3880fa3ce", #datetime(2026, 9, 30, 18, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 25.8, 57.6, 55.5, 11911.0, 81.1, 0.0},
+				            {"85c23dcff2a565ea2ba83bac137d42bc", #datetime(2026, 9, 30, 18, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 25.8, 57.7, 52.5, 11911.0, 81.1, 0.0},
+				            {"3cfecc85b7283ccb24d868cb52a47582", #datetime(2026, 9, 30, 18, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 25.9, 57.2, 72.6, 11911.0, 81.1, 0.0},
+				            {"ee4a6e5528ce935c0b42312f390ff0f4", #datetime(2026, 9, 30, 20, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 24.3, 61.7, 54.9, 0.0, 81.1, 0.0},
+				            {"4080f4aa9a40e1eb6b1ab7b44dbdbf12", #datetime(2026, 9, 30, 20, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 24.3, 62.2, 52.2, 0.0, 81.1, 0.0},
+				            {"4f24f88269dace3838ad8f8f95b6c70f", #datetime(2026, 9, 30, 20, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 24.4, 61.6, 71.6, 0.0, 81.1, 0.0},
+				            {"d5c314438b7c5a454508f0a2324078b2", #datetime(2026, 9, 30, 22, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 22.7, 65.2, 57.0, 0.0, 80.8, 0.0},
+				            {"b8f38d1b376afb435a58e0c15e2fd186", #datetime(2026, 9, 30, 22, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 22.4, 64.6, 52.3, 0.0, 80.8, 0.0},
+				            {"dbbf71423a2e901934568a23813c855c", #datetime(2026, 9, 30, 22, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 23.1, 65.2, 70.0, 0.0, 80.8, 0.0},
+				            {"8355ce73ad87e50d1f6f17a0c02cbb7c", #datetime(2026, 10, 1, 0, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 21.1, 68.7, 56.6, 0.0, 80.8, 0.0},
+				            {"b5f0bd5f63d2c4cb03d710354f8fdd84", #datetime(2026, 10, 1, 0, 0, 0), "esp32-01", "tray-2", "mustard", "compost", 21.1, 67.6, 51.2, 0.0, 80.8, 0.0},
+				            {"8017f4e4ce204c965c8a19d2e9f21682", #datetime(2026, 10, 1, 0, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 21.4, 70.1, 70.1, 0.0, 80.8, 0.0},
+				            {"699e3b2ae59e1f0c59f7412db0e25386", #datetime(2026, 10, 1, 2, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 21.2, 68.1, 55.3, 0.0, 80.8, 0.0},
+				            {"1902bac1a0fad25ae7f29ab15a241c92", #datetime(2026, 10, 1, 2, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 21.3, 68.6, 50.8, 0.0, 80.8, 0.0},
+				            {"ecfa355341349d668551cc0eb77555e7", #datetime(2026, 10, 1, 2, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 21.0, 68.3, 68.7, 0.0, 80.5, 0.0},
+				            {"1c76c5bbae5a8a833e94bd1bf9607af3", #datetime(2026, 10, 1, 4, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 21.0, 67.6, 55.4, 0.0, 80.5, 0.0},
+				            {"be7264aab1d65b1a6acfffb7160d107f", #datetime(2026, 10, 1, 4, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 21.3, 68.1, 53.1, 0.0, 80.5, 0.0},
+				            {"6c89ac3df319c55af244bf16595a75ee", #datetime(2026, 10, 1, 4, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 21.3, 67.6, 68.1, 0.0, 80.5, 0.0},
+				            {"d33eb4e6b3e6c1bff3c9df160b2f59b5", #datetime(2026, 10, 1, 6, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 22.6, 66.4, 54.8, 12429.0, 80.5, 0.0},
+				            {"e27abca0222670d04ca3a936b2b365fd", #datetime(2026, 10, 1, 6, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 22.4, 66.0, 52.5, 12429.0, 80.1, 0.0},
+				            {"99434ea927a063e7aaa1de16ad518396", #datetime(2026, 10, 1, 6, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 22.9, 66.9, 66.7, 12429.0, 80.1, 0.0},
+				            {"526256de8b06c17bc8ac1ba730974c01", #datetime(2026, 10, 1, 8, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 24.2, 63.0, 58.2, 10954.0, 79.6, 0.0},
+				            {"405c8a4ab3097038a7110b0ebb0b58e4", #datetime(2026, 10, 1, 8, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 24.6, 63.4, 52.3, 10954.0, 79.6, 0.0},
+				            {"2f8c4faf5e2de4d14bdb52c72527b6fa", #datetime(2026, 10, 1, 8, 4, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 24.5, 61.2, 66.4, 10954.0, 79.6, 0.0},
+				            {"1b73d2960a8f8e5b0ec6dfcf3d47fd07", #datetime(2026, 10, 1, 10, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 25.7, 57.7, 57.1, 12741.0, 79.6, 0.0},
+				            {"7e8fad533768bcfef1e72aa70cf0a5c1", #datetime(2026, 10, 1, 10, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 25.8, 56.6, 51.5, 12741.0, 79.6, 0.0},
+				            {"3a3d6466b01fb83c2452c038148a223a", #datetime(2026, 10, 1, 10, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.0, 57.8, 65.6, 12741.0, 79.6, 0.0},
+				            {"9148ac6e591d3eb1acddefa490393d58", #datetime(2026, 10, 1, 12, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.5, 56.0, 56.8, 10994.0, 79.5, 0.0},
+				            {"f639b33566bffc83f9704198278470e2", #datetime(2026, 10, 1, 12, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 26.5, 54.8, 52.8, 10994.0, 79.5, 0.0},
+				            {"5e5f1a0ff3eb5ef56bcffbab9235466a", #datetime(2026, 10, 1, 12, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.7, 55.4, 64.3, 10994.0, 79.5, 0.0},
+				            {"8c51309f33ec092fe3d69b01f7f19a78", #datetime(2026, 10, 1, 14, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 27.2, 53.5, 56.7, 10023.0, 79.5, 0.0},
+				            {"7d4145edb587728c40651107ab94c668", #datetime(2026, 10, 1, 14, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 27.1, 52.7, 51.7, 10023.0, 79.5, 0.0},
+				            {"911ddb9296a50b7fe8c4d03683600d24", #datetime(2026, 10, 1, 14, 0, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 27.1, 54.0, 62.5, 10023.0, 79.5, 0.0},
+				            {"2bd761248b573a366457ababaf9b278b", #datetime(2026, 10, 1, 16, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.6, 54.2, 55.7, 11070.0, 79.5, 0.0},
+				            {"2b0261665acb1925deeb1395ba6c0498", #datetime(2026, 10, 1, 16, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 26.9, 54.0, 51.2, 11070.0, 79.2, 0.0},
+				            {"3d42c2e51f6abac14170098ed35c84cd", #datetime(2026, 10, 1, 16, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.7, 54.7, 61.6, 11070.0, 79.2, 0.0},
+				            {"40113e71e01a6ea5969bd71324ed03e8", #datetime(2026, 10, 1, 18, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.1, 59.0, 57.6, 10714.0, 79.1, 0.0},
+				            {"df80c7f57be56be38074514c7cb73161", #datetime(2026, 10, 1, 18, 0, 0), "esp32-01", "tray-2", "mustard", "compost", 26.0, 57.7, 50.4, 10714.0, 79.1, 0.0},
+				            {"b163246828854501f7b0011779cb35ab", #datetime(2026, 10, 1, 18, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 25.7, 56.3, 62.5, 10714.0, 79.1, 0.0},
+				            {"7bc293b49443efe955e3aa7e01886f43", #datetime(2026, 10, 1, 20, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 23.8, 63.2, 57.5, 0.0, 79.1, 0.0},
+				            {"abc4f4dbba1a40ee2555070ba180fe3e", #datetime(2026, 10, 1, 20, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 23.8, 63.2, 49.5, 0.0, 79.1, 0.0},
+				            {"df70b4c03cf00bb0cb99c882cb04ce6d", #datetime(2026, 10, 1, 20, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 23.7, 62.0, 61.2, 0.0, 78.9, 0.0},
+				            {"80f4a9f67b415e88c85633aefd0924b2", #datetime(2026, 10, 1, 22, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 22.7, 66.7, 56.0, 0.0, 78.9, 0.0},
+				            {"def84f5ae38620d701d9fd0534929c98", #datetime(2026, 10, 1, 22, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 22.6, 64.9, 52.5, 0.0, 78.9, 0.0},
+				            {"4d2e6a0024d10dbf10fab18896380ea0", #datetime(2026, 10, 1, 22, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 22.1, 65.5, 60.4, 0.0, 78.9, 0.0},
+				            {"9a57cce3e49118ed3349fd1472aacd6d", #datetime(2026, 10, 2, 0, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 21.7, 68.1, 56.0, 0.0, 78.5, 0.0},
+				            {"d0fd57c9cf396ff112cd4650144d8e2c", #datetime(2026, 10, 2, 0, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 21.4, 69.3, 52.0, 0.0, 78.5, 0.0},
+				            {"5250f5953654771b070f104aec425fce", #datetime(2026, 10, 2, 0, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 21.5, 68.8, 61.8, 0.0, 78.5, 0.0},
+				            {"8e142335ddaac33996a73746ae1e5049", #datetime(2026, 10, 2, 2, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 20.9, 68.8, 57.3, 0.0, 78.2, 0.0},
+				            {"7a416ffab6202b3ad03e86e5420134f7", #datetime(2026, 10, 2, 2, 0, 0), "esp32-01", "tray-2", "mustard", "compost", 21.0, 69.5, 51.3, 0.0, 78.2, 0.0},
+				            {"5c81c108473c3adc8f2e494274025c14", #datetime(2026, 10, 2, 2, 4, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 20.2, 68.8, 61.4, 0.0, 78.2, 0.0},
+				            {"0727d012efdbfb7517047d17faa55475", #datetime(2026, 10, 2, 4, 4, 0), "esp32-01", "tray-1", "radish", "cocopeat", 21.2, 68.4, 56.7, 0.0, 78.2, 0.0},
+				            {"9b27af30f093490842553c172e8bb75c", #datetime(2026, 10, 2, 4, 2, 0), "esp32-01", "tray-2", "mustard", "compost", 21.2, 66.5, 51.5, 0.0, 78.2, 0.0},
+				            {"076f5c3c874ba543297e1275c772c444", #datetime(2026, 10, 2, 4, 2, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 21.2, 67.6, 60.9, 0.0, 78.2, 0.0},
+				            {"6cf4c2f0c258cbd15377b678340542bb", #datetime(2026, 10, 2, 6, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 22.9, 65.1, 57.4, 10041.0, 78.1, 0.0},
+				            {"f44ac032446c3624c4ea6574de881f0f", #datetime(2026, 10, 2, 6, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 23.1, 66.2, 51.6, 10041.0, 78.1, 0.0},
+				            {"dd2cefb86f4f9cbd2eab07c970674db5", #datetime(2026, 10, 2, 6, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 22.7, 66.6, 59.6, 10041.0, 77.6, 0.0},
+				            {"51058367e4ddac07fda3b9780c5e9c7a", #datetime(2026, 10, 2, 8, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 23.7, 61.0, 55.8, 12278.0, 77.2, 0.0},
+				            {"395250c32dd1b62c00a876576db08606", #datetime(2026, 10, 2, 8, 4, 0), "esp32-01", "tray-2", "mustard", "compost", 23.8, 62.3, 51.9, 12278.0, 77.2, 0.0},
+				            {"f50da5457f0b528bd6ee47a85a83bd61", #datetime(2026, 10, 2, 8, 0, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 23.5, 61.7, 62.8, 12278.0, 77.2, 0.0},
+				            {"0a99b2ddb02a3b275361dba402b608f4", #datetime(2026, 10, 2, 10, 3, 0), "esp32-01", "tray-1", "radish", "cocopeat", 25.7, 56.0, 55.2, 10632.0, 77.2, 0.0},
+				            {"bae115169c6472c0b1940b434131bf70", #datetime(2026, 10, 2, 10, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 25.7, 58.4, 51.4, 10632.0, 77.0, 0.0},
+				            {"e894d345089d77b3c8b215ac9eeee2fe", #datetime(2026, 10, 2, 10, 0, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 25.5, 56.1, 61.4, 10632.0, 77.0, 0.0},
+				            {"a127cca8d332991e3c03e7036140a69e", #datetime(2026, 10, 2, 12, 3, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.3, 55.5, 56.8, 11458.0, 77.0, 0.0},
+				            {"8b067af7cc1cf866a0ffa121126e45a3", #datetime(2026, 10, 2, 12, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 26.6, 54.6, 50.7, 11458.0, 77.0, 0.0},
+				            {"38a223049219c11f7a03a6bd96e8e3c4", #datetime(2026, 10, 2, 12, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.6, 55.8, 60.1, 11458.0, 77.0, 0.0},
+				            {"84703e8ec240e6b12cace96dcc5c2f3f", #datetime(2026, 10, 2, 14, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.5, 54.1, 55.9, 11153.0, 76.6, 0.0},
+				            {"5710706c85fca4905eeb07f49f6c3ff2", #datetime(2026, 10, 2, 14, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 26.7, 53.6, 50.6, 11153.0, 76.6, 0.0},
+				            {"b7daadc64e79649f2dad8d829730ff8c", #datetime(2026, 10, 2, 14, 4, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.7, 53.5, 63.1, 11153.0, 76.6, 0.0},
+				            {"5f52b8509488e806b63ed11dda09c746", #datetime(2026, 10, 2, 16, 0, 0), "esp32-01", "tray-1", "radish", "cocopeat", 26.8, 55.5, 55.5, 13400.0, 76.4, 0.0},
+				            {"6a2a93c8869bd0f164acab7a61208f98", #datetime(2026, 10, 2, 16, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 27.1, 55.6, 52.6, 13400.0, 76.4, 0.0},
+				            {"76514eabef6002fb76691b139040d8d0", #datetime(2026, 10, 2, 16, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 26.7, 56.5, 62.1, 13400.0, 76.4, 0.0},
+				            {"170da6a51e3d0f5d75bba463c516bde4", #datetime(2026, 10, 2, 18, 1, 0), "esp32-01", "tray-1", "radish", "cocopeat", 25.3, 58.1, 54.0, 12462.0, 76.4, 0.0},
+				            {"ae54dd71d2f139fc0e14c998744b8963", #datetime(2026, 10, 2, 18, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 25.4, 57.2, 51.5, 12462.0, 76.4, 0.0},
+				            {"0cd30d4ad11d0ba7682ddac2ff832087", #datetime(2026, 10, 2, 18, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 25.7, 57.2, 60.9, 12462.0, 76.4, 0.0},
+				            {"bab0c1220d18d933a9f4e8438e5e5cc0", #datetime(2026, 10, 2, 20, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 24.3, 64.2, 57.9, 0.0, 76.0, 0.0},
+				            {"cbcc7409383dc1144607d625090a5b58", #datetime(2026, 10, 2, 20, 3, 0), "esp32-01", "tray-2", "mustard", "compost", 24.1, 65.4, 51.1, 0.0, 76.0, 0.0},
+				            {"ba519468ef52eb3867efec237461c32e", #datetime(2026, 10, 2, 20, 3, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 24.2, 64.7, 60.0, 0.0, 76.0, 0.0},
+				            {"d5645201a8ac60d23948f24f6a2932fa", #datetime(2026, 10, 2, 22, 2, 0), "esp32-01", "tray-1", "radish", "cocopeat", 22.1, 66.3, 56.4, 0.0, 75.6, 0.0},
+				            {"0ab08f08222619a0b219e502ec81cdb2", #datetime(2026, 10, 2, 22, 1, 0), "esp32-01", "tray-2", "mustard", "compost", 22.8, 66.9, 50.1, 0.0, 75.6, 0.0},
+				            {"b827d2938f81d55cb4fa23e951984400", #datetime(2026, 10, 2, 22, 1, 0), "esp32-01", "tray-3", "green gram", "tissue paper", 22.8, 66.3, 62.9, 0.0, 75.6, 0.0}
+				        }),
+				    Step0 = Table.AddColumn(Source, "Date", each DateTime.Date([timestamp]), type date),
+				    Step1 = Table.AddColumn(Step0, "Hour", each Time.Hour(DateTime.Time([timestamp])), Int64.Type),
+				    Result = Step1
+				in
+				    Result
+
+	annotation PBI_ResultType = Table

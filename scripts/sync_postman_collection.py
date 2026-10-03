@@ -42,13 +42,17 @@ ENVIRONMENT_PATH = ROOT / "postman" / "SmartGrowAI.postman_environment.json"
 TAG_TO_FOLDER = {
     "Health": "Health",
     "Auth": "Auth",
-    "Users": "Users (Admin)",
-    "Trays": "Trays",
-    "Sensor Readings": "Sensors (ESP32)",
-    "Irrigation": "Irrigation",
-    "Predictions": "Predictions",
-    "Analytics": "Analytics (Power BI)",
-    "AI Agent": "AI Agent",
+    "Sensor Data": "Data Collections",
+    "Model Output": "Data Collections",
+    "Hardware Status": "Data Collections",
+    "Tray Status": "Data Collections",
+    "Threshold": "Data Collections",
+    "Irrigation Log": "Data Collections",
+    "Crop Batch": "Data Collections",
+    "Fault Event": "Data Collections",
+    "ML: Crop-Water Response": "Crop-Water Response (Model 1)",
+    "ML: Response Deviation": "Response Deviation & Faults (Model 2)",
+    "Policy": "Adaptive Irrigation Policy (Model 3)",
 }
 
 # Header parameters that map to a specific, already-documented environment

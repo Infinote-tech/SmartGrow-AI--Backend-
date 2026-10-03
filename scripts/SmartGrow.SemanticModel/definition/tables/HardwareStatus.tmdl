@@ -1,0 +1,140 @@
+table HardwareStatus
+	lineageTag: 315f7621-f692-4687-87b5-fb6b3dda76fa
+
+	measure Snapshots = COUNTROWS(HardwareStatus)
+		formatString: #,0
+		lineageTag: fcd572c2-38ee-4cb0-9c61-148250b8ffd7
+
+	measure 'Healthy %' = DIVIDE(CALCULATE(COUNTROWS(HardwareStatus), HardwareStatus[overall_system_status] = "ok"), COUNTROWS(HardwareStatus))
+		formatString: 0%
+		lineageTag: 3d1cf6d5-4bcd-4c68-b597-5d22fbe3d20a
+
+	column hardware_status_id
+		dataType: string
+		lineageTag: 0901e1df-d73b-40c5-9e47-5f3a0bf22b37
+		summarizeBy: none
+		sourceColumn: hardware_status_id
+
+	column timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 19de9b69-3342-4cb6-ad14-a29c283e3107
+		summarizeBy: none
+		sourceColumn: timestamp
+
+	column esp32_id
+		dataType: string
+		lineageTag: 2ae834ea-6d94-4741-b8e2-c8552d31d09b
+		summarizeBy: none
+		sourceColumn: esp32_id
+
+	column overall_system_status
+		dataType: string
+		lineageTag: 3daca339-66a4-4c8e-91cc-344c35ed22cf
+		summarizeBy: none
+		sourceColumn: overall_system_status
+
+	column solenoid_1_status
+		dataType: string
+		lineageTag: c9501857-21d3-4e5d-ad0e-984dd966188e
+		summarizeBy: none
+		sourceColumn: solenoid_1_status
+
+	column solenoid_2_status
+		dataType: string
+		lineageTag: 3954f758-658d-43b1-9c9b-f87eff93f0ad
+		summarizeBy: none
+		sourceColumn: solenoid_2_status
+
+	column solenoid_3_status
+		dataType: string
+		lineageTag: ffe02f6f-0b70-4479-9bab-259014b6c859
+		summarizeBy: none
+		sourceColumn: solenoid_3_status
+
+	column fan_status
+		dataType: string
+		lineageTag: 51415b4d-47fd-4a82-a41c-41890644424a
+		summarizeBy: none
+		sourceColumn: fan_status
+
+	column motor_status
+		dataType: string
+		lineageTag: e26cb6d3-4724-4384-b941-09e72f018518
+		summarizeBy: none
+		sourceColumn: motor_status
+
+	column water_pump_status
+		dataType: string
+		lineageTag: 05bfdfa6-c5ab-4e1b-8653-bb9173e5be2c
+		summarizeBy: none
+		sourceColumn: water_pump_status
+
+	column power_status
+		dataType: string
+		lineageTag: 7fb4f0e1-1130-4f72-958c-b3edb75cd8ba
+		summarizeBy: none
+		sourceColumn: power_status
+
+	column connectivity_status
+		dataType: string
+		lineageTag: bbca979a-5371-4238-b772-5aea5d79cd05
+		summarizeBy: none
+		sourceColumn: connectivity_status
+
+	column Date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: b0309970-1112-4959-91f6-98a309a45840
+		summarizeBy: none
+		sourceColumn: Date
+
+	column 'Overall Status'
+		dataType: string
+		lineageTag: 43d23e57-8d7e-4c6d-90d8-d591219d9e22
+		summarizeBy: none
+		sourceColumn: Overall Status
+
+	partition HardwareStatus = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [hardware_status_id = text, timestamp = datetime, esp32_id = text, overall_system_status = text, solenoid_1_status = text, solenoid_2_status = text, solenoid_3_status = text, fan_status = text, motor_status = text, water_pump_status = text, power_status = text, connectivity_status = text],
+				        {
+				            {"119a72d174c9df6acc011cdd9474031b", #datetime(2026, 9, 26, 0, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "off", "off", "off", "ok", "online"},
+				            {"8b0d590bb0a844e52587be6b5c9bcf35", #datetime(2026, 9, 26, 6, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"8604871926debfdb8825ae562179b37d", #datetime(2026, 9, 26, 12, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"2954ba5cf81e54dd1c0502c6f0290531", #datetime(2026, 9, 26, 18, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"11f2d44dcc35e83474fa941200d93534", #datetime(2026, 9, 27, 0, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "off", "off", "off", "ok", "online"},
+				            {"0c89c0017c4ea6034944f2cede962a6d", #datetime(2026, 9, 27, 6, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"4fcc9a5c334e51aff848a9567ee5e857", #datetime(2026, 9, 27, 12, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"6bca9b3f18af266c3555d6ae15866ffb", #datetime(2026, 9, 27, 18, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"92a73f9d16cabe32658f62d1e8e84b0d", #datetime(2026, 9, 28, 0, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "off", "off", "off", "ok", "online"},
+				            {"64edfce5db4a18fca13903858923b7f6", #datetime(2026, 9, 28, 6, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"99ea4514541c18d563825046e1527ae4", #datetime(2026, 9, 28, 12, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"75fe1142f1a4bf3b3bcb9bcea17870d5", #datetime(2026, 9, 28, 18, 1, 0), "esp32-01", "degraded", "closed", "closed", "closed", "on", "off", "off", "ok", "offline"},
+				            {"133f524303682cec0fbeb7166651b3c4", #datetime(2026, 9, 29, 0, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "off", "off", "off", "ok", "online"},
+				            {"bc8df872aebe17730bbe27a89c13aef3", #datetime(2026, 9, 29, 6, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"7f834533b5906f578eb7980da0ed7277", #datetime(2026, 9, 29, 12, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"fe9f0bb4337405bf56be6d2a09b1e1fb", #datetime(2026, 9, 29, 18, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"712e17f6041a7212a3ca8d60fa8792bf", #datetime(2026, 9, 30, 0, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "off", "off", "off", "ok", "online"},
+				            {"8472a7bb532b51fc0db5a9398fa2fc70", #datetime(2026, 9, 30, 6, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"251e1ae1cd8e4dc54dd5169a8970978f", #datetime(2026, 9, 30, 12, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"62ba641a9fbea64073289c3231102878", #datetime(2026, 9, 30, 18, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"e8af2d6bd82830a66743ca595b1c2724", #datetime(2026, 10, 1, 0, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "off", "off", "off", "ok", "online"},
+				            {"47e7f3cbe553ef860f71e85e0b1c0cc9", #datetime(2026, 10, 1, 6, 1, 0), "esp32-01", "ok", "closed", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"72853369bd5e0bdeadbe36b538f4aa22", #datetime(2026, 10, 1, 12, 1, 0), "esp32-01", "degraded", "fault", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"9fe70a1396d756e0218408e5e4dc2b23", #datetime(2026, 10, 1, 18, 1, 0), "esp32-01", "degraded", "fault", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"0ba38a2bcbd7d4aa6a0db8b0dd018ce5", #datetime(2026, 10, 2, 0, 1, 0), "esp32-01", "degraded", "fault", "closed", "closed", "off", "off", "off", "ok", "online"},
+				            {"3c0f7e8495d483a6086d1ec5e51d2959", #datetime(2026, 10, 2, 6, 1, 0), "esp32-01", "degraded", "fault", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"d2670e4d27076e4f2c1f4683ac767417", #datetime(2026, 10, 2, 12, 1, 0), "esp32-01", "degraded", "fault", "closed", "closed", "on", "off", "off", "ok", "online"},
+				            {"41493f1b623bc05a50236cc3162c5e08", #datetime(2026, 10, 2, 18, 1, 0), "esp32-01", "degraded", "fault", "closed", "closed", "on", "off", "off", "ok", "online"}
+				        }),
+				    Step0 = Table.AddColumn(Source, "Date", each DateTime.Date([timestamp]), type date),
+				    Step1 = Table.AddColumn(Step0, "Overall Status", each Text.Proper(Text.Replace([overall_system_status], "_", " ")), type text),
+				    Result = Step1
+				in
+				    Result
+
+	annotation PBI_ResultType = Table

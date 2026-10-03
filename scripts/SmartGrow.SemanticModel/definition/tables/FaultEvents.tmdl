@@ -1,0 +1,262 @@
+table FaultEvents
+	lineageTag: 6c72d4e9-f818-4397-82d6-1b99f38b26be
+
+	measure 'Total Faults' = COUNTROWS(FaultEvents)
+		formatString: #,0
+		lineageTag: de2e99d1-7343-4591-89d0-60526d9b05cc
+
+	measure 'Active Faults' = CALCULATE(COUNTROWS(FaultEvents), FaultEvents[fault_status] = "active") + 0
+		formatString: #,0
+		lineageTag: 715e8281-0a16-4bba-86e5-f7efdb65d225
+
+	measure 'Critical Faults' = CALCULATE(COUNTROWS(FaultEvents), FaultEvents[severity] = "critical") + 0
+		formatString: #,0
+		lineageTag: be39b928-d4fe-407a-8c49-a6184a1e21c3
+
+	measure 'Resolved %' =
+			DIVIDE(
+			    CALCULATE(COUNTROWS(FaultEvents), FaultEvents[fault_status] = "resolved"),
+			    COUNTROWS(FaultEvents)
+			)
+		formatString: 0%
+		lineageTag: e866f3f6-279a-4354-9a2e-e3ad5b3f4c35
+
+	measure 'Avg Hours To Resolve' = AVERAGE(FaultEvents[Hours To Resolve])
+		formatString: 0.0" h"
+		lineageTag: 7a0b259e-67c2-43da-96cf-e49bc2dfbdec
+
+	measure 'Avg Fault Confidence' = AVERAGE(FaultEvents[fault_confidence])
+		formatString: 0%
+		lineageTag: b6a50cea-16f6-4bad-aa0c-3edcd6103cc4
+
+	column fault_id
+		dataType: string
+		lineageTag: 8f358034-3ddc-4553-ac49-bbf8c80a4b79
+		summarizeBy: none
+		sourceColumn: fault_id
+
+	column timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 7d6a85d5-b88f-436e-a8e5-5d5a723ccc50
+		summarizeBy: none
+		sourceColumn: timestamp
+
+	column esp32_id
+		dataType: string
+		lineageTag: ec86bd4a-3499-45f5-9296-a85f72aa4f47
+		summarizeBy: none
+		sourceColumn: esp32_id
+
+	column tray_id
+		dataType: string
+		lineageTag: 42dc9dde-e91a-4259-8142-c87fc95f5255
+		summarizeBy: none
+		sourceColumn: tray_id
+
+	column fault_type
+		dataType: string
+		lineageTag: 457cc7ef-d0c0-4925-ad09-c5ad3d9fc178
+		summarizeBy: none
+		sourceColumn: fault_type
+
+	column fault_source
+		dataType: string
+		lineageTag: b3191181-a6fa-4a88-98e0-7f27226f6654
+		summarizeBy: none
+		sourceColumn: fault_source
+
+	column severity
+		dataType: string
+		lineageTag: 75854cdc-b0c5-4954-b96a-5ab92f44b6c5
+		summarizeBy: none
+		sourceColumn: severity
+
+	column sensor_value
+		dataType: double
+		formatString: General Number
+		lineageTag: 4d58b6cc-d36e-43e4-96c3-00943cb7a4f9
+		summarizeBy: none
+		sourceColumn: sensor_value
+
+	column expected_min
+		dataType: double
+		formatString: General Number
+		lineageTag: d2078afd-b4f1-464b-b476-38fbc4d63631
+		summarizeBy: none
+		sourceColumn: expected_min
+
+	column expected_max
+		dataType: double
+		formatString: General Number
+		lineageTag: 4beeb649-55dd-4d2d-8886-6a6afb56b879
+		summarizeBy: none
+		sourceColumn: expected_max
+
+	column anomaly_score
+		dataType: double
+		formatString: General Number
+		lineageTag: 26bce66c-4e67-4303-931b-5806c8c1e599
+		summarizeBy: none
+		sourceColumn: anomaly_score
+
+	column fault_probability
+		dataType: double
+		formatString: General Number
+		lineageTag: 8ca2bcb9-e9ec-41cb-a6d0-d4af5bbc428b
+		summarizeBy: none
+		sourceColumn: fault_probability
+
+	column detected_by
+		dataType: string
+		lineageTag: 925c29bf-3671-4375-8b3a-20b26f84b92c
+		summarizeBy: none
+		sourceColumn: detected_by
+
+	column recommended_action
+		dataType: string
+		lineageTag: af6938dc-1aac-4b58-b706-3de387049e58
+		summarizeBy: none
+		sourceColumn: recommended_action
+
+	column automatic_action
+		dataType: string
+		lineageTag: 37dfeae3-c9b9-4bf0-9011-4591ae9846fa
+		summarizeBy: none
+		sourceColumn: automatic_action
+
+	column fault_status
+		dataType: string
+		lineageTag: c3e1a890-a6da-4efa-b6ab-d607670ac5ec
+		summarizeBy: none
+		sourceColumn: fault_status
+
+	column resolved_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 6ec68b64-aa3f-412b-9a2c-7701d96a3e12
+		summarizeBy: none
+		sourceColumn: resolved_at
+
+	column resolution_reason
+		dataType: string
+		lineageTag: 7213321f-d837-403d-bafe-fc29c637b52b
+		summarizeBy: none
+		sourceColumn: resolution_reason
+
+	column irrigation_id
+		dataType: string
+		lineageTag: 186acb38-3a2c-4b28-a8e5-3115267ce951
+		summarizeBy: none
+		sourceColumn: irrigation_id
+
+	column response_deviation
+		dataType: double
+		formatString: General Number
+		lineageTag: 184a1e8f-bbb7-49e8-99b8-ba0ebfe372f5
+		summarizeBy: none
+		sourceColumn: response_deviation
+
+	column fault_hypothesis
+		dataType: string
+		lineageTag: 52e7ceed-4f52-4e01-91a4-4e3654815592
+		summarizeBy: none
+		sourceColumn: fault_hypothesis
+
+	column fault_confidence
+		dataType: double
+		formatString: General Number
+		lineageTag: 060a3f27-6114-4d1d-a17b-5c19696ec4ad
+		summarizeBy: none
+		sourceColumn: fault_confidence
+
+	column flow_class
+		dataType: string
+		lineageTag: 80293dc2-fb08-41e5-8ea1-24a73fa0b90f
+		summarizeBy: none
+		sourceColumn: flow_class
+
+	column response_class
+		dataType: string
+		lineageTag: 90fa4b4a-eef1-4d0c-b7f2-7e9985bf64fc
+		summarizeBy: none
+		sourceColumn: response_class
+
+	column diagnostic_action
+		dataType: string
+		lineageTag: 85c1a24c-9def-4389-b0a7-ba53a0be55ae
+		summarizeBy: none
+		sourceColumn: diagnostic_action
+
+	column recovery_action
+		dataType: string
+		lineageTag: d82f7ec8-d5fd-4284-a53f-20ac17caa240
+		summarizeBy: none
+		sourceColumn: recovery_action
+
+	column recovery_success
+		dataType: boolean
+		lineageTag: 6026072c-850d-47be-bcdf-d537dcdcf3dd
+		summarizeBy: none
+		sourceColumn: recovery_success
+
+	column injected
+		dataType: boolean
+		lineageTag: 54869534-b8de-4b9e-8715-11d261bb6685
+		summarizeBy: none
+		sourceColumn: injected
+
+	column Date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: c08b4e55-c6fc-46a1-b16e-878c337ec532
+		summarizeBy: none
+		sourceColumn: Date
+
+	column Hypothesis
+		dataType: string
+		lineageTag: 5b2d3199-b294-4cde-86c6-97f0fd29783e
+		summarizeBy: none
+		sourceColumn: Hypothesis
+
+	column Status
+		dataType: string
+		lineageTag: 8993d0e6-f6b3-4d52-8b81-d679b581295e
+		summarizeBy: none
+		sourceColumn: Status
+
+	column 'Severity Label'
+		dataType: string
+		lineageTag: c859fcf8-30a9-4f54-8bb0-880c95f055ad
+		summarizeBy: none
+		sourceColumn: Severity Label
+
+	column 'Hours To Resolve'
+		dataType: double
+		formatString: General Number
+		lineageTag: 1fb2354c-0559-4975-a3aa-6253755240b2
+		summarizeBy: none
+		sourceColumn: Hours To Resolve
+
+	partition FaultEvents = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [fault_id = text, timestamp = datetime, esp32_id = text, tray_id = text, fault_type = text, fault_source = text, severity = text, sensor_value = number, expected_min = number, expected_max = number, anomaly_score = number, fault_probability = number, detected_by = text, recommended_action = text, automatic_action = text, fault_status = text, resolved_at = datetime, resolution_reason = text, irrigation_id = text, response_deviation = number, fault_hypothesis = text, fault_confidence = number, flow_class = text, response_class = text, diagnostic_action = text, recovery_action = text, recovery_success = logical, injected = logical],
+				        {
+				            {"6329cfd3606de4eb3f0121f3e35c18a0", #datetime(2026, 9, 29, 14, 35, 20), "esp32-01", "tray-2", "response_anomaly", "pump", "warning", 52.58, 53.41, 59.41, 1.275, 0.7, "rule", "Check reservoir level, pump power and inlet line", "irrigation paused for tray", "resolved", #datetime(2026, 9, 29, 17, 5, 20), "Cleared the inlet line", "d526e8f999e4226426afd434d4cf50a7", -3.826, "pump_tank_blockage", 0.7, "no_flow", "no_change", "Check reservoir level, pump power and inlet line", "Flushed inlet line and refilled reservoir", true, false},
+				            {"4f7d39dad19e2a95780e21047a54c2e3", #datetime(2026, 9, 30, 9, 18, 20), "esp32-01", "tray-3", "response_anomaly", "sensor", "critical", 76.97, 60.63, 65.63, 4.614, 0.8, "rule", "Check for pooling, leaks near sensor, sensor drift", "irrigation paused for tray", "resolved", #datetime(2026, 10, 1, 11, 18, 20), "Moved the sensor away from the drip point", "75fc74c45de7818bb5da24688c6f5a9c", 13.842, "leakage_or_sensor", 0.8, "normal", "excessive", "Check for pooling, leaks near sensor, sensor drift", "Reduced next volume; re-seated sensor", true, false},
+				            {"54ebef65b79692bbbf4e72cb157f2cc4", #datetime(2026, 10, 1, 7, 21, 20), "esp32-01", "tray-1", "response_anomaly", "valve", "warning", 58.31, 59.08, 64.08, 1.089, 0.7, "rule", "Check solenoid operation, tubing kinks, air in line", "irrigation paused for tray", "active", null, null, "77f0613902c4b76f0bab24821262afca", -3.266, "valve_tubing_system", 0.7, "intermittent", "no_change", "Check solenoid operation, tubing kinks, air in line", "Cycle valve; inspect tubing", null, false},
+				            {"dd0460ebc620f253c7a1f2640bd30ece", #datetime(2026, 10, 2, 6, 31, 20), "esp32-01", "tray-2", "response_anomaly", "sensor", "warning", 52.25, 54.4, 59.4, 1.549, 0.7, "rule", "Check emitter placement, sensor contact with media, media dryness/hydrophobicity", "irrigation paused for tray", "active", null, null, "35b6a52ac83c86b7e202fbed0d5840cd", -4.648, "distribution_sensor_media", 0.7, "normal", "no_change", "Check emitter placement, sensor contact with media, media dryness/hydrophobicity", "Re-seat sensor; inspect distribution; manual watering check", null, false}
+				        }),
+				    Step0 = Table.AddColumn(Source, "Date", each DateTime.Date([timestamp]), type date),
+				    Step1 = Table.AddColumn(Step0, "Hypothesis", each Text.Proper(Text.Replace([fault_hypothesis], "_", " ")), type text),
+				    Step2 = Table.AddColumn(Step1, "Status", each Text.Proper(Text.Replace([fault_status], "_", " ")), type text),
+				    Step3 = Table.AddColumn(Step2, "Severity Label", each Text.Proper(Text.Replace([severity], "_", " ")), type text),
+				    Step4 = Table.AddColumn(Step3, "Hours To Resolve", each if [resolved_at] = null then null else Duration.TotalHours([resolved_at] - [timestamp]), type number),
+				    Result = Step4
+				in
+				    Result
+
+	annotation PBI_ResultType = Table

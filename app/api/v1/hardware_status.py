@@ -11,12 +11,15 @@ from app.repositories.hardware_status_repository import HardwareStatusRepository
 router = APIRouter(prefix="/hardware-status", tags=["Hardware Status"])
 
 
-@router.post("", response_model=HardwareStatusPublic, status_code=201)
+@router.post("", response_model=HardwareStatusPublic, status_code=201, summary="Store a hardware health snapshot")
 async def create_hardware_status(
     payload: HardwareStatusCreate,
     repo: Annotated[HardwareStatusRepository, Depends(get_hardware_status_repository)],
     current_user: Annotated[UserInDB, Depends(get_current_user)],
 ):
-    """A hardware health snapshot reported by an ESP32. Insert-only: stored in the `hardware_status` collection with a generated `hardware_status_id`."""
+    """Store the state of the controller's actuators and links (three valves, fan, motor, pump, power, connectivity).
+    Sent by the ESP32 periodically for fault monitoring. Insert-only: stored in `hardware_status` with a generated
+    `hardware_status_id`.
+    """
     document = await insert_document(repo, payload, id_field="hardware_status_id", timestamp_field="timestamp")
     return HardwareStatusPublic(**document.model_dump())

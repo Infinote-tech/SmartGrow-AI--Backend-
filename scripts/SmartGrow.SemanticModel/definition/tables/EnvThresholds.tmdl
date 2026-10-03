@@ -1,44 +1,52 @@
 table EnvThresholds
-	lineageTag: 88e29723-9c02-4787-80a5-c7a1eda75eab
+	lineageTag: 3ca774ae-1552-4286-a4ce-d3fb573aa382
 
 	column Parameter
 		dataType: string
-		lineageTag: c1944a14-250a-45d6-bb32-4136c30b084d
+		lineageTag: 8d8886e2-40c9-4bd8-b374-e9b5d2423b7c
 		summarizeBy: none
 		sourceColumn: Parameter
+		sortByColumn: Sort
 
 	column Good
 		dataType: string
-		lineageTag: eb89e500-8b62-4b30-8a8c-9aaae892d9ca
+		lineageTag: 6202373a-2b24-4726-a0c6-51a800bd0e22
 		summarizeBy: none
 		sourceColumn: Good
 
 	column Warning
 		dataType: string
-		lineageTag: efc18732-a696-481f-85ea-9ec3fb4d40f3
+		lineageTag: 74a87bfd-8a86-4afb-ae27-214ff0421b1d
 		summarizeBy: none
 		sourceColumn: Warning
 
 	column Critical
 		dataType: string
-		lineageTag: 31c574ff-7642-4c09-bd4d-51410386a389
+		lineageTag: 77922b83-891a-41b8-9374-269ddfdc271f
 		summarizeBy: none
 		sourceColumn: Critical
+
+	column Sort
+		dataType: int64
+		formatString: 0
+		lineageTag: c5aef6bb-515a-45fa-87b8-ce483c983f4c
+		summarizeBy: none
+		sourceColumn: Sort
 
 	partition EnvThresholds = m
 		mode: import
 		source =
 				let
 				    Source = #table(
-				        type table [Parameter = text, Good = text, Warning = text, Critical = text],
+				        type table [Parameter = text, Good = text, Warning = text, Critical = text, Sort = Int64.Type],
 				        {
-				{"Temperature (lowland)", "22-28 °C", "28-31 °C", ">32 °C"},
-									{"Temperature (hill country)", "18-25 °C", "25-28 °C", ">30 °C"},
-									{"Humidity, growth phase", "50-70%", "70-80%", ">80% for 4+ h"},
-									{"Light", "8,000-15,000 lux, 12-14 h/day", "<4,000 lux", "Schedule missed"}
-				        })
+				            {"Temperature (lowland)", "22-28 °C", "28-31 °C", ">32 °C", 1},
+				            {"Temperature (hill country)", "18-25 °C", "25-28 °C", ">30 °C", 2},
+				            {"Humidity, growth phase", "50-70%", "70-80%", ">80% for 4+ h", 3},
+				            {"Light", "8,000-15,000 lux, 12-14 h/day", "<4,000 lux", "Schedule missed", 4}
+				        }),
+				    Result = Source
 				in
-				    Source
+				    Result
 
 	annotation PBI_ResultType = Table
-

@@ -11,12 +11,14 @@ from app.repositories.tray_status_repository import TrayStatusRepository
 router = APIRouter(prefix="/tray-status", tags=["Tray Status"])
 
 
-@router.post("", response_model=TrayStatusPublic, status_code=201)
+@router.post("", response_model=TrayStatusPublic, status_code=201, summary="Store a snapshot of all three trays")
 async def create_tray_status(
     payload: TrayStatusCreate,
     repo: Annotated[TrayStatusRepository, Depends(get_tray_status_repository)],
     current_user: Annotated[UserInDB, Depends(get_current_user)],
 ):
-    """A snapshot of the three trays' status, seed types and media types. Insert-only: stored in the `tray_status` collection with a generated `tray_status_id`."""
+    """Store the status, seed type and media type of trays 1-3 at one moment, for crop management dashboards.
+    Insert-only: stored in `tray_status` with a generated `tray_status_id`.
+    """
     document = await insert_document(repo, payload, id_field="tray_status_id", timestamp_field="timestamp")
     return TrayStatusPublic(**document.model_dump())

@@ -24,3 +24,11 @@ class InvalidCredentialsError(Exception):
 class InvalidTokenError(Exception):
     def __init__(self, reason: str = "Invalid or expired token"):
         super().__init__(reason)
+
+
+class UnprocessableError(Exception):
+    """Request is well-formed but cannot be processed with the data available (HTTP 422)."""
+
+
+class ConflictError(Exception):
+    """Request conflicts with the current state of a resource (HTTP 409)."""

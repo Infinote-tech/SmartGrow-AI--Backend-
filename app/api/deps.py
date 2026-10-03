@@ -24,6 +24,10 @@ from app.repositories.token_repository import TokenDenylistRepository
 from app.repositories.tray_status_repository import TrayStatusRepository
 from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
+from app.services.irrigation_policy_service import IrrigationPolicyService
+from app.services.response_deviation_service import ResponseDeviationService
+from app.services.response_linker import ResponseLinker
+from app.services.water_response_service import WaterResponseService
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.api_v1_prefix}/auth/login", auto_error=False)
 
@@ -79,6 +83,22 @@ def get_auth_service(
     token_denylist: Annotated[TokenDenylistRepository, Depends(get_token_denylist)],
 ) -> AuthService:
     return AuthService(user_repo, token_denylist)
+
+
+def get_water_response_service(db: DbDep) -> WaterResponseService:
+    return WaterResponseService.from_db(db)
+
+
+def get_response_deviation_service(db: DbDep) -> ResponseDeviationService:
+    return ResponseDeviationService.from_db(db)
+
+
+def get_response_linker(db: DbDep) -> ResponseLinker:
+    return ResponseLinker.from_db(db)
+
+
+def get_irrigation_policy_service(db: DbDep) -> IrrigationPolicyService:
+    return IrrigationPolicyService.from_db(db)
 
 
 # --- Auth guards -----------------------------------------------------------

@@ -1,32 +1,32 @@
 table SubstrateProfile
-	lineageTag: 4c0dc2cd-42c4-4108-be46-c1e5636af6f9
+	lineageTag: ae393f86-16b4-4856-92c2-b77d2b24f30d
 
 	measure 'Optimal Value' = SELECTEDVALUE(SubstrateProfile[Value])
-		lineageTag: 1ddf8cb4-9530-4f23-940f-f2c543d9bf8d
+		lineageTag: f5ec043d-7550-43aa-858c-742220607558
 
 	column Substrate
 		dataType: string
-		lineageTag: b7bba7f0-b0f9-4ad4-bb14-51a42d58c8a2
+		lineageTag: a4f359f2-567e-4706-94d2-0aaaef2b1b9e
 		summarizeBy: none
 		sourceColumn: Substrate
 
 	column Setting
 		dataType: string
-		lineageTag: 5f080e59-5768-4a90-aaa7-2fb15f2156e6
+		lineageTag: 0e5182db-ac33-4115-b367-389d6bfef76f
 		summarizeBy: none
 		sourceColumn: Setting
 		sortByColumn: Sort
 
 	column Value
 		dataType: string
-		lineageTag: 23f17ffa-2f26-4a3c-867b-e3391ec0870f
+		lineageTag: ad0303c1-f081-4ec3-b222-5e2af992c491
 		summarizeBy: none
 		sourceColumn: Value
 
 	column Sort
 		dataType: int64
 		formatString: 0
-		lineageTag: abf57194-e896-42bf-809e-1e39e39e98c8
+		lineageTag: 82c20138-80b2-4b63-8fa6-ffbc6a8d2feb
 		summarizeBy: none
 		sourceColumn: Sort
 
@@ -37,33 +37,33 @@ table SubstrateProfile
 				    Source = #table(
 				        type table [Substrate = text, Setting = text, Value = text, Sort = Int64.Type],
 				        {
-				{"cocopeat", "Dry (irrigate)", "<45%", 1},
-									{"tissue paper", "Dry (irrigate)", "<50%", 1},
-									{"compost", "Dry (irrigate)", "<40%", 1},
-									{"cocopeat", "Target after watering", "~65%", 2},
-									{"tissue paper", "Target after watering", "~70%", 2},
-									{"compost", "Target after watering", "~60%", 2},
-									{"cocopeat", "Good band", "55-75%", 3},
-									{"tissue paper", "Good band", "60-80%", 3},
-									{"compost", "Good band", "50-70%", 3},
-									{"cocopeat", "Too wet", ">85%", 4},
-									{"tissue paper", "Too wet", ">90%", 4},
-									{"compost", "Too wet", ">80%", 4},
-									{"cocopeat", "Dose size", "Medium", 5},
-									{"tissue paper", "Dose size", "Small", 5},
-									{"compost", "Dose size", "Medium-small", 5},
-									{"cocopeat", "Min interval between doses", "2 h", 6},
-									{"tissue paper", "Min interval between doses", "45 min", 6},
-									{"compost", "Min interval between doses", "3 h", 6},
-									{"cocopeat", "Max pump run per dose", "10 s", 7},
-									{"tissue paper", "Max pump run per dose", "4 s", 7},
-									{"compost", "Max pump run per dose", "8 s", 7},
-									{"cocopeat", "Moisture check interval", "5 min", 8},
-									{"tissue paper", "Moisture check interval", "2 min", 8},
-									{"compost", "Moisture check interval", "5 min", 8}
-				        })
+				            {"cocopeat", "Dry (irrigate)", "<45%", 1},
+				            {"tissue paper", "Dry (irrigate)", "<50%", 1},
+				            {"compost", "Dry (irrigate)", "<40%", 1},
+				            {"cocopeat", "Target after watering", "~65%", 2},
+				            {"tissue paper", "Target after watering", "~70%", 2},
+				            {"compost", "Target after watering", "~60%", 2},
+				            {"cocopeat", "Good band", "55-75%", 3},
+				            {"tissue paper", "Good band", "60-80%", 3},
+				            {"compost", "Good band", "50-70%", 3},
+				            {"cocopeat", "Too wet", ">85%", 4},
+				            {"tissue paper", "Too wet", ">90%", 4},
+				            {"compost", "Too wet", ">80%", 4},
+				            {"cocopeat", "Dose size", "Medium", 5},
+				            {"tissue paper", "Dose size", "Small", 5},
+				            {"compost", "Dose size", "Medium-small", 5},
+				            {"cocopeat", "Min interval between doses", "2 h", 6},
+				            {"tissue paper", "Min interval between doses", "45 min", 6},
+				            {"compost", "Min interval between doses", "3 h", 6},
+				            {"cocopeat", "Max pump run per dose", "10 s", 7},
+				            {"tissue paper", "Max pump run per dose", "4 s", 7},
+				            {"compost", "Max pump run per dose", "8 s", 7},
+				            {"cocopeat", "Moisture check interval", "5 min", 8},
+				            {"tissue paper", "Moisture check interval", "2 min", 8},
+				            {"compost", "Moisture check interval", "5 min", 8}
+				        }),
+				    Result = Source
 				in
-				    Source
+				    Result
 
 	annotation PBI_ResultType = Table
-

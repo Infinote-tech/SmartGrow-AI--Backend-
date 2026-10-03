@@ -1,27 +1,72 @@
 {
-  "name": "SmartGrow Microgreens",
-  "dataColors": ["#2E8B57", "#8BC34A", "#F2C94C", "#1B5E20", "#66BB6A", "#A5D6A7", "#D4A017", "#388E3C"],
-  "background": "#FFFFFF",
-  "foreground": "#1B3A2B",
-  "tableAccent": "#2E8B57",
-  "good": "#2E8B57",
+  "name": "SmartGrow Dark Green",
+  "dataColors": [
+    "#B6E36B",
+    "#4CC38A",
+    "#2E9E6B",
+    "#D6F08A",
+    "#1F7A56",
+    "#F2C94C",
+    "#7FD9B0",
+    "#EF6F61"
+  ],
+  "background": "#10382C",
+  "foreground": "#E9F6EE",
+  "tableAccent": "#4CC38A",
+  "good": "#4CC38A",
   "neutral": "#F2C94C",
-  "bad": "#C0392B",
-  "maximum": "#1B5E20",
-  "center": "#8BC34A",
-  "minimum": "#E8F5E9",
+  "bad": "#EF6F61",
+  "maximum": "#B6E36B",
+  "center": "#4CC38A",
+  "minimum": "#1F7A56",
   "textClasses": {
-    "title": { "fontFace": "Segoe UI Semibold", "fontSize": 14, "color": "#1B5E20" },
-    "label": { "fontFace": "Segoe UI", "fontSize": 10, "color": "#1B3A2B" }
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 10,
+      "color": "#E9F6EE"
+    },
+    "title": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 12,
+      "color": "#E9F6EE"
+    }
   },
   "visualStyles": {
     "*": {
       "*": {
-        "title": [{ "show": true, "fontColor": { "solid": { "color": "#1B5E20" } } }],
-        "background": [{ "color": { "solid": { "color": "#F1F8E9" } }, "transparency": 0 }],
-        "border": [{ "show": true, "color": { "solid": { "color": "#A5D6A7" } }, "radius": 8 }]
+        "categoryAxis": [
+          {
+            "labelColor": {
+              "solid": {
+                "color": "#8DB7A3"
+              }
+            }
+          }
+        ],
+        "valueAxis": [
+          {
+            "labelColor": {
+              "solid": {
+                "color": "#8DB7A3"
+              }
+            },
+            "gridlineColor": {
+              "solid": {
+                "color": "#1A4A39"
+              }
+            }
+          }
+        ],
+        "legend": [
+          {
+            "labelColor": {
+              "solid": {
+                "color": "#E9F6EE"
+              }
+            }
+          }
+        ]
       }
-    },
-    "page": { "*": { "background": [{ "color": { "solid": { "color": "#E8F5E9" } }, "transparency": 0 }] } }
+    }
   }
 }

@@ -1,13 +1,55 @@
-relationship 1208135c-407d-4c86-90a3-5971a87544e1
-	fromColumn: TrayEntries.substrate_type
+relationship 570824cc-1f34-44ba-ab1b-ee0cca331584
+	fromColumn: SensorData.tray_id
+	toColumn: Trays.tray_id
+
+relationship 85d65dad-f605-4f4a-a12b-dec39f36eb0d
+	fromColumn: IrrigationLogs.tray_id
+	toColumn: Trays.tray_id
+
+relationship e8ac7e51-a0c6-479c-bf64-35cb73c0e44f
+	fromColumn: ModelOutputs.tray_id
+	toColumn: Trays.tray_id
+
+relationship 0a7d0763-a3e3-4957-8991-c4a01c3a9cef
+	fromColumn: FaultEvents.tray_id
+	toColumn: Trays.tray_id
+
+relationship 6aae01e1-d180-4678-95e5-a2c45735c42c
+	fromColumn: CropBatches.tray_id
+	toColumn: Trays.tray_id
+
+relationship e8949882-5c87-4b0a-a517-26f7dc5140f6
+	fromColumn: SensorData.Date
+	toColumn: Dates.Date
+
+relationship 11d54ecf-d5cd-4202-a4f2-152c39814917
+	fromColumn: IrrigationLogs.Date
+	toColumn: Dates.Date
+
+relationship 1da7480e-50b0-4b08-9939-1337b5af30e7
+	fromColumn: ModelOutputs.Date
+	toColumn: Dates.Date
+
+relationship d98fe819-e3c1-458b-aba6-ebcd1468bdb2
+	fromColumn: FaultEvents.Date
+	toColumn: Dates.Date
+
+relationship 86ba4b61-7112-454b-8de3-487ea617340f
+	fromColumn: HardwareStatus.Date
+	toColumn: Dates.Date
+
+relationship 083445b6-3734-43ba-b906-75b8eeea5425
+	fromColumn: IrrigationLogs.growth_stage
+	toColumn: GrowthStages.stage_key
+
+relationship 86681ff1-6156-4095-8151-e9580a92e1f7
+	fromColumn: ModelOutputs.growth_stage
+	toColumn: GrowthStages.stage_key
+
+relationship 55965a02-93e9-4e9c-8c73-42f5e677384a
+	fromColumn: Trays.media_type
 	toColumn: Substrates.Substrate
 
-relationship 4c6a4020-950f-45ce-86f4-fca8e7101e51
+relationship b81cc21b-5fd9-43b9-a702-2892c60e6e3a
 	fromColumn: SubstrateProfile.Substrate
 	toColumn: Substrates.Substrate
-
-relationship 51775d71-1a27-46d6-9708-0a3ead5eb945
-	joinOnDateBehavior: datePartOnly
-	fromColumn: TrayEntries.'Entry Date'
-	toColumn: LocalDateTable_356c207e-6d31-49b6-83bf-05cbf6e83da6.Date
-
